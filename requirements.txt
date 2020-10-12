@@ -3,6 +3,7 @@ async-generator==1.10
 attrs==20.2.0
 backcall==0.2.0
 bleach==3.2.1
+Boruta==0.3
 certifi==2020.6.20
 cffi==1.14.3
 cycler==0.10.0
@@ -76,3 +77,4 @@ traitlets==5.0.4
 wcwidth==0.2.5
 webencodings==0.5.1
 widgetsnbextension==3.5.1
+xgboost==1.2.0
