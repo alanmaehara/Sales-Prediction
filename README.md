@@ -22,8 +22,8 @@ This project was born from [Meigarom Lopes](https://github.com/Meigarom)'s cours
 This is a very extensive README since it carries the responsibility of showing the project outcomes and also to explain the statistics under the hood of our algorithms and analyses. There is also a somewhat palatable length of explanations on the reasoning of each step in this project. Here is my suggestion for the readers:
 
 1. If you are an **experienced reader and don't mind going directly to a notebook**, access the notebook [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb) and go back to the [table of contents](#table-of-contents) whenever some explanation is lacking there. 
-2. If you wish to **read the project's main findings instead of going through the entire project**, look no further and [get there.](#)
-3. **If you wanna bear the adventure with me**, just read the entire readme. A [(go to next section)]() hyperlink will be available for each section and every technical explanation to make your reading smoother. Codes for this project can be found [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb).
+2. If you wish to **read the project's main findings instead of going through the entire project**, look no further and [get there.](#main-findings)
+3. **If you wanna bear the adventure with me**, just read the entire readme. A [(go to next section)]() hyperlink will be available for each section to make your reading smoother, and a [(skip theory)]() hyperlink will be there to skip technical explanations. Codes for this project can be found [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb).
 
 
 I would appreciate any comments or suggestions on how to improve this project. Please feel free to add me on GitHub or [Linkedin](https://www.linkedin.com/in/ammaehara/) - I will get back to you as soon as possible. 
@@ -156,9 +156,9 @@ Let's pretend that we are data scientists working for Rossmann, and that we have
 Later on, you find out that the CFO was the one who has made this business request to all sales managers. You reached out the CFO and got to know its initial motive: to figure out the total revenue per store after six weeks in order to finance upcoming investments for each store. Then, you suggest a sales forecast project that has as the main output the 6-week sales forecast to be displayed on a smartphone app.
 
 - **Business Question**: what is the sales forecast for the next six weeks?
-- **Issue Owner and Motive**: The CFO needs to plan the finance strategy for each store after two months (~6 weeks)
+- **Issue Owner and Motive**: the CFO needs to plan the finance strategy for each store after two months (~6 weeks)
 - **Solution Format and Deliverables**:
-    - **Data Problem Type**: Sales forecast
+    - **Data Problem Type**: sales forecast
     - **Possible Solution Methods**: Regression, Time Series, Neural Networks 
     - **Deliverables**: 6-week daily sales forecast per store. Stakeholders (sales managers, CFO, CEO..) will be able to get forecasts from a smartphone app.
 
@@ -168,65 +168,397 @@ Later on, you find out that the CFO was the one who has made this business reque
 ---
 ## 02. Data Preparation
 In this step, we work on acquiring data and get first impressions of our problem. Four tasks to be performed:
-- **Data Collection**: will you have enough processing and capacity power to acquire the data? Is your data publicly available or do you need to acquire it from the business? Or rather you figure out that you don't have the means to get the necessary data (in this case, the project might not be feasible). Check these points and proceed.  
-- **Data Description**: once you get your hands on data for the first time, analyze the dimension of your data (how many rows vs columns?), the data types (categorical data? numerical data? Discrete or continuous data?),
-- **Data Cleaning**
-    * Null Values: Check the volume of null values on each column of your dataset, and find a method to impute null values. Usually, a good way to determine the best imputation method is to reflect upon the reasons why you have null values for each feature on your dataset. 
-    _Quick note: depending on the volume of missing values in the dataset, you might want to go back to the previous task "Data Collection"._
-    * Change data types: In python, some features (columns) might not be in the right format to work on (e.g: variable "date" in integer format instead of "date" format). 
-- **Descriptive Statistics**: calculate some statistics from your data. Separate numerical and categorical data to perform this step. The recommended statistics are listed below: 
-    * Measures of Central Tendency (mean, median)
-    * Measures of Dispersion (Variance, Standard Deviation, Range, First and Third Quartiles, Minimum and Maximum)
 
-### [I. Data Collection](#data-collection)
+### I. Data Collection
 
-As mentioned in [Cycle Description](#cycle-description), the data comes from a Kaggle competition held by Rossmann. Therefore, our project is pretty limited on the information contained in the dataset. In real life, we would collect all information available in the company's data warehouse that helps answering our [Business Question](#business-question). As for this project, it is fine to proceed as it is, since we are running this project under a fictitional business standpoint.
+Once we've set up the business problem and deliverables of our project, let's get our hands into data. Usually, one must check the data whereabouts: is your data publicly available or do you need to acquire it from the business? Will you have enough processing and capacity power to acquire the data? Or rather you figure out that you don't have the means to get the necessary data (in this case, the project might not be feasible). 
 
+In our case, things a bit different. As mentioned in [Cycle Description](#cycle-description), our data comes from a Kaggle competition held by Rossmann. Therefore, our project is pretty limited on the information contained in the dataset. In real life, we would collect all information available in the company's data warehouse that helps answering our [Business Question](#business-question). As for this project, it is fine to proceed as it is, since we are running this project under a fictitional business standpoint.
 
-### [II. Data Description](#data-description)
+**At this point, we should know what is the phenomenon that we are trying to predict (target variable): sales revenues.**
 
-Our initial set of variables are as follows. For a reference on data types, check this [diagram](https://o.quizlet.com/8UUywzzaMhY2ZGHrWE7VkA_b.png). 
+### II. Data Description
+
+Once you get your hands on data for the first time, analyze the dimension of your data (how many rows vs columns?) and the data types (categorical data? numerical data? Discrete or continuous data?). For a reference on data types, check this [diagram](https://o.quizlet.com/8UUywzzaMhY2ZGHrWE7VkA_b.png). 
+
+**A quick note on statistical terminology**: our sales variable, which is what we want to predict in this project, can assume many names such as _dependent variable_, _predicted variable_, _response variable_ or _target variable_. Other variables that helps us explain sales, they are commonly called _independent variable_, _predictor variable_, _feature_, or _explanatory variable_. In a regression model context, you might also see explanatory variables being called as _regressors_.
+
+Our initial set of variables are as follows:
+
 
 | Variable      | Description | Data Type |
 | ----------- | ----------- | ----------- | 
-| Store   | a unique Id for each store  | numerical (discrete)  |
-| DayOfWeek   | day of the week (1 = Monday, 7 = Sunday) | numerical (discrete)    |
-| Date  | date of each sales entry | date  |
-| Sales   | the turnover for any given day (this is what you are predicting) | numerical (continuous)   |
-| Customers  | the number of customers on a given day  | numerical (discrete) |
-| Open   | an indicator for whether the store was open: 0 = closed, 1 = open | numerical (dummy*)  | 
-| Promo  | indicates whether a store is running a promo on that day | numerical (dummy*)   |
-| StateHoliday   | indicates a state holiday. Normally all stores, with few exceptions, are closed on state holidays. Note that all schools are closed on public holidays and weekends. a = public holiday, b = Easter holiday, c = Christmas, 0 = None | categorical (nominal)  |
-| SchoolHoliday  | indicates if the (Store, Date) was affected by the closure of public schools: 1 = affected, 0 = not affected | numerical (dummy*)  |
-| StoreType   | differentiates between 4 different store models: a, b, c, d | categorical (nominal)  |
-| Assortment | describes an assortment level: a = basic, b = extra, c = extended | categorical (ordinal)  |
-| CompetitionDistance   |distance in meters to the nearest competitor store | numerical (continuous)   |
-| CompetitionOpenSinceMonth  | gives the approximate month of the time the nearest competitor was opened | numerical (discrete)  |
-| CompetitionOpenSinceYear   | gives the approximate year of the time the nearest competitor was opened | numerical (discrete) | 
-| Promo2  | promo2 is a continuing and consecutive promotion for some stores: 0 = store is not participating, 1 = store is participating | numerical (dummy)  |
-| Promo2SinceWeek   |describes the calendar week when the store started participating in Promo2 | numerical (discrete) |
-| Promo2SinceYear   |describes the year when the store started participating in Promo2 | numerical (discrete) |
-| PromoInterval   |describes the consecutive intervals Promo2 is started, naming the months the promotion is started anew. E.g. "Feb,May,Aug,Nov" means each round starts in February, May, August, November of any given year for that store | categorical (nominal) |
+| store   | a unique Id for each store  | numerical (discrete)  |
+| day_of_week   | day of the week (1 = Monday, 7 = Sunday) | numerical (discrete)    |
+| date  | date of each sales entry | date  |
+| sales   | the turnover for any given day (this is what you are predicting) | numerical (continuous)   |
+| customers  | the number of customers on a given day  | numerical (discrete) |
+| open   | an indicator for whether the store was open: 0 = closed, 1 = open | numerical (dummy*)  | 
+| promo  | indicates whether a store is running a promo on that day | numerical (dummy*)   |
+| state_holiday   | indicates a state holiday. Normally all stores, with few exceptions, are closed on state holidays. Note that all schools are closed on public holidays and weekends. a = public holiday, b = Easter holiday, c = Christmas, 0 = None | categorical (nominal)  |
+| school_holiday  | indicates if the (Store, Date) was affected by the closure of public schools: 1 = affected, 0 = not affected | numerical (dummy*)  |
+| store_type   | differentiates between 4 different store models: a, b, c, d | categorical (nominal)  |
+| assortment | describes an assortment level: a = basic, b = extra, c = extended | categorical (ordinal)  |
+| competition_distance   | distance in meters to the nearest competitor store | numerical (continuous)   |
+| competition_open_since_month  | gives the approximate month of the time the nearest competitor was opened | numerical (discrete)  |
+| competition_open_since_year   | gives the approximate year of the time the nearest competitor was opened | numerical (discrete) | 
+| promo2  | promo2 is a continuing and consecutive promotion for some stores: 0 = store is not participating, 1 = store is participating | numerical (dummy)  |
+| promo2_since_week   |describes the calendar week when the store started participating in Promo2 | numerical (discrete) |
+| promo2_since_year   |describes the year when the store started participating in Promo2 | numerical (discrete) |
+| promo_interval   |describes the consecutive intervals Promo2 is started, naming the months the promotion is started anew. E.g. "Feb,May,Aug,Nov" means each round starts in February, May, August, November of any given year for that store | categorical (nominal) |
 
-*dummy variable is one that takes either 0 or 1. For more details, check [here](https://en.wikipedia.org/wiki/Dummy_variable_(statistics))._
+*dummy variable is one that takes either 0 or 1. For more details, check [here](https://en.wikipedia.org/wiki/Dummy_variable_(statistics)).
+
+* **Data Dimensions**: 
+
+  `Train dataset:   Number of rows: 969264 | Number of columns: 18`
+  `Valid dataset:   Number of rows: 47945 | Number of columns: 18`
+  `Range of Date: 2013-01-01 (first) | 2015-07-31 (last)`
+\
+  We splitted the whole data into training and validation parts. **Training data** corresponds to all data entries between **2013-01-01 to 2015-06-19**, and **validation data** contains entries from the last 6 weeks of available data, **2015-06-19 to 2015-07-31**.
+
+
+### III. Data Cleaning
+
+This is a crucial step to any data science project. Many Machine Learning algorithms don't cope well with missing (null) values or data that isn't in the right format. Here we perform two tasks:
+
+* **Change data types**: In python, some features (columns) might not be in the right format to work on (e.g: variable "date" in string format instead of "date" format). In our case, we can simply use the pandas `.astype()` method to change data types.
+* **Imputation**: check the volume of null values on each column of your dataset, and find a method to impute null values. Usually, a good way to determine the best imputation method is to reflect upon the reasons why you have null values for each feature on your dataset. 
+    _Quick note: depending on the volume of missing values in the dataset, you might want to go back to the previous task "Data Collection"._
+
+    
+Let's check the missing values for each dataset:
+* Null Values for training data: 
+![](img\train_NA.png)
+
+* Null Values for validation data: 
+![](img\valid_NA.png)
+
+The imputation method for each variable is as follows:
+  * **promo_interval**: fill null values with 0 (store is not participating in consecutive promo sales "promo2") 
+  * **competition_distance**: fill null values with 100000. The reason is that null values are probably an indicative that stores don't have closer competitors. Therefore we fill out with a value way above the maximum competition distance seen (75860m)
+
+  The following variables don't seem to have an ideal imputation method. Imputing null values with mean, median, or zero doesn't sound good, due to the high percentage of null values. Therefore we use the `date` column:
+  * **promo2_since_week**: fill with the week number located in `date` 
+  * **promo2_since_year**: fill with the year located in `date` 
+  * **competition_open_since_year**: fill with the year located in `date` 
+  * **competition_open_since_month**: fill with the year located in `date`   
+
+### III. Descriptive Statistics
+
+Descriptive statistics is a summary of the data. It quantitatively describes the data by using some statistic metrics depending on the nature of your data. 
+
+For numerical variables, we usually use statistics that measure **dispersion** (Variance, Standard Deviation, Range, First and Third Quartiles, Minimum, Maximum, Skewness, Kurtosis) and **central tendency** (mean, median). Find below a quick explanation on such measures.
+
+[(skip theory)](#numerical-data)
+
+Let's start with measures of **Central Tendency**, which are measures of where the center of a data set lies:
+
+##### 1. Mean
+Most commonly known as the "average", the mean (or arithmetic mean) is equal to the sum of a list of values divided by its total number of elements:
+$$ \large {\displaystyle \hat{x} ={\frac {1}{n}}\sum _{i=1}^{n}x_{i}={\frac {x_{1}+x_{2}+\cdots +x_{n}}{n}}}
+$$
+
+where,
+
+$ \large\hat{x}$ = mean
+$ \large {n}$ = number of elements
+$ \sum _{i=1}^{n}x_{i}$ = sum of all elements.
+##### 2. Median
+Median (or the "middle" value) is simply a value separating the data on half. It is also known as the 2nd quartile (Q2). The median is best understood when given an example:
+
+List A = $(1,2,3,4,4,5,6)$
+List B = $(1,2,2,3)$
+
+* List A has 7 elements; for odd-numbered lists, we find the median by picking the middle term, which is **4**.
+* List B has 4 elements; for even-numbered lists, the median is the average of the middle two numbers: $\large \frac{(2+2)}{2}$ = **2**
+
+
+Now we turn our focus to measures of **Dispersion**:
+
+#####1. Variance:
+
+Variance is the average of the squared differences from the mean. It measures how far a set of numbers is spread out from their mean (average) value. In order to calculate the variance, find the mean value and subtract its value from each number on your set. Then square the result, and average it:
+
+$$\large \sigma^{2} = \frac{\sum_{i=1}^{n} 
+  \left(x_{i} - \bar{x}\right)^{2}}
+  {n-1}$$
+
+where,
+
+$ \large\sigma^{2}$ = variance
+$ \large {n}$ = number of elements
+$\large\bar{x}$ = mean
+$\large x_{i}$ = ith element of the dataset 
+$ \sum _{i=1}^{n}x_{i}$ = sum of all x elements.
+
+**2. Standard Deviation**
+
+$$\large \sigma = \sqrt{\frac{\sum\limits_{i=1}^{n} \left(x_{i} - \bar{x}\right)^{2}} {n-1}}$$
+
+
+As we can notice from the formula above, standard deviation is just the square root of the variance. This is usually a better statistic to measure data dispersion than variance, since it gives a meaningful interpretation to its values. To better understand the concept of standard deviation, let's graph a normal distribution curve like the one below (graph retrieved [here](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Standard_deviation_diagram.svg/1024px-Standard_deviation_diagram.svg.png)). The x-axis represents the standard deviations from the mean (centered on zero), and can assume negative or positive values. The y-axis is the probability density function (PDF) and represents the likelihood of an outcome to happen. 
+
+Data that follows a normal distribution has its mean, median and [mode](https://en.wikipedia.org/wiki/Mode_(statistics)) values centered around zero, and have a bell-shaped curve. One example of data that falls into a normal distribution is the height of human beings. Since most people aren't super tall nor very short, their height tend to converge closer to a mean value. 
+
+
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Standard_deviation_diagram.svg/1024px-Standard_deviation_diagram.svg.png" alt="drawing" width="70%"/>
+
+
+Here's where the standard deviation comes into play: for normal distributions, around 68% of the world's population height falls between -1 and +1 standard deviations from the mean. If we go to +-2 standard deviations, then we could say that 95% of our population height falls into that threshold. Going even further, we could say that 99.7% of the world's population heights are included within +- 3 standard deviations from the mean.
+
+In our project, however, we can´t assume that our variables follows a normal distribution (we will see graphs proving it). With this in mind, we calculate the standard deviation for each variable we got in our dataset in order to find out how spread the data is. For example, if the variable "customers" has low standard deviation (let's say 5), it means that the number of customers in our dataset is not widespread and are closer to the mean values of customers. On the other hand, if standard deviation is very high (think of 20 or higher), then the number of customers are too sparse. The following graph (with mean equal 100 customers) illustrates the situation for normal distributed variables (graph retrieved [here](http://www.skillpower.co.nz/wp-content/uploads/2015/12/mmm.png)):
+
+<img src="http://www.skillpower.co.nz/wp-content/uploads/2015/12/mmm.png" alt="drawing" width="50%"/>
+
+
+
+_Quick note: while the result of the standard deviation can't be negative, standard deviation thresholds on a distribution can assume negative and positive values to determine dispersion from the mean value (as we showed on the first graph)_
+
+**3. Minimum/Maximum**
+
+Minimum is the smallest value found from a list of numbers. Maximum is the biggest value found from the same list.
+
+**4. Range**
+
+Range is the difference between the lowest and highest value. This is a useful statistic that also tell us about the statistical dispersion of the data, and shows a rough idea of the magnitude and scale of our data.
+
+List A = $(1,2,3,4,4,5,6)$
+
+The range is simply  $\max(A) - min(A) = 6-1 = 5$
+
+**5. Quartiles**
+
+Quartiles are values that divide a list of numbers into quartiles (four or less equal parts). We usually have three types of quartiles:
+  *  **1st Quartile (Q1)**: also known as the 25th percentile, it cuts the lowest 25% of data.
+  *  **2nd Quartile (Q2)**: known as the 50th percentile, it cuts the dataset in half. Its value is also the **median**. 
+  *  **3rd Quartile (Q3)**: known as the 75th percentile, it represents the value that splits 75% of the data from the top 25%.
+
+A illustration might help internalizing the idea behind quartiles (retrieved from [here](https://www.mathsisfun.com/data/images/quartiles-c.svg)):
+
+![](https://www.mathsisfun.com/data/images/quartiles-c.svg
+)
+
+We also have the Interquartile Range (IQR), which is the difference between Q3 and Q1. In the illustration above, IQR would be 4.
+
+This is a good moment to explore **boxplots**, which is a very useful tool for statistic analysis and uses concepts related to quartiles, minimum and maximum, and outliers. I will explain just enough to make ourselves comfortable with boxplots, but you may find a complete explanation on the topic by [Michael Galarnyk](https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51).
+
+<img src="https://miro.medium.com/max/700/1*2c21SkzJMf3frPXPAR_gZA.png" alt="drawing" width="80%"/>
+
+Boxplots is a controlled, neat way to visualize the variability of our data. On the x-axis, the numbered ticks represent the values that our data can assume. The figure above shows numbers ranging from -4 to +4 but they could be really any number, for example, from 50 to 250 centimeters (human body height) to -20 to +40 Cº (temperature in celsius).
+There are many ways to read a boxplot, but whenever I deal with them I take the following steps:
+  1. **Find the median**: you can identify the median (Q2) as the yellow line that divides the red box into two parts.
+  2. **Identify the Interquartile Range (IQR)**: the IQR is the whole red box and represents 50% of your data. If you read the boxplot from right to left, the Q1 is the line where the IQR box starts, and the Q3 is where the IQR box ends. 
+  Just by reading the IQR box, one can understand the variability of the data. If the median line is symmetric between Q1 and Q3, your data distribution is more symmetric. Otherwise, if the median line is closer to either Q1 or Q3, then the distribution is asymmetric.
+  3. **Minimum/Maximum**: the minimum and maximum values in a boxplot **are not equal** to the data's true minimum and maximum values. In a boxplot, minimum (also known as _lower fence_) is the difference between the value representing the 25th percentile of your data (Q1) and 1.5 times the IQR. Maximum (or _upper fence_) is the sum of the value representing the 75th percentile of your data (Q3) and 1.5 times the IQR.
+  4. **Outliers**: outliers are data points that differs greatly from other data points. You can identify them as mini-circles in the extreme sides of a boxplot. The threshold that determines whether a data point is an outlier or not is the minimum and maximum values.
+
+Let's check a practical example that records time slept (hours) by an individual across weekdays (graph retrieved [here](https://plot.ly/static/img/literacy/boxplot/boxplotfig9.jpg)):
+
+
+<img src="https://plot.ly/static/img/literacy/boxplot/boxplotfig9.jpg" alt="drawing" width="70%"/>
+
+Although these boxplots are in vertical position, there's nothing different in terms of data interpretation. 
+Let's start by looking at Monday's boxplot. The median for Monday is approximately 7.5 hours of sleep, with its median mark closer to the Q3 value, which indicates that the data distribution is asymmetrical (this individual has slept between 6 to 7.5 hours more frequently). Now see the box on its entirety: 50% of the time, this person has slept between 6 to 8 hourse on Mondays and no unusual time sleep hours were recorded (no outliers). 
+Now look at the Thursday boxplot. On thursdays, this individual had 5.5 to 6.5 hours of sleep 50% of the time. The box size is very small, which indicates that the data distribuion is more concentrated on the median value (and less dispersed compared to Monday). Sadly, this person slept less one day - there is an outlier around 2.5 hours of sleep.
+
+
+**6. Skewness**
+
+Before explaining skewness, we need to understand what is a random variable and a probability distribution. 
+
+According to [Yale](http://www.stat.yale.edu/Courses/1997-98/101/ranvar.htm), a **random variable** (usually described as X) is a variable whose possible values are numerical outcomes of a random phenomenon. For example, flipping a coin 100 times is a random phenomenon - there is no way to know the outcome for each and every single coin flip unless you actually flip the coin 100 times. But you know that there are only two possible outcomes: heads or tails. When we quantify our possible outcomes - let's say, X = 0 for tails and X = 1 for heads, then we got a random variable.
+
+A **probability distribution** is a list of probabilities associated with each and every single possible values of a random variable. In the graph below, let's say that we calculate the probability distribution on the event (or probability) of getting heads [P(X = 1)], from 100 coin flips. Our distribution is plotted below:
+
+<img src="https://sumproduct-4634.kxcdn.com/fileadmin/_processed_/a/e/csm_Image-04-No.-of-Heads-from-100-Coin-Tosses_5fd73d4f03.gif
+" alt="drawing" width="90%"/>
+
+Each bar represents the event of flipping a coin 100 times. Assuming that our coin is not biased (in other words, don't tend to flip one side more than the other), then we notice that our probability distribution has a bell-curve shape resembling a normal distribution with mean 50. Therefore, the probability of getting 50 heads when flipping a coin 100 times is the highest one. It makes sense - if you flip a coin 100 times on your own, you might get a number of heads that is close to 50. This has a theory behind it - the [Law of Large Numbers](https://www.investopedia.com/terms/l/lawoflargenumbers.asp), which states that as the sample size grows, its mean gets closer to the average of the whole population. In our flip-a-coin case, if we flip a coin 1000 times instead of 100 times, we would have a probability distribution with a very narrow bell-shaped curve closer to the mean 50.
+
+Now we are ready to dig into **skewness**. Skewness is the degree of distortion (or a measure of the asymmetry) of a probability distribution of a random variable about its mean. In the graph below, we see three graphs: (1) a distribution with positive skew; (2) a symmetrical distribution with zero skewness; (3) a distribution with negative skew.
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Relationship_between_mean_and_median_under_different_skewness.png/1024px-Relationship_between_mean_and_median_under_different_skewness.png
+" alt="drawing" width="90%"/>
+
+Take a closer look on the graphs. The one with positive skew has a longer, fatter tail on the right side of the distribution. It has a mean value greater than the median and mode, and its peak is on the left side. Now look to the symmetrical distribution graph in the middle. It has its mean = media = mode - basically a normal distribution curve with a centered peak. The last one, with negative skew, has a longer, fatter tail on the right side and its mean value is lower than the median and mode, with a peak located on the right side. 
+
+You can also tell the direction (but not the number) of outliers in a skewed distribution. For positive skewed curves, outliers are most present on the right side of the curve, while for negative skewed curves is just the opposite side.
+
+In the real world, data not always assume a normal, symmetric bell-curved shape as the graph depicted in the middle. For instance, there are many types of distribution that describes data (see a few examples [here](https://www.google.com/imgres?imgurl=http%3A%2F%2Fimage.sciencenet.cn%2Falbum%2F201609%2F13%2F175607zopgnj40j00so4ee.png&imgrefurl=https%3A%2F%2Fwww.kaggle.com%2Fgetting-started%2F81761&tbnid=t4_CFhWWxcakyM&vet=12ahUKEwiMuMipvrnsAhWEAbkGHTpyBJkQMygJegUIARCiAQ..i&docid=wiph3DFgr5Q8AM&w=680&h=735&q=distributions%20cheat%20sheet&client=firefox-b-d&ved=2ahUKEwiMuMipvrnsAhWEAbkGHTpyBJkQMygJegUIARCiAQ)). This is the reason why an analysis on skewness is important: it shows how data behaves and what we can do about it when doing ML modeling. 
+
+A very good example on how we should take care of skewness is depicted by linear models, since such models takes the assumption that the independent variable follows the same distribution as the target variable. Let's look on an example depicted by [Abhishek Sharma](https://www.analyticsvidhya.com/blog/2020/07/what-is-skewness-statistics/) on its article about skewness in statistics. Let's say you want to predict the mpg (miles per gallon) of a car by running a linear regression that has one independent variable: horsepower:
+
+<img src="https://cdn.analyticsvidhya.com/wp-content/uploads/2020/06/sk2-768x450.png
+" alt="drawing" width="100%"/>
+
+The shape of this distribution resembles the one with positive skewness. Since your data is concentrated on the left side, our linear model will give us good mpg predictions on cars with low horsepower, but will probably perform poor predictions on cars with high horsepower. In this case, skewness is a problem and we usually use rescaling techniques that helps us reshaping the distribution of skewed variables. We will get into more details on rescaling in the [Data Preprocessing](#data-preprocessing) part.
+
+
+To determine when skewness is symmetrical or not just by looking at skewness values, you can check the table below:
+
+| Skewness      | Distribution shape | 
+| ----------- | ----------- |
+|$ -0.5 \leq skew \leq 0.5 $| Symmetrical |
+|$ -1 \leq skew \leq -0.5 $| Negative, moderately skewed | 
+|$ 0.5 \geq skew \geq 1 $ | Positive, moderately skewed |
+|$ skew  \leq  -1$ | Negative, highly skewed|
+|$ skew  \geq  1$ | Positive, highly skewed|
+
+**7. Kurtosis**
+
+Kurtosis is a measure of tailedness of a probability distribution - therefore, it solely focuses on the tails. This is a great statistic to measure the presence of outliers on our distribution. 
+
+Data distributions with **high kurtosis** (K > 3) indicates that the data has many outliers, and therefore, a detailed investigation on outliers are a must. Distribution with **low kurtosis** (k < 3) has fewer and less extreme outliers.
+
+There are three types of kurtosis as follows:
+  * **Leptokurtic (K > 3)**: Distribution has fatter, longer tails, a sharp peak;
+  * **Mesokurtic (K = 3)**: Distribution resembles a normal distribution;
+  * **Platykurtic (K < 3)**: Distribution has shorter, thinner tails. 
+
+<img src="https://financetrain.com/wp-content/uploads/KurtosisPict.jpg" alt="drawing" width="70%"/>
+
+In summary, skewness and kurtosis serve us to indicate: (1) how our data is distributed and if we should be extra careful during data preprocessing; (2) presence of outliers and if we need to figure out a way to make our model more robust to outlier effects.
+
+Now, let's go back to our project! Here we separate numerical and categorical data to perform this step. 
+
+##### Numerical data:
+![](img\descriptive.png)
+
+##### Categorical data (boxplots):
+![](img\categorical_boxplot.png)
+
+
+Some notes from the summary statistics above:
+* `competition_distance, competition_open_since_year` are heavily skewed;
+* `customers, competition_distance, competition_open_since_year` have a high kurtosis, which indicates a profusion of outliers;
+* `state_holiday, store_type, assortment` have many outliers;
+
+[back to top](#table-of-contents)
+
+---
+## 03. Feature Engineering
+In this task, we create new features (variables) on our dataset based on the existent set of variables. Our main compass for feature creation is the business needs; therefore, three tasks must be performed:
+
+### I. Hypothesis List
+
+In order to guide our feature engineering process, we need to create a hypothesis list first. Hypothesis should be testable (you should able to reject or fail to reject it), and must be written as a clear statement that exposes a personal belief to be tested. In our project's case, we will write hypotheses that are connected with the target variable (sales).
+
+To guide our hypothesis list creation, a mindmap is a great tool to map all factors that influences our target variable.
+
+![](img\mindmap.png)
+
+
+#### Stores
+1. Stores with more employees sell more
+2. Stores with bigger available stock sell more
+3. Bigger stores sell more
+4. Stores with extended assortment type sell more
+5. Stores near competitors sell less
+6. Stores with newly opened competitors sell less than stores with old competitors
+
+#### Time
+1. Stores sell more on weekdays than weekends/holidays
+2. Stores sell more during the 2nd semester
+3. Stores sell more during summer/winter breaks (schools)
+4. Stores sell less during school holidays
+5. Stores sell more on Christmas than other holidays
+6. Stores sell more after day 10 of each month
+7. Stores sell more along the years
+
+#### Products
+1. Stores with higher marketing investments sell more
+2. Stores with products in promotion displayed at the entrance sell more
+3. Stores with cheaper products sell more
+4. Stores with aggresive price strategies sell more
+5. Stores frequently doing standalone promo sales sell more
+6. Stores doing consecutive promo sales in the beginning of the year sell more
+7. Stores participating in consecutive promo for a longer time sell more
+8. Stores with more consecutive promo sale days sell more
+
+#### Customers
+1. Stores with more customers who have children sell more
+2. Stores with more customers who have higher income sell more
+3. Stores with more elderly customers sell more
+4. Stores with more customers who have higher # of family members sell more
+5. Stores with more loyal customers sell more
+
+#### Location
+_note: Location of each store is not given. Hypothesis are displayed below just for the purpose of completeness._
+
+1. Stores with higher pedestrian count (front street) sell more
+2. Stores located in an expensive neighborhood sell more
+3. Stores located in urban areas sell more
+4. Stores located in residential areas sell more
+5. Stores near schools sell more
+6. Stores near shopping malls sell more
+7. Stores located inside malls sell more than standalone stores
+
+#### External Factors (Economy, Healthcare, Weather)
+* **Economy**: usually macroeconomic data would not be relevant to the model since its impact tend to affect all stores as a whole. However, some macroeconomic data could be relevant if divided by location or month/week. Since such kind of data is difficult to find, some hypotheses are displayed below just for the purpose of completeness.
+* **Healthcare**: relevant data (per month) was either unavailable on public datasets or not possible to be utilized. Therefore, some hypotheses are displayed for the purpose of completeness.
+* **Weather**: although Rossmann stores are mainly located in Germany, their location is not present on the dataset. Therefore, the usage of weather as a predictor for this model would be a big assumption to take, but hypotheses were written below for the purpose of completeness.
+
+1. Stores within areas with low unemployment rate sell more
+2. Stores within areas with high number of patients sell more
+3. Stores within areas with high Gross Domestic Product Per Capita (GDPpc) sell more
+4. Store sales increase when GDPpc increases (month)
+5. Store sales increase when interest rates decrease (month)
+6. Store sales increase when Consumer Price Index (CPI) rate increases (month)
+7. Store sales increase when the number of patients hospitalized (per month) increase
+8. Store sales increase when the air quality gets worse (AQI)
+9. Store sales increase when the weather is above 28ºC or below 18ºC
+10. Store sales increase when Consumer Confidence Index (CCI) rate increases (month)
+11. Store sales increase when Unemployment rate decreases (month)
+
+### II. Viable Hypothesis List
+
+From 44 hypothesis listed, we select 19 hypothesis that can be tested with the current dataset. Our feature engineering process will be focused on answering the following hypotheses:
+
+1. Stores with extended assortment type sell more
+2. Stores near competitors sell less
+3. Stores with newly opened competitors sell less than stores with old competitors
+4. Stores sell more on weekdays than weekends/holidays (sales rate)
+5. Stores sell more during the 2nd semester
+6. Stores sell more during summer/winter breaks (schools)
+7. Stores sell less during school holidays
+8. Stores sell more on Christmas than other holidays
+9. Stores are selling more along the years
+10. Stores sell more after day 10 of each month
+11. Stores frequently doing standalone promo sales sell more
+12. Stores doing consecutive promo sales in the beginning of the year sell more
+13. Stores participating in consecutive promo for a longer time sell more
+14. Stores with more consecutive promo sale days sell more
+15. Stores sales increase when GDPpc increases (month)
+16. Stores sales increase when interest rates decrease (month)
+17. Stores sales increase when Consumer Price Index (CPI) rate increases (month)
+18. Stores sales increase when Consumer Confidence Index (CCI) rate increases (month)
+19. Stores sales increase when Unemployment rate decreases (month)
+
+### III. Feature Engineering: 
+
+The main purpose of feature engineering is to improve the performance of our predictive model. New variables added to a machine learning model can contribute in many ways, such as creating a more accurate model that better predicts our target variable, or making our model simpler and less complex by creating independent variables that better explain the dependent variable. In this project, we will also use the new variables to help us reject/fail to reject our hypotheses on the [Exploratory Data Analysis](#exploratory-data-analysis-eda) section.
+
+The following tasks were performed on this part:
+  1. We used the variable `date` to create time-related variables. Now we have new variables that explains how long stores were holding traditional and consecutive promotion sales, and how long stores were facing competition from other companies. All time-related variables are divided by day, month, and year;
+  2.  We also used the variable `date` to get a better sense of seasonality - `day, month, year, year_week, is_weekday` variables were created;
+  3.  Variables with data described by single letters were transformed into full text (e.g: all 'a' in variable `state_holiday` were transformed to 'christmas') 
+  4.  Germany's Gross Domestic Product (GDP) per capita, Consumer Price Index (CPI), interest rates, unemployment rate, Consumer Confidence Index (CCI) datasets were added as new variables. All economic indicators were found in month periods except for GDPpc (quarters)
+
+### IV. Filtering Variables
+In this part, we need to check the business restritions that should be considered in the project and filter variables/rows from the dataset that can't be used to predict sales revenues.
+
+We divide this part into two tasks:
+* **Data Entry Filtering**: data entries with characteristics that won't be considered on the model should be excluded from the dataset. Here we removed closed stores and stores with no sales revenue, since such entries are irrelevant to our goal of predicting sales revenue. 
+* **Column Selection**: variables that won't be available at the moment of prediction must be dropped from the dataset. In the 1st CRISP-DM cycle, we dropped the number of customers from the training dataset since this feature was not present in the test dataset. It makes sense, since this is a business restriction: there is no way to know the number of customers at the time we predict sales revenues for the next six weeks. In order to keep the number of customers in the model, we have created a [new project](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/rossmann_customers_prediction.ipynb) that predicts number of customers for the next six weeks for each Rossmann store, and included results on the test dataset. Otherwise, we wouldn't be able to use this variable in our project.
 
 
 [back to top](#table-of-contents)
 
 ---
-## 3. Feature Engineering
-here we create new features on our dataset to support our modelling. In this task, the business needs are the main compass that guide us for feature creation. There are two tasks within feature engineering:
-    *  Start with a hypothesis list, which must be: (1) connected with the main issue/question of the project; (2) do not have clear answers and you expect to get those answers from your dataset. 
-    *  Create new variables that will enable you to reject/fail to reject those hypotheses. 
--  **Filtering Variables**: this is the moment to check the business restritions that should be considered in the project. There are two tasks to perform:
-    * Data Entry Filtering: is there a specific characteristic that won't be considered on the model? If so, filter entries with such train and exclude them from the dataset.
-    * Business Restriction - Feature Selection: if there are some variables that won't be available at the moment of predictions, then it might be wise to drop them from the dataset.
 
-[back to top](#table-of-contents)
-
----
-
-## 4. Exploratory Data Analysis (EDA)
+## 04. Exploratory Data Analysis (EDA)
 
 in this task, our main focus is to explore our dataset and generate valuable insights for the business. . We will divide this task into three parts:
     * Univariate Analysis: check data distribution of each feature and get a first look on how your data is organized as a whole.
@@ -237,14 +569,14 @@ in this task, our main focus is to explore our dataset and generate valuable ins
 
 ---
 
-## 5. Data Preprocessing
+## 05. Data Preprocessing
 data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Also, some data might have categorical data on it, and this could be a problem: most ML models perform better when categorical data is transformed to numerical data. Therefore, this task is centered on rescaling and encoding our variables.
 
 [back to top](#table-of-contents)
 
 ---
 
-## 6. Feature Selection
+## 06. Feature Selection
 In this step, we select the variables that best explain our response (target) variable. There are three methods to do so: 
   * Filter Methods, which is usually the simplest, fastest method to select relevant variables but exclude [multicollinearity issues](https://statisticsbyjim.com/regression/multicollinearity-in-regression-analysis/); 
   * Embedded Methods, which simply runs a ML algorithm that already has an in-built feature selection step; 
@@ -256,7 +588,7 @@ In this step, we select the variables that best explain our response (target) va
 
 
 ---
-## 7. Machine Learning Modeling
+## 07. Machine Learning Modeling
 The fun part has just arrived! We divide this step into four tasks:
   
   * **Performance Metrics**: choose suitable metrics to measure performance on our model. In this case, we will use three metrics:
@@ -276,7 +608,7 @@ The fun part has just arrived! We divide this step into four tasks:
 
 
 ---
-## 8. Hyperparameter Tuning
+## 08. Hyperparameter Tuning
 
 in this task, our goal is to find the best parameters which maximizes the learning on our model. There are three methods to find these parameters:
     1. Random Search: this method randomly choose parameters from a given list. It is the fastest method available;
@@ -286,7 +618,7 @@ in this task, our goal is to find the best parameters which maximizes the learni
 [back to top](#table-of-contents)
 
 ---
-## 9. Error Interpretation & Business Performance
+## 09. Error Interpretation & Business Performance
 
 Also known as _Residual Analysis_, in this step we analyze the predictions' performance from a business perspective. Our focus is to translate and interpret errors from our ML model. 
 
