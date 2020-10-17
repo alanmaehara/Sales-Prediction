@@ -244,10 +244,10 @@ This is a crucial step to any data science project. Many Machine Learning algori
     
 Let's check the missing values for each dataset:
 * Null Values for training data: 
-![](img\train_NA.png)
+![](img/train_NA.PNG)
 
 * Null Values for validation data: 
-![](img\valid_NA.png)
+![](img/valid_NA.PNG)
 
 The imputation method for each variable is as follows:
   * **promo_interval**: fill null values with 0 (store is not participating in consecutive promo sales "promo2") 
@@ -272,17 +272,17 @@ Let's start with measures of **Central Tendency**, which are measures of where t
 ##### 1. Mean
 Most commonly known as the "average", the mean (or arithmetic mean) is equal to the sum of a list of values divided by its total number of elements:
 
-![](img/mean.png)
+![](img/mean.PNG)
 
 where,
 
-![](img/mean_1.png)
+![](img/mean_1.PNG)
 
 ##### 2. Median
 Median (or the "middle" value) is simply a value separating the data on half. It is also known as the 2nd quartile (Q2). The median is best understood when given an example:
 
-![](img/range.png)  
-![](img/range_11.png) 
+![](img/range.PNG)  
+![](img/range_11.PNG) 
 * List A has 7 elements; for odd-numbered lists, we find the median by picking the middle term, which is **4**.
 * List B has 4 elements; for even-numbered lists, the median is the average of the middle two numbers: $\large \frac{(2+2)}{2}$ = **2**
 
@@ -292,16 +292,16 @@ Now we turn our focus to measures of **Dispersion**:
 
 Variance is the average of the squared differences from the mean. It measures how far a set of numbers is spread out from their mean (average) value. In order to calculate the variance, find the mean value and subtract its value from each number on your set. Then square the result, and average it:
 
-![](img/variance.png)
+![](img/variance.PNG)
 
 
 where,
 
-![](img/variance_1.png)
+![](img/variance_1.PNG)
 
 **2. Standard Deviation**
 
-![](img/std.png)
+![](img/std.PNG)
 
 
 
@@ -332,11 +332,11 @@ Minimum is the smallest value found from a list of numbers. Maximum is the bigge
 
 Range is the difference between the lowest and highest value. This is a useful statistic that also tell us about the statistical dispersion of the data, and shows a rough idea of the magnitude and scale of our data.
 
-![](img/range.png)
+![](img/range.PNG)
 
 The range of list A is simply:
 
-![](img/range_1.png)
+![](img/range_1.PNG)
 
 **5. Quartiles**
 
@@ -382,13 +382,13 @@ According to [Yale](http://www.stat.yale.edu/Courses/1997-98/101/ranvar.htm), a 
 
 A **probability distribution** is a list of probabilities associated with each and every single possible values of a random variable. In the graph below, let's say that we calculate the probability distribution on the event (or probability) of getting heads [P(X = 1)], from 100 coin flips. Our distribution is plotted below:
 
-![](img\probability_distribution.png)
+![](img/probability_distribution.png)
 
 Each bar represents the event of flipping a coin 100 times. Assuming that our coin is not biased (in other words, don't tend to flip one side more than the other), then we notice that our probability distribution has a bell-curve shape resembling a normal distribution with mean 50. Therefore, the probability of getting 50 heads when flipping a coin 100 times is the highest one. It makes sense - if you flip a coin 100 times on your own, you might get a number of heads that is close to 50. This has a theory behind it - the [Law of Large Numbers](https://www.investopedia.com/terms/l/lawoflargenumbers.asp), which states that as the sample size grows, its mean gets closer to the average of the whole population. In our flip-a-coin case, if we flip a coin 1000 times instead of 100 times, we would have a probability distribution with a very narrow bell-shaped curve closer to the mean 50.
 
 Now we are ready to dig into **skewness**. Skewness is the degree of distortion (or a measure of the asymmetry) of a probability distribution of a random variable about its mean. In the graph below, we see three graphs: (1) a distribution with positive skew; (2) a symmetrical distribution with zero skewness; (3) a distribution with negative skew.
 
-![](img\skew.png)
+![](img/skew.PNG)
 
 Take a closer look on the graphs. The one with positive skew has a longer, fatter tail on the right side of the distribution. It has a mean value greater than the median and mode, and its peak is on the left side. Now look to the symmetrical distribution graph in the middle. It has its mean = media = mode - basically a normal distribution curve with a centered peak. The last one, with negative skew, has a longer, fatter tail on the right side and its mean value is lower than the median and mode, with a peak located on the right side. 
 
@@ -398,7 +398,7 @@ In the real world, data not always assume a normal, symmetric bell-curved shape 
 
 A very good example on how we should take care of skewness is depicted by linear models, since such models takes the assumption that the independent variable follows the same distribution as the target variable. Let's look on an example depicted by [Abhishek Sharma](https://www.analyticsvidhya.com/blog/2020/07/what-is-skewness-statistics/) on its article about skewness in statistics. Let's say you want to predict the mpg (miles per gallon) of a car by running a linear regression that has one independent variable: horsepower:
 
-![](img\horsepower.png)
+![](img/horsepower.png)
 
 The shape of this distribution resembles the one with positive skewness. Since your data is concentrated on the left side, our linear model will give us good mpg predictions on cars with low horsepower, but will probably perform poor predictions on cars with high horsepower. In this case, skewness is a problem and we usually use rescaling techniques that helps us reshaping the distribution of skewed variables. We will get into more details on rescaling in the [Data Preprocessing](#05-data-preprocessing) part.
 
@@ -432,10 +432,10 @@ In summary, skewness and kurtosis serve us to indicate: (1) how our data is dist
 Now, let's go back to our project! Here we separate numerical and categorical data to perform this step. 
 
 ##### Numerical data:
-![](img\descriptive.png)
+![](img/descriptive.PNG)
 
 ##### Categorical data (boxplots):
-![](img\categorical_boxplot.png)
+![](img/categorical_boxplot.PNG)
 
 
 Some notes from the summary statistics above:
@@ -459,7 +459,7 @@ In order to guide our feature engineering process (and later on, our [explorator
 
 To guide our hypothesis list creation, a mindmap is a great tool to map all factors that influences our target variable.
 
-![](img\mindmap.png)
+![](img/mindmap.PNG)
 
 
 #### Stores
@@ -598,15 +598,15 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 
 * **Target Variable (sales)**: distribution looks like a [poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), with a positive skew and right tail. We will need to rescale our data before creating our model. 
 
-![](img\univariate_1.png)
+![](img/univariate_1.PNG)
 
 
 
 * **Numerical variables (histograms)**
 
-![](img\univariate_2.png)
-![](img\univariate_3.png)
-![](img\univariate_4.png)
+![](img/univariate_2.PNG)
+![](img/univariate_3.PNG)
+![](img/univariate_4.PNG)
 
 
 * **Highlights**:
@@ -627,7 +627,7 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 &nbsp;
 * **Categorical variables (barplots)**
 
-![](img\univariate_5.png)
+![](img/univariate_5.PNG)
 
 
 * **Highlights**:
@@ -642,15 +642,15 @@ Now our focus goes to the bivariate analysis - when we observe how each independ
 ####  H1. Stores with extended assortment type sell more
 **FALSE**: Stores with bigger assortment sell less. However, the number of data points for stores with assortment 'extra' is very low compared to the other two (refer to [univariate analysis](#univariate-analysis)). Since assortment 'extra' follows a similar sales pattern of the other two, assortment might not be meaningful on our model.
 
-![](img\h1.png)
-![](img\h1_1.png) 
-![](img\h1_2.png)
+![](img/h1.PNG)
+![](img/h1_1.PNG) 
+![](img/h1_2.PNG)
 
 
 #### H2. Stores near competitors sell less
 **FALSE**: Stores near competitors sell more.
 
-![](img\h2.png)
+![](img/h2.PNG)
 
 
 
@@ -658,16 +658,16 @@ Now our focus goes to the bivariate analysis - when we observe how each independ
 
 **FALSE**: Stores with newly opened competitors sell more.
 
-![](img\h3.png)
+![](img/h3.PNG)
 
 
 ### H4. Stores sell more on weekdays than weekends/holidays (sales rate)
 
 **TRUE**: Stores sell more on weekdays. Sales volume is also bigger on weekdays. Worst sales day is Sunday.
 
-![](img\h4.png)
+![](img/h4.PNG)
 
-![](img\h4_1.png)
+![](img/h4_1.PNG)
 
 ### III. Multivariate Analysis
 
