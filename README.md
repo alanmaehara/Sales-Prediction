@@ -8,7 +8,7 @@ For starters in the Data Science field, it is not always clear how to build end-
 1. Tackle a classic Data Science problem faced by many firms: sales prediction.
 2. Go through the statistics theory behind our project steps. We will go deep enough to make sense of the concepts, but won't reach to a point where we bog ourselves down in the road.
 3. Unlock insightful information for the business by doing a thorough, detailed data study over the company's data.  
-4. Deploy a complete solution suitable for the business needs. Here, we will go from understanding the business demands and prepare the data, to Machine Learning modeling and posterior production.
+4. Deploy a complete solution suitable for the business needs. Here, we will go from understanding the business demands and prepare the data, to Machine Learning (ML) modeling and posterior production.
 
 
 
@@ -44,12 +44,12 @@ With no further due, let's get started!
 - [06. Feature Selection](#06-feature-selection)
 - [07. Machine Learning Modelling](#07-machine-learning-modelling)
 - [08. Hyperparameter Tuning](#08-hyperparameter-tuning)
-- [09. Error Interpretation & Business Performance](#09-error-interpretation-&-business-performance)
-- [10. Deploy Machine Learning Model to Production](#010-deploy-machine-learning-model-to-production)
+- [09. Error Interpretation & Business Performance](#09-error-interpretation-business-performance)
+- [10. Deploy Machine Learning Model to Production](#10-deploy-machine-learning-model-to-production)
 - [11. A Sales Predictor Bot](#11-a-sales-predictor-bot)
 - [Conclusion](#conclusion)
-- [Appendix I - Datasets](#appendix-i-datasets)
-- [Appendix II - References](#appendix-i-references)
+- [Appendix I - Datasets](#appendixi-datasets)
+- [Appendix II - References](#appendixii-references)
 
 ---
 ## Brief Intro - Dirk Rossmann GmbH
@@ -125,7 +125,7 @@ The purpose and application of each step will be shown through the project, so b
 ___
 ## Cycle Description
 
-[(go to next session)](#1-a-business-request)
+[(go to next session)](#01-a-business-request)
 
 In this project, you will see the results of the 2nd CRISP-DM cycle. See the log of each cycle below:
 
@@ -135,13 +135,14 @@ In this project, you will see the results of the 2nd CRISP-DM cycle. See the log
 | 2º   | A few variables were added to the dataset. Number of customers (which was previously dropped from the model) were added. In order to allow this variable into the project, a complementary project to predict number of customers for each Rossmann store was done and predictions were added test dataset. We also remodeled the whole project to attend data leakage issues, although significant effects on performance were not observed.|[complementary project](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/rossmann_customers_prediction.ipynb) & [cycle 02](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb) |
 
 
-Exact source links of all datasets will be displayed on [Appendix I - Datasets](#appendix_i_datasets). 
+Exact source links of all datasets will be displayed on [Appendix I - Datasets](#appendixii-datasets). 
 
 [back to top](#table-of-contents)
 
 ---
-
 ## 01. A Business Request
+[(go to next session)](#02-data-preparation)
+
 We start this project with the most important step. Here we understand why a data-driven project needs to be done in first place. There are three tasks to be done:
 
 - **Business Question**: understand the main issue to be solved/question to be answered. Answer the question: "What is the company's main problem and what information addresses this issue (what is the target variable?)
@@ -167,13 +168,15 @@ Later on, you find out that the CFO was the one who has made this business reque
 
 ---
 ## 02. Data Preparation
+[(go to next session)](#03-feature-engineering)
+
 In this step, we work on acquiring data and get first impressions of our problem. Four tasks to be performed:
 
 ### I. Data Collection
 
 Once we've set up the business problem and deliverables of our project, let's get our hands into data. Usually, one must check the data whereabouts: is your data publicly available or do you need to acquire it from the business? Will you have enough processing and capacity power to acquire the data? Or rather you figure out that you don't have the means to get the necessary data (in this case, the project might not be feasible). 
 
-In our case, things a bit different. As mentioned in [Cycle Description](#cycle-description), our data comes from a Kaggle competition held by Rossmann. Therefore, our project is pretty limited on the information contained in the dataset. In real life, we would collect all information available in the company's data warehouse that helps answering our [Business Question](#business-question). As for this project, it is fine to proceed as it is, since we are running this project under a fictitional business standpoint.
+In our case, things a bit different. As mentioned in [Cycle Description](#cycle-description), our data comes from a Kaggle competition held by Rossmann. Therefore, our project is pretty limited on the information contained in the dataset. In real life, we would collect all information available in the company's data warehouse that helps answering our [Business Question](#business-situation). As for this project, it is fine to proceed as it is, since we are running this project under a fictitional business standpoint.
 
 **At this point, we should know what is the phenomenon that we are trying to predict (target variable): sales revenues.**
 
@@ -209,13 +212,25 @@ Our initial set of variables are as follows:
 
 *dummy variable is one that takes either 0 or 1. For more details, check [here](https://en.wikipedia.org/wiki/Dummy_variable_(statistics)).
 
-* **Data Dimensions**: 
+* **Data Dimensions (rows x columns)**: 
 
-  `Train dataset:   Number of rows: 969264 | Number of columns: 18`
-  `Valid dataset:   Number of rows: 47945 | Number of columns: 18`
-  `Range of Date: 2013-01-01 (first) | 2015-07-31 (last)`
-\
-  We splitted the whole data into training and validation parts. **Training data** corresponds to all data entries between **2013-01-01 to 2015-06-19**, and **validation data** contains entries from the last 6 weeks of available data, **2015-06-19 to 2015-07-31**.
+  * Train dataset: 969264 x 18 
+  * Valid dataset: 47945  x 18
+  * Date Range: 2013-01-01 (first) / 2015-07-31 (last)
+  
+To build a machine learning model, we need **training data**, which is a data that a machine learning algorithm work on to learn (or "train") the data patterns to create a prediction model, and a **validation data**, which is the data that the prediction (or "trained") model will generate predictions to check whether the model accurately works. 
+
+In this project, we splitted the whole data into training and validation parts:
+* **Training data** corresponds to all data entries between **2013-01-01 to 2015-06-19**
+* **Validation data** contains entries from the last 6 weeks of available data, **2015-06-19 to 2015-07-31**. 
+
+
+We splitted so that we could avoid [data leakage](https://www.kaggle.com/alexisbcook/data-leakage) (we will get into this later), and also to simulate how our model will predict sales revenues for each Rossmann store on a 6-week validation data. If our model works well, then we are good to predict sales revenues on the **test data**, which is the data we really want to predict sales revenues. 
+* **Test data** corresponds to data entries between **2015-07-31 to 2015-09-16**. 
+
+Once we validate our model, we can put it into "production", so that all stakeholders of this project can access sales predictions for the next six weeks.
+
+This idea of splitting data into training, validation, and test will be clearer when we reach to the [Machine Learning Modeling](#07-machine-learning-modelling) part. For now, don't worry - just proceed to the next step.
 
 
 ### III. Data Cleaning
@@ -256,14 +271,13 @@ Let's start with measures of **Central Tendency**, which are measures of where t
 
 ##### 1. Mean
 Most commonly known as the "average", the mean (or arithmetic mean) is equal to the sum of a list of values divided by its total number of elements:
-$$ \large {\displaystyle \hat{x} ={\frac {1}{n}}\sum _{i=1}^{n}x_{i}={\frac {x_{1}+x_{2}+\cdots +x_{n}}{n}}}
-$$
+
+![](img/mean.png)
 
 where,
 
-$ \large\hat{x}$ = mean
-$ \large {n}$ = number of elements
-$ \sum _{i=1}^{n}x_{i}$ = sum of all elements.
+![](img/mean_1.png)
+
 ##### 2. Median
 Median (or the "middle" value) is simply a value separating the data on half. It is also known as the 2nd quartile (Q2). The median is best understood when given an example:
 
@@ -280,21 +294,17 @@ Now we turn our focus to measures of **Dispersion**:
 
 Variance is the average of the squared differences from the mean. It measures how far a set of numbers is spread out from their mean (average) value. In order to calculate the variance, find the mean value and subtract its value from each number on your set. Then square the result, and average it:
 
-$$\large \sigma^{2} = \frac{\sum_{i=1}^{n} 
-  \left(x_{i} - \bar{x}\right)^{2}}
-  {n-1}$$
+![](img/variance.png)
+
 
 where,
 
-$ \large\sigma^{2}$ = variance
-$ \large {n}$ = number of elements
-$\large\bar{x}$ = mean
-$\large x_{i}$ = ith element of the dataset 
-$ \sum _{i=1}^{n}x_{i}$ = sum of all x elements.
+![](img/variance_1.png)
 
 **2. Standard Deviation**
 
-$$\large \sigma = \sqrt{\frac{\sum\limits_{i=1}^{n} \left(x_{i} - \bar{x}\right)^{2}} {n-1}}$$
+![](img/std.png)
+
 
 
 As we can notice from the formula above, standard deviation is just the square root of the variance. This is usually a better statistic to measure data dispersion than variance, since it gives a meaningful interpretation to its values. To better understand the concept of standard deviation, let's graph a normal distribution curve like the one below (graph retrieved [here](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Standard_deviation_diagram.svg/1024px-Standard_deviation_diagram.svg.png)). The x-axis represents the standard deviations from the mean (centered on zero), and can assume negative or positive values. The y-axis is the probability density function (PDF) and represents the likelihood of an outcome to happen. 
@@ -324,9 +334,11 @@ Minimum is the smallest value found from a list of numbers. Maximum is the bigge
 
 Range is the difference between the lowest and highest value. This is a useful statistic that also tell us about the statistical dispersion of the data, and shows a rough idea of the magnitude and scale of our data.
 
-List A = $(1,2,3,4,4,5,6)$
+![](img/range.png)
 
-The range is simply  $\max(A) - min(A) = 6-1 = 5$
+The range of list A is simply:
+
+![](img/range_1.png)
 
 **5. Quartiles**
 
@@ -372,15 +384,13 @@ According to [Yale](http://www.stat.yale.edu/Courses/1997-98/101/ranvar.htm), a 
 
 A **probability distribution** is a list of probabilities associated with each and every single possible values of a random variable. In the graph below, let's say that we calculate the probability distribution on the event (or probability) of getting heads [P(X = 1)], from 100 coin flips. Our distribution is plotted below:
 
-<img src="https://sumproduct-4634.kxcdn.com/fileadmin/_processed_/a/e/csm_Image-04-No.-of-Heads-from-100-Coin-Tosses_5fd73d4f03.gif
-" alt="drawing" width="90%"/>
+![](img\probability_distribution.png)
 
 Each bar represents the event of flipping a coin 100 times. Assuming that our coin is not biased (in other words, don't tend to flip one side more than the other), then we notice that our probability distribution has a bell-curve shape resembling a normal distribution with mean 50. Therefore, the probability of getting 50 heads when flipping a coin 100 times is the highest one. It makes sense - if you flip a coin 100 times on your own, you might get a number of heads that is close to 50. This has a theory behind it - the [Law of Large Numbers](https://www.investopedia.com/terms/l/lawoflargenumbers.asp), which states that as the sample size grows, its mean gets closer to the average of the whole population. In our flip-a-coin case, if we flip a coin 1000 times instead of 100 times, we would have a probability distribution with a very narrow bell-shaped curve closer to the mean 50.
 
 Now we are ready to dig into **skewness**. Skewness is the degree of distortion (or a measure of the asymmetry) of a probability distribution of a random variable about its mean. In the graph below, we see three graphs: (1) a distribution with positive skew; (2) a symmetrical distribution with zero skewness; (3) a distribution with negative skew.
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Relationship_between_mean_and_median_under_different_skewness.png/1024px-Relationship_between_mean_and_median_under_different_skewness.png
-" alt="drawing" width="90%"/>
+![](img\skew.png)
 
 Take a closer look on the graphs. The one with positive skew has a longer, fatter tail on the right side of the distribution. It has a mean value greater than the median and mode, and its peak is on the left side. Now look to the symmetrical distribution graph in the middle. It has its mean = media = mode - basically a normal distribution curve with a centered peak. The last one, with negative skew, has a longer, fatter tail on the right side and its mean value is lower than the median and mode, with a peak located on the right side. 
 
@@ -390,10 +400,9 @@ In the real world, data not always assume a normal, symmetric bell-curved shape 
 
 A very good example on how we should take care of skewness is depicted by linear models, since such models takes the assumption that the independent variable follows the same distribution as the target variable. Let's look on an example depicted by [Abhishek Sharma](https://www.analyticsvidhya.com/blog/2020/07/what-is-skewness-statistics/) on its article about skewness in statistics. Let's say you want to predict the mpg (miles per gallon) of a car by running a linear regression that has one independent variable: horsepower:
 
-<img src="https://cdn.analyticsvidhya.com/wp-content/uploads/2020/06/sk2-768x450.png
-" alt="drawing" width="100%"/>
+![](img\horsepower.png)
 
-The shape of this distribution resembles the one with positive skewness. Since your data is concentrated on the left side, our linear model will give us good mpg predictions on cars with low horsepower, but will probably perform poor predictions on cars with high horsepower. In this case, skewness is a problem and we usually use rescaling techniques that helps us reshaping the distribution of skewed variables. We will get into more details on rescaling in the [Data Preprocessing](#data-preprocessing) part.
+The shape of this distribution resembles the one with positive skewness. Since your data is concentrated on the left side, our linear model will give us good mpg predictions on cars with low horsepower, but will probably perform poor predictions on cars with high horsepower. In this case, skewness is a problem and we usually use rescaling techniques that helps us reshaping the distribution of skewed variables. We will get into more details on rescaling in the [Data Preprocessing](#05-data-preprocessing) part.
 
 
 To determine when skewness is symmetrical or not just by looking at skewness values, you can check the table below:
@@ -406,6 +415,7 @@ To determine when skewness is symmetrical or not just by looking at skewness val
 |$ skew  \leq  -1$ | Negative, highly skewed|
 |$ skew  \geq  1$ | Positive, highly skewed|
 
+&nbsp;
 **7. Kurtosis**
 
 Kurtosis is a measure of tailedness of a probability distribution - therefore, it solely focuses on the tails. This is a great statistic to measure the presence of outliers on our distribution. 
@@ -433,12 +443,16 @@ Now, let's go back to our project! Here we separate numerical and categorical da
 Some notes from the summary statistics above:
 * `competition_distance, competition_open_since_year` are heavily skewed;
 * `customers, competition_distance, competition_open_since_year` have a high kurtosis, which indicates a profusion of outliers;
-* `state_holiday, store_type, assortment` have many outliers;
+* `state_holiday, store_type, assortment` have many outliers.
 
 [back to top](#table-of-contents)
 
 ---
+
 ## 03. Feature Engineering
+
+[(go to next session)](#04-exploratory-data-analysis-eda)
+
 In this task, we create new features (variables) on our dataset based on the existent set of variables. Our main compass for feature creation is the business needs; therefore, three tasks must be performed:
 
 ### I. Hypothesis List
@@ -514,7 +528,7 @@ _note: Location of each store is not given. Hypothesis are displayed below just 
 
 ### II. Viable Hypothesis List
 
-From 44 hypothesis listed, we select 19 hypothesis that can be tested with the current dataset. Our feature engineering process will be focused on answering the following hypotheses:
+From 44 hypothesis listed, we select **19 hypothesis** that can be tested with the current dataset. Our feature engineering process will be focused on answering the following hypotheses:
 
 1. Stores with extended assortment type sell more
 2. Stores near competitors sell less
@@ -538,7 +552,7 @@ From 44 hypothesis listed, we select 19 hypothesis that can be tested with the c
 
 ### III. Feature Engineering: 
 
-The main purpose of feature engineering is to improve the performance of our predictive model. New variables added to a machine learning model can contribute in many ways, such as creating a more accurate model that better predicts our target variable, or making our model simpler and less complex by creating independent variables that better explain the dependent variable. In this project, we will also use the new variables to help us reject/fail to reject our hypotheses on the [Exploratory Data Analysis](#exploratory-data-analysis-eda) section.
+The main purpose of feature engineering is to improve the performance of our predictive model. New variables added to a machine learning model can contribute in many ways, such as creating a more accurate model that better predicts our target variable, or making our model simpler and less complex by creating independent variables that better explain the dependent variable. In this project, we will also use the new variables to help us reject/fail to reject our hypotheses on the [Exploratory Data Analysis](#04-exploratory-data-analysis-eda) section.
 
 The following tasks were performed on this part:
   1. We used the variable `date` to create time-related variables. Now we have new variables that explains how long stores were holding traditional and consecutive promotion sales, and how long stores were facing competition from other companies. All time-related variables are divided by day, month, and year;
@@ -560,16 +574,72 @@ We divide this part into two tasks:
 
 ## 04. Exploratory Data Analysis (EDA)
 
-in this task, our main focus is to explore our dataset and generate valuable insights for the business. . We will divide this task into three parts:
-    * Univariate Analysis: check data distribution of each feature and get a first look on how your data is organized as a whole.
-    * Bivariate Analysis: check how each feature behaves against the target variable. Here we validate the hypothesis list (created on the Feature Engineering part), generate business insights, and analyze whether to include each variable to the model. 
-    * Multivariate Analysis: here we check whether there are repetitive information across features. Since Machine Learning (ML) models work best when data is less complex, dimensionality reduction plays a big role on ML models.
+[(go to next session)](#05-data-preprocessing)
+
+We shift our focus to explore our dataset and generate valuable insights for the business. This is what Exploratory Data Analysis (EDA) really means: to go even further on our data to unlock precious insights from it. An EDA is an important step to get a sense of which variables are vital to our prediction model, and how our features relate to the target variable. 
+
+We will divide this task into three parts:
+1. **Univariate Analysis**: check data distribution of each feature and get a first look on how your data is organized as a whole;
+2. **Bivariate Analysis**: check how each feature behaves against the target variable. Here we validate the hypothesis list (created on the [feature engineering](#03-feature-engineering) section), generate business insights, and analyze how relevant each variable is to our model.
+3. **Multivariate Analysis**: check whether there are repetitive information across features. Since machine learning models work best when data is less complex, dimensionality reduction plays a big role on ML models.
+
+### I. Univariate Analysis 
+
+Usually, the univariate analysis supports the [descriptive statistics](#iii-descriptive-statistics) part we have done before by showing a distribution analysis on univariate data. Here we check each single variable's distribution by using histograms, with x-axis showing all possible values that a variable can assume, and a y-axis showing the [absolute frequency](https://www.statisticshowto.com/absolute-frequency-definition-examples/):
+
+* **Target Variable (sales)**: distribution looks like a [poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), with a positive skew and right tail. We will need to rescale our data before creating our model. 
+
+![](img\univariate_1.png)
+
+
+
+* **Numerical variables**
+
+![](img\univariate_2.png)
+![](img\univariate_3.png)
+![](img\univariate_4.png)
+
+
+* **Highlights**:
+  * All variables don't follow a normal distribution;
+  * `day`: there are specific days which has almost double sales data points than others;
+  * `month`: more sales data points on the first semester;
+  * `year`: less data points in 2015 is observed since our dataset goes until June 2015.
+  * `customers`: resemble a poisson distribution, with concentrated data between 500~1000 customers;
+  * `week_of_year`: a boom of sales data points during the first weeks of the year is observed;
+  * `day_of_week`: there are less sales data points on sundays;
+  * `is_weekday`: there are more sales data points on weekdays;
+  * `school_holiday`: there are more sales data points on regular days;
+  * `competition_distance`: there are more sales data points for stores with closer competitors;
+  * `competition_open_since_month`: there are more sales data points for competitors which entered competition on April, July, September;
+  * `is_promo2`: there are more sales data points for stores which are not joining consecutive promotion sales;
+  * `promo2_since_year`: most stores joined consecutive promotion sales in 2013;
+  * `promo`: in the dataset, there are more stores doing traditional, single-day promotions than stores not joining such promotions;   
+&nbsp;
+* **Categorical variables**
+
+![](img\univariate_5.png)
+
+
+* **Highlights**:
+  * `state_holiday`: there are more sales data points on public holidays than other holidays. Easter and Christmas are on a similar level;
+  * `store_type`: there are more sales data points for store of type "a", and less stores of type "b";
+  * `assortment`: there are less sales data points for stores with assortment of type 'extra' than other assortment types.
+&nbsp;
+### II. Bivariate Analysis: 
+
+
+### III. Multivariate Analysis: 
+
+
 
 [back to top](#table-of-contents)
 
 ---
 
 ## 05. Data Preprocessing
+[(go to next session)](#06-feature-selection)
+
 data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Also, some data might have categorical data on it, and this could be a problem: most ML models perform better when categorical data is transformed to numerical data. Therefore, this task is centered on rescaling and encoding our variables.
 
 [back to top](#table-of-contents)
@@ -577,6 +647,8 @@ data is usually not ordered in a similar manner. Some variables might have an ex
 ---
 
 ## 06. Feature Selection
+[(go to next session)](#07-machine-learning-modeling)
+
 In this step, we select the variables that best explain our response (target) variable. There are three methods to do so: 
   * Filter Methods, which is usually the simplest, fastest method to select relevant variables but exclude [multicollinearity issues](https://statisticsbyjim.com/regression/multicollinearity-in-regression-analysis/); 
   * Embedded Methods, which simply runs a ML algorithm that already has an in-built feature selection step; 
@@ -589,6 +661,8 @@ In this step, we select the variables that best explain our response (target) va
 
 ---
 ## 07. Machine Learning Modeling
+[(go to next session)](#08-hyperparameter-tuning)
+
 The fun part has just arrived! We divide this step into four tasks:
   
   * **Performance Metrics**: choose suitable metrics to measure performance on our model. In this case, we will use three metrics:
@@ -610,6 +684,8 @@ The fun part has just arrived! We divide this step into four tasks:
 ---
 ## 08. Hyperparameter Tuning
 
+[(go to next session)](#09-error-interpretation-business-performance)
+
 in this task, our goal is to find the best parameters which maximizes the learning on our model. There are three methods to find these parameters:
     1. Random Search: this method randomly choose parameters from a given list. It is the fastest method available;
     2. Grid Search: this method is the most complete one and find the absolute best values for each parameter on the model. Once a list of parameters is set, this method performs combination of every single possibility among parameters. Very slow and costly;
@@ -620,36 +696,44 @@ in this task, our goal is to find the best parameters which maximizes the learni
 ---
 ## 09. Error Interpretation & Business Performance
 
+[(go to next session)](#10-deploy-machine-learning-model-to-production)
+
+
 Also known as _Residual Analysis_, in this step we analyze the predictions' performance from a business perspective. Our focus is to translate and interpret errors from our ML model. 
 
 [back to top](#table-of-contents)
 
 ---
 ## 10. Deploy Machine Learning Model to Production
+[(go to next session)](#11-a-sales-bot)
 
 
 
 ---
 ## 11. A Sales Predictor Bot
+[(go to next session)](#conclusion)
 
-
+[back to top](#table-of-contents)
 
 ---
 
 ## Conclusion
 
 
+[back to top](#table-of-contents)
 
 ---
 
 ## Appendix I - Datasets
 
 
+[back to top](#table-of-contents)
 
 ---
 
 ## Appendix II - References
 
 
+[back to top](#table-of-contents)
 
 
