@@ -617,8 +617,7 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 * **Numerical variables (histograms)**
 
 ![](img/univariate_2.png)
-![](img/univariate_3.png)
-![](img/univariate_4.png)
+
 
 * **Highlights**:
   * All variables don't follow a normal distribution;
