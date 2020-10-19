@@ -244,9 +244,11 @@ This is a crucial step to any data science project. Many Machine Learning algori
     
 Let's check the missing values for each dataset:
 * Null Values for training data: 
+
 ![](img/train_NA.PNG)
 
 * Null Values for validation data: 
+
 ![](img/valid_NA.PNG)
 
 The imputation method for each variable is as follows:
@@ -284,7 +286,7 @@ Median (or the "middle" value) is simply a value separating the data on half. It
 ![](img/range.PNG)  
 ![](img/range_11.PNG) 
 * List A has 7 elements; for odd-numbered lists, we find the median by picking the middle term, which is **4**.
-* List B has 4 elements; for even-numbered lists, the median is the average of the middle two numbers: $\large \frac{(2+2)}{2}$ = **2**
+* List B has 4 elements; for even-numbered lists, the median is the average of the middle two numbers: **2**
 
 Now we turn our focus to measures of **Dispersion**:
 
@@ -508,7 +510,10 @@ _note: Location of each store is not given. Hypothesis are displayed below just 
 7. Stores located inside malls sell more than standalone stores
 
 #### External Factors (Economy, Healthcare, Weather)
-* **Economy**: usually macroeconomic data would not be relevant to the model since its impact tend to affect all stores as a whole. However, some macroeconomic data could be relevant if divided by location or month/week. Since such kind of data is difficult to find, some hypotheses are displayed below just for the purpose of completeness.
+* **Economy**: usually macroeconomic data is not very relevant to analyze a firm's sales performance - there are some markets that thrive even when economic indicators are bad.  
+Another caveat to economic indicators is that Rossmann stores are not located in Germany on its entirety, and we don't know their precise location since they are unknown in the dataset. 
+Some macroeconomic data could be relevant if divided by location or month/week, but at the time this project was done, data was not available. 
+Another aspect to be considered is the Germany's economy. From 2013 to 2015, Germany has always ranked in the top 10 economies in GDP per capita with high HDI value. Therefore, economic fluctuations over the time span would not affect directly Rossmann stores. Therefore, some hypotheses are displayed below just for the purpose of completeness.
 * **Healthcare**: relevant data (per month) was either unavailable on public datasets or not possible to be utilized. Therefore, some hypotheses are displayed for the purpose of completeness.
 * **Weather**: although Rossmann stores are mainly located in Germany, their location is not present on the dataset. Therefore, the usage of weather as a predictor for this model would be a big assumption to take, but hypotheses were written below for the purpose of completeness.
 
@@ -548,15 +553,22 @@ From 44 hypothesis listed, we select **19 hypothesis** that can be tested with t
 18. Stores sales increase when Consumer Confidence Index (CCI) rate increases (month)
 19. Stores sales increase when Unemployment rate decreases (month)
 
-### III. Feature Engineering: 
+### III. Feature Engineering
 
 The main purpose of feature engineering is to improve the performance of our predictive model. New variables added to a machine learning model can contribute in many ways, such as creating a more accurate model that better predicts our target variable, or making our model simpler and less complex by creating independent variables that better explain the dependent variable. In this project, we will also use the new variables to help us reject/fail to reject our hypotheses on the [Exploratory Data Analysis](#04-exploratory-data-analysis-eda) section.
 
 The following tasks were performed on this part:
-  1. We used the variable `date` to create time-related variables. Now we have new variables that explains how long stores were holding traditional and consecutive promotion sales, and how long stores were facing competition from other companies. All time-related variables are divided by day, month, and year;
-  2.  We also used the variable `date` to get a better sense of seasonality - `day, month, year, year_week, is_weekday` variables were created;
-  3.  Variables with data described by single letters were transformed into full text (e.g: all 'a' in variable `state_holiday` were transformed to 'christmas') 
-  4.  Germany's Gross Domestic Product (GDP) per capita, Consumer Price Index (CPI), interest rates, unemployment rate, Consumer Confidence Index (CCI) datasets were added as new variables. All economic indicators were found in month periods except for GDPpc (quarters)
+* We used the variable `date` to create time-related variables. Now we have new variables that explains how long stores were holding traditional and consecutive promotion sales, and how long stores were facing competition from other companies. All time-related variables are divided by day, month, and year;
+* We also used the variable `date` to get a better sense of seasonality - `day, month, year, year_week, is_weekday` variables were created;
+* Variables with data described by single letters were transformed into full text (e.g: all 'a' in variable `state_holiday` were transformed to 'christmas') 
+* Germany's Gross Domestic Product (GDP) per capita, Consumer Price Index (CPI), interest rates, unemployment rate, Consumer Confidence Index (CCI) datasets were added as new variables. All economic indicators correspond to month values except for GDPpc (quarters). See below a description of these indicators (retrieved from [OECD](https://stats.oecd.org/) - all dataset references are available in [Appendix I - Dataset](#appendix-dataset)):
+  * **Gross Domestic Product (GDP)**: monetary measurement of all goods and services produced within a country. income per capita (per head), in US$ (current prices) and current PPPs, adjusted quartely;
+  * **Consumer Price Index (CPI)**: measures inflation by looking at the average price changes from a basket of consumer goods and services of a country. The base year is 2015 (2015 = 100).
+  * **Interest Rate**: interest rate is the cost of borrowing money. The rate is usually set by governments or central banks. Here we use long-term interest rates, per cent per annum, divided monthly.
+  * **Unemployment Rate**: measurement of changes in unemployment within a country. Unemployment rate is the fraction of total number of unemployed population by the total number of active population. 
+  * **Consumer Confidence Index (CCI)**: measurement of consumer confidence within a country, it indicates how future developments on consumption and saving will be based on the current households' economic situation. Values below 100 indicate a pessimistic attitude towards future developments in the economy, possibly resulting in a tendency to save more and consume less.  
+
+## Appendix I - Datasets
 
 ### IV. Filtering Variables
 In this part, we need to check the business restritions that should be considered in the project and filter variables/rows from the dataset that can't be used to predict sales revenues.
@@ -587,7 +599,7 @@ As mentioned before, I also performed a complementary project to predict number 
 
 #### Quick note on Data Visualization
 
-Since we are now ready to deeply explore our data, we must get ourselves comfortable with showing data relationships graphically. 
+We have already seen some histograms showing distributions, some line plots, barplots and boxplots. From now on, we will go deep on data exploration, and some other types of graphs will inevitably appear here, such as scatterplots, heatmaps, plots with regression lines, and we must get ourselves comfortable with understanding data relationships graphically. 
 
 Data visualization is a key tool for data science practitioners. Although there are several ways to graphically represent data, delivering the right message to an audience by using the right data visualization technique is usually the hardest part. I won't do better job explaining the myriad of data visualization types than Mehul Gupta's article [Data Visualization for Data Science Beginners](https://medium.com/data-science-in-your-pocket/data-visualization-for-data-science-beginners-84bacdb8d72e) - this should suffice to get ourselves on track with EDA.
 
@@ -598,15 +610,14 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 
 * **Target Variable (sales)**: distribution looks like a [poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), with a positive skew and right tail. We will need to rescale our data before creating our model. 
 
-![](img/univariate_1.PNG)
+![](img/univariate_1.png)
 
 
 
 * **Numerical variables (histograms)**
 
-![](img/univariate_2.PNG)
-![](img/univariate_3.PNG)
-![](img/univariate_4.PNG)
+![](img/univariate_2.png)
+![](img/univariate_3.png)
 
 
 * **Highlights**:
@@ -640,37 +651,313 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 Now our focus goes to the bivariate analysis - when we observe how each independent variable behaves against the dependent variable (sales). Here we reject or fail to reject our viable hypothesis list, and raise valuable insights for the business. This is also the place where we analyze a variable's relevancy to the model.
 
 ####  H1. Stores with extended assortment type sell more
-**FALSE**: Stores with bigger assortment sell less. However, the number of data points for stores with assortment 'extra' is very low compared to the other two (refer to [univariate analysis](#univariate-analysis)). Since assortment 'extra' follows a similar sales pattern of the other two, assortment might not be meaningful on our model.
+
+For the variable `assortment`, we have three types of store assortment: basic, extended and extra. There is no clue on the magnitude of these categories, and therefore we assume that "extra" refers to a bigger assortment type, "extended" is a medium, and "basic" is the smallest assortment type.
 
 ![](img/h1.PNG)
 ![](img/h1_1.PNG) 
 ![](img/h1_2.PNG)
 
+**Verdict: FALSE**.
+Stores with bigger assortment sell less. However, the number of data points for stores with assortment 'extra' is very low compared to the other two (refer to [univariate analysis](#univariate-analysis)). Since assortment 'extra' follows a similar sales pattern of the other two, assortment might not be meaningful on our model.
 
 #### H2. Stores near competitors sell less
-**FALSE**: Stores near competitors sell more.
+
+The variable `competition_distance` is the distance from a Rossmann store to a competitor.
 
 ![](img/h2.PNG)
 
 
+**Verdict: FALSE**
+Stores near competitors sell more than stores with competitors located far away. We can tell that because there are more concentrated data around a competition distance of 0~20000 meters (see scatterplot). From the barplot, we can also tell that sales revenue are higher for stores with competitors located within 0~4000 meters.
+
+Quick note: the third graph (from right to left) is a **heatmap**. The value of -0.28 inside the black square is the [pearson correlation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) value between the variables `sales` and `competition_distance`. I will explain the pearson correlation in detail later, but as for now think of this negative value as depicting a linear negative relationship between sales and competition distance (as competition distance increase, sales revenues decrease). Pearson correlation values goes from -1 (negative linear correlation) to 1 (positive linear correlation).
 
 #### H3. Stores with newly opened competitors sell less than stores with old competitors
 
-**FALSE**: Stores with newly opened competitors sell more.
+The variable `competition_since_month` tells us since when a Rossmann store has started facing competitors (in months). Note that negative values mean that competition hasn't started yet.
 
 ![](img/h3.PNG)
 
+**Verdict: FALSE**
+Stores with newly opened competitors sell more than stores with competitors from a long date.
 
-### H4. Stores sell more on weekdays than weekends/holidays (sales rate)
+#### H4. Stores sell more on weekdays than weekends/holidays (sales rate)
 
-**TRUE**: Stores sell more on weekdays. Sales volume is also bigger on weekdays. Worst sales day is Sunday.
+To validate this hypothesis, we list the total sales on weekdays and weekends on a data frame, and illustrate this values on the barplots below. 
+
+The variable `is_weekday` is a dummy variable in which 1 corresponds to weekdays, and 0 to weekends. `day_of_week` takes values from 1 to 7, which represents respectively, Monday to Sunday.
 
 ![](img/h4.PNG)
 
 ![](img/h4_1.PNG)
 
+**Verdict: TRUE**
+ From the data table and the right barplot above, sales is bigger on weekdays than weekends. The barplot on the left shows that Rossmann stores sell more on Mondays (1), has a stable sales performance across the weekdays (2-5), and starts declining till the worst day of sales on Sundays (7).
+
+ As shown in the heatmap and scatterplot, the variable `day_of_week` shows a strong linear negative correlation with sales, which indicates that `day_of_week` is probably an essential feature to explain our target variable. 
+
+ 
+#### H5. Stores sell more during the 2nd semester
+
+![](img/h5.PNG)
+
+**Verdict: FALSE** 
+Stores sell more on the 1st semester. The heatmap shows that `month` and `sales` have a strong, negative linear correlation: as the months go by, sales decrease.
+
+
+#### H6. Stores sell more during summer/winter breaks (schools) 
+
+**Verdict: FALSE**
+School breaks in Germany are scattered throughout the year. The longest school break is the summer break in August and mid-September. During these months, stores sell less (refer to barplot above on [H5](#h5-stores-sell-more-during-the-2nd-semester)).
+
+
+#### H7. Stores sell less during school holidays
+
+`school_holiday` takes values of 0 (if regular day) and 1 (if school holiday):
+
+![](img/h7.PNG)
+
+**Verdict: TRUE**
+Stores sell less during school holidays except in August. Not a surprise, since the longest school break in Germany happens in August.
+
+
+#### H8. Stores sell more on Christmas than other holidays
+
+![](img/h8.PNG)
+
+**Verdict: FALSE**
+Stores sell more on public holidays and Easter. However, our data doesn't capture christmas sales in 2015 since the dataset goes until mid-June.
+
+
+#### H9. Stores are selling more along the years
+
+![](img/h9.PNG)
+
+**Verdict: FALSE**
+Stores are selling less along the years, and `year` has a strong, negative linear correlation with `sales`. However, the year 2015 is not closed (dataset goes till mid-2015) so our analysis on year should be taken as incomplete.
+
+
+#### H10. Stores sell more after day 10 of each month
+In some companies, the salary payment is set on day 10 every month. To analyze the effect of sales before and after day 10, we create the variables `before_day_10` and `after_day_10` 
+
+![](img/h10.PNG)
+
+**Verdict: TRUE**
+Stores sell more after day 10. Not a surprise, since there are more days after day 10.
+
+
+#### H11. Stores frequently doing traditional promo sales sell more
+
+To analyze traditional, single-day promotion sales, we will use the dummy variable `promo` that carries two values: 1 for traditional promo sales, 0 for regular sales day.
+
+![](img/h11.PNG)
+
+**Verdict: TRUE**
+We can observe in the barplot that traditional promotion sales generate bigger sales revenue volume than regular days, although there were more regular sales days than traditional promotion sales days (see `promo` distribution on [univariate analysis section](#i-univariate-analysis)). In the scatterplot, we observe that the more traditional promo sales days a store has, the more sales revenues it makes. 
+
+
+#### H12. Stores doing consecutive promo sales in the beginning of the year sell more
+
+To analyze consecutive promotion sales, we use the dummy variable `is_promo2` that carries two values: 1 for consecutive promo sales, 0 for regular sales day.
+
+![](img/h12.PNG)
+
+**Verdict: TRUE**
+Although the sales volume is higher for regular days (see first barplot), stores running consecutive promo sales sell more in the beginning of the year (see second barplot). However, sales are unstable for February.
+
+
+#### H13. Stores participating in consecutive promo for a longer time sell more
+
+To run this analysis, we will pick the variable `promo2_time_week` that shows by when a Rossmann store started consecutive promo sales (in weeks). Negative values indicate that stores haven't started consecutive promo yet, and positive values indicate that stores are already doing consecutive promo sales.
+
+![](img/h13.PNG)
+
+
+**Verdict: FALSE**
+As depicted in the first barplot, stores participating in consecutive promo for a longer time sell less.
+You may find odd to see a very weak correlation between `sales` and `promo2_time_week`, and a somewhat definite linear relationship on the two scatterplots drawn above. The reason is that we have splitted the variable `promo2_time_week` into positive and negative values. While considering the entire variable as a predictor for sales prediction, dividing `promo2_time_week` into two variables could be a good idea.
+
+
+#### H14. Stores with more consecutive promo sale days sell more
+
+![](img/h14.PNG)
+
+**Verdict: TRUE**
+Stores with more consecutive promo days sell more. However, sales volume is bigger for days with no consecutive promotion.
+
+We can observe in the barplot that regular sales days generate bigger sales revenue volume than consecutive promo sales days. In the scatterplot, we observe that the more consecutive promo sales days a store has, the more sales revenues it makes. 
+
+
+#### H15. Stores sales increase when GDPpc increases (month)
+
+![](img/h15.PNG)
+
+**Verdict: FALSE**
+Given the caveats that including an economic indicator on a model have, we don't expect to find extremely important insights from them.
+
+Overall, sales decrease when GDPpc increase. This is an indicative that Rossmann stores are not impacted by GDPpc fluctuations; therefore, we will not include GDPpc on the prediction model.
+
+The lineplots representing sales and GDP performance over time (we used `year_month`) shows that Rossmann sales and GDP are not related. The heatmap also confirms a weak, negative linear correlation between GDP and sales.
+
+A better variable would be Germany's GDPpc per region - however, the location of each Rossmann store in the dataset is unknown. For this and other reasons already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section, we will drop it from our model.
+
+
+#### H16. Stores sales increase when interest rates decrease (month)
+
+![](img/h16.PNG)
+
+**Verdict: FALSE**
+
+Sales increase when interest rate increase over time. However, we were expecting to actually confirm this hypothesis, since a low interest rate stimulates people to purchase more.
+
+Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
+
+
+#### H17. Stores sales increase when Consumer Price Index (CPI) rate increase (month)
+
+![](img/h17.PNG)
+
+**Verdict: FALSE** 
+When inflation increases, we expect people to purchase more since the value of money decreases. In our case, sales decrease when inflation increases. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
+
+
+#### H18. Store sales increase when Consumer Confidence Index (CCI) rate increases (month)
+
+![](img/h18.PNG)
+
+**Verdict: FALSE**
+When consumer confidence increases, we expect people to increase their expenditures. In our case, sales decrease when consumer confidence increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
+
+
+
+#### H19. Store sales increase when Unemployment rate decreases (month)
+
+![](img/h19.PNG)
+
+**Verdict: FALSE**
+An increase in unemployment rate can lead a  economy slowdown. In this case, we might expect people to reduce their expenditures.
+In our case, sales increase when unemployment rate increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
+
+
 ### III. Multivariate Analysis
 
+In a multivariate analysis, we must answer two questions:
+1. **Target variable & independent variables (predictors)**: is there any predictor in our dataset that are highly correlated to the target (variable to be predicted)? If so, this predictor is likely to be an important feature to our prediction model.
+2. **Independent variables**: is there any predictor that is highly correlated to another predictor? If so, we might consider removing one of them since they behave in a similar way when "explaining" the target variable. We have to remove one or another due to two reasons: (1) in machine learning models, a simpler model is preferred (we will get into details on the [feature selection](#06-feature-selection) section) ; (2) it eliminates [multicollinearity](https://statisticsbyjim.com/regression/multicollinearity-in-regression-analysis/) problems, which can be a serious issue on linear regression models (we will explore linear regression models later) where independent variables should be independent to each other. Models full of highly correlated independent variables creates a lot of noise on the model, which makes our sales prediction unreliable. 
+
+But how to tell whether a variable is correlated to another one? Let's get into a bit of theory again.
+
+[(skip theory)](#heatmap)
+
+#### Correlation
+
+In statistics, we use correlation to understand relationships between variables. Correlation can be strong (high) or weak (low), and can take positive or negative values. 
+
+Correlation is best understood graphically though (graph retrieved [ here](https://miro.medium.com/max/320/0*abk24QJL8-9JKFEz.png)):
+
+<img src="https://miro.medium.com/max/320/0*abk24QJL8-9JKFEz.png" alt="drawing" width="70%"/>
+
+How to interpret these graphs? Let's see some examples:
+
+* **Strong Positive Correlation**: the amount of time spent reading this project in the x-axis, and how much you understood this project in a confidence scale in the y-axis. For most of us, the relationship is positive because the more you read this project, the more you understand it.
+* **Strong Negative Correlation**: time slept in hours and time awake in hours. This negative relationship is easy to understand: the more you sleep, the less hours you are awake.
+* **Weak-No Correlation**: your skills in data science and you driving skills. This has a weak (even zero) correlation because no matter how skilled you are in data science, it doesn't relate to your ability to drive.
+
+A quick note on correlation is needed here. A famous maxima that every statistician knows is that **correlation does not imply causation**. In other words, correlation cannot answer whether one variable **causes** the other. Let's go back to our strong positive correlation example. It may be common sense to affirm that, the more you read this project, the more you understand it. But what if the person is reading this very project in a language that he does not know? Then spending long hours reading it in a different language doesn't imply that he will in fact understand the project.
+
+Although we have learned that correlation doesn't imply causation, understanding association relationships between variables is crucial in data science projects. In our project, using variables which have some sort of relationship with sales revenues can increase our success rate of getting accurate predictions, and this is why we look at correlation.
+
+But how do we calculate linear correlation? There are few methods to measure association between variables, but we will focus on the **correlation coefficient** (or Pearson correlation coefficient):
+
+
+![](img/correlation.PNG)
+
+where,
+
+![](img/correlation_1.PNG)
+
+The correlation coefficient can assume values from -1 to 1. Graphically, this should look like this:
+&nbsp;
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Pearson_Correlation_Coefficient_and_associated_scatterplots.png" alt="drawing" width="70%"/>
+
+
+| Degree of correlation | Correlation Coefficient (R) |
+|----|---|
+| Perfect | ± 1 | 
+| Strong | between ± 0.5 and ± 1 | 
+| Medium | between ± 0.30 and ± 0.49 |
+| Weak | below ± 0.29 | 
+| No correlation | zero | 
+
+**Important**: while the pearson correlation coefficient works well to measure associative relationships between linear variables, other methods of correlation measurement should be taken for non-linear or too complex data. 
+&nbsp;
+
+Now we are ready to proceed with our multivariate analysis! There are some techniques to find out correlation depending on the kind of data you are working with:
+&nbsp;
+
+
+<img src="https://miro.medium.com/max/1000/1*6KNXPv-_3s7cJrcOQxbZCw.png" alt="drawing" width="70%"/>
+
+_Retrieved from [Outside Two Standard Deviations](https://medium.com/@outside2SDs/an-overview-of-correlation-measures-between-categorical-and-continuous-variables-4c7f85610365)_ 
+&nbsp;
+
+For **numerical variables**, we will use  a heatmap with pearson correlation coefficient values, and for **categorical variables** we use Cramer's V technique. 
+#### Numerical Variables
+
+
+![](img/multivariate.PNG)
+
+**1. Target variable & independent variables (predictors)**
+* **Variables with positive correlation with sales**:
+
+  * **Strong**: `customers`
+  * **Medium**: `promo`
+  * **Weak**: `is_weekday`, `promo2_since_year`
+  
+* **Variables with negative correlation with sales**:
+
+  * **Strong**: -
+  * **Medium**: -
+  * **Weak**: `promo2`, `day_of_the_week` 
+
+**2. Multicollinearity problems (independent variables that are highly correlated to other independent variables)**
+
+* **Negative correlation**:
+  `competition_open_since_year` vs `competition_open_since_month`
+  `year` vs `interest_rate`
+  `promo2_since_year` vs `promo2_time_month`
+  `promo2_since_year` vs `promo2_time_week`
+  `day_of_week` vs `is_weekday`
+  `year` vs `unemployment_rate`
+  `gdp` vs `unemployment_rate`
+  `cci` vs `unemployment rate`
+&nbsp;
+* **Positive correlation**:
+
+  `month` vs `week_of_year`
+  `gdp` vs `year`
+  `cpi` vs `year`
+  `gdp` vs `cpi`
+  `promo2` vs `promo2_time_week`
+  `promo2` vs `promo2_time_month`
+  `cci` vs `year`
+  `cci` vs `gdp`
+  `cpi` vs `cci`
+  `interest rate` vs `unemployment_rate` `promo2_time_week` vs `promo2_time_month`
+&nbsp;
+#### Categorical Variables
+
+In order to compare correlations between categorical variable, we will use Cramér's V technique. The only difference from the Pearson Correlation Coefficient is that its values varies from 0 to +1, without negative values. The closer a Cramér's V value is from 1, the stronger the association between variables.
+
+We won't go into details on how to calculate the Cramér's V, but you can find more details on [Wikipedia](https://en.wikipedia.org/wiki/Cram%C3%A9r%27s_V). In this project, I created a python function `cramer_v` that calculates Cramér's V and returns a dataframe with correlation values between categorical data. In the [Jupyter notebook](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb), you can find the function in the section `0.1. Helper Functions`.
+
+
+![](img/cramer.PNG)
+
+
+`store_type` and `assortment` have a mild correlation of 0.51.
 
 
 [back to top](#table-of-contents)
@@ -680,7 +967,9 @@ Now our focus goes to the bivariate analysis - when we observe how each independ
 ## 05. Data Preprocessing
 [(go to next session)](#06-feature-selection)
 
-data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Also, some data might have categorical data on it, and this could be a problem: most ML models perform better when categorical data is transformed to numerical data. Therefore, this task is centered on rescaling and encoding our variables.
+Data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Some variables might be categorical or numerical, or a data type variable. The problem is: most ML models perform better when data is of numerical type. Therefore, this task is centered on standardizing, rescaling and encoding our variables.
+
+
 
 [back to top](#table-of-contents)
 
@@ -765,6 +1054,13 @@ Also known as _Residual Analysis_, in this step we analyze the predictions' perf
 ---
 
 ## Appendix I - Datasets
+
+
+GDP https://stats.oecd.org/index.aspx?queryid=66948#
+CPI https://stats.oecd.org/Index.aspx?DataSetCode=PRICES_CPI
+Interest Rates https://stats.oecd.org/index.aspx?queryid=86
+Unemployment rate https://stats.oecd.org/index.aspx?queryid=36324
+CCI https://data.oecd.org/leadind/consumer-confidence-index-cci.htm
 
 
 [back to top](#table-of-contents)
