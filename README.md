@@ -618,7 +618,7 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 
 ![](img/univariate_2.png)
 ![](img/univariate_3.png)
-
+![](img/univariate_4.png)
 
 * **Highlights**:
   * All variables don't follow a normal distribution;
@@ -638,7 +638,7 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 &nbsp;
 * **Categorical variables (barplots)**
 
-![](img/univariate_5.PNG)
+![](img/univariate_5.png)
 
 
 * **Highlights**:
@@ -654,9 +654,9 @@ Now our focus goes to the bivariate analysis - when we observe how each independ
 
 For the variable `assortment`, we have three types of store assortment: basic, extended and extra. There is no clue on the magnitude of these categories, and therefore we assume that "extra" refers to a bigger assortment type, "extended" is a medium, and "basic" is the smallest assortment type.
 
-![](img/h1.PNG)
-![](img/h1_1.PNG) 
-![](img/h1_2.PNG)
+![](img/h1.png)
+![](img/h1_1.png) 
+![](img/h1_2.png)
 
 **Verdict: FALSE**.
 Stores with bigger assortment sell less. However, the number of data points for stores with assortment 'extra' is very low compared to the other two (refer to [univariate analysis](#univariate-analysis)). Since assortment 'extra' follows a similar sales pattern of the other two, assortment might not be meaningful on our model.
@@ -665,7 +665,7 @@ Stores with bigger assortment sell less. However, the number of data points for 
 
 The variable `competition_distance` is the distance from a Rossmann store to a competitor.
 
-![](img/h2.PNG)
+![](img/h2.png)
 
 
 **Verdict: FALSE**
@@ -677,7 +677,7 @@ Quick note: the third graph (from right to left) is a **heatmap**. The value of 
 
 The variable `competition_since_month` tells us since when a Rossmann store has started facing competitors (in months). Note that negative values mean that competition hasn't started yet.
 
-![](img/h3.PNG)
+![](img/h3.png)
 
 **Verdict: FALSE**
 Stores with newly opened competitors sell more than stores with competitors from a long date.
@@ -690,7 +690,7 @@ The variable `is_weekday` is a dummy variable in which 1 corresponds to weekdays
 
 ![](img/h4.PNG)
 
-![](img/h4_1.PNG)
+![](img/h4_1.png)
 
 **Verdict: TRUE**
  From the data table and the right barplot above, sales is bigger on weekdays than weekends. The barplot on the left shows that Rossmann stores sell more on Mondays (1), has a stable sales performance across the weekdays (2-5), and starts declining till the worst day of sales on Sundays (7).
@@ -700,7 +700,7 @@ The variable `is_weekday` is a dummy variable in which 1 corresponds to weekdays
  
 #### H5. Stores sell more during the 2nd semester
 
-![](img/h5.PNG)
+![](img/h5.png)
 
 **Verdict: FALSE** 
 Stores sell more on the 1st semester. The heatmap shows that `month` and `sales` have a strong, negative linear correlation: as the months go by, sales decrease.
@@ -716,7 +716,7 @@ School breaks in Germany are scattered throughout the year. The longest school b
 
 `school_holiday` takes values of 0 (if regular day) and 1 (if school holiday):
 
-![](img/h7.PNG)
+![](img/h7.png)
 
 **Verdict: TRUE**
 Stores sell less during school holidays except in August. Not a surprise, since the longest school break in Germany happens in August.
@@ -724,7 +724,7 @@ Stores sell less during school holidays except in August. Not a surprise, since 
 
 #### H8. Stores sell more on Christmas than other holidays
 
-![](img/h8.PNG)
+![](img/h8.png)
 
 **Verdict: FALSE**
 Stores sell more on public holidays and Easter. However, our data doesn't capture christmas sales in 2015 since the dataset goes until mid-June.
@@ -732,7 +732,7 @@ Stores sell more on public holidays and Easter. However, our data doesn't captur
 
 #### H9. Stores are selling more along the years
 
-![](img/h9.PNG)
+![](img/h9.png)
 
 **Verdict: FALSE**
 Stores are selling less along the years, and `year` has a strong, negative linear correlation with `sales`. However, the year 2015 is not closed (dataset goes till mid-2015) so our analysis on year should be taken as incomplete.
@@ -741,7 +741,7 @@ Stores are selling less along the years, and `year` has a strong, negative linea
 #### H10. Stores sell more after day 10 of each month
 In some companies, the salary payment is set on day 10 every month. To analyze the effect of sales before and after day 10, we create the variables `before_day_10` and `after_day_10` 
 
-![](img/h10.PNG)
+![](img/h10.png)
 
 **Verdict: TRUE**
 Stores sell more after day 10. Not a surprise, since there are more days after day 10.
@@ -751,7 +751,7 @@ Stores sell more after day 10. Not a surprise, since there are more days after d
 
 To analyze traditional, single-day promotion sales, we will use the dummy variable `promo` that carries two values: 1 for traditional promo sales, 0 for regular sales day.
 
-![](img/h11.PNG)
+![](img/h11.png)
 
 **Verdict: TRUE**
 We can observe in the barplot that traditional promotion sales generate bigger sales revenue volume than regular days, although there were more regular sales days than traditional promotion sales days (see `promo` distribution on [univariate analysis section](#i-univariate-analysis)). In the scatterplot, we observe that the more traditional promo sales days a store has, the more sales revenues it makes. 
@@ -761,7 +761,7 @@ We can observe in the barplot that traditional promotion sales generate bigger s
 
 To analyze consecutive promotion sales, we use the dummy variable `is_promo2` that carries two values: 1 for consecutive promo sales, 0 for regular sales day.
 
-![](img/h12.PNG)
+![](img/h12.png)
 
 **Verdict: TRUE**
 Although the sales volume is higher for regular days (see first barplot), stores running consecutive promo sales sell more in the beginning of the year (see second barplot). However, sales are unstable for February.
@@ -771,8 +771,8 @@ Although the sales volume is higher for regular days (see first barplot), stores
 
 To run this analysis, we will pick the variable `promo2_time_week` that shows by when a Rossmann store started consecutive promo sales (in weeks). Negative values indicate that stores haven't started consecutive promo yet, and positive values indicate that stores are already doing consecutive promo sales.
 
-![](img/h13.PNG)
-
+![](img/h13.png)
+<img src="img/h131.png" alt="drawing" width="65%"/>
 
 **Verdict: FALSE**
 As depicted in the first barplot, stores participating in consecutive promo for a longer time sell less.
@@ -781,7 +781,7 @@ You may find odd to see a very weak correlation between `sales` and `promo2_time
 
 #### H14. Stores with more consecutive promo sale days sell more
 
-![](img/h14.PNG)
+![](img/h14.png)
 
 **Verdict: TRUE**
 Stores with more consecutive promo days sell more. However, sales volume is bigger for days with no consecutive promotion.
@@ -791,7 +791,8 @@ We can observe in the barplot that regular sales days generate bigger sales reve
 
 #### H15. Stores sales increase when GDPpc increases (month)
 
-![](img/h15.PNG)
+![](img/h15.png)
+<img src="img/h15_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE**
 Given the caveats that including an economic indicator on a model have, we don't expect to find extremely important insights from them.
@@ -805,7 +806,8 @@ A better variable would be Germany's GDPpc per region - however, the location of
 
 #### H16. Stores sales increase when interest rates decrease (month)
 
-![](img/h16.PNG)
+![](img/h16.png)
+<img src="img/h16_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE**
 
@@ -816,7 +818,9 @@ Since we were not able to confirm this hypothesis (and for other issues already 
 
 #### H17. Stores sales increase when Consumer Price Index (CPI) rate increase (month)
 
-![](img/h17.PNG)
+
+![](img/h17.png)
+<img src="img/h17_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE** 
 When inflation increases, we expect people to purchase more since the value of money decreases. In our case, sales decrease when inflation increases. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
@@ -824,7 +828,8 @@ When inflation increases, we expect people to purchase more since the value of m
 
 #### H18. Store sales increase when Consumer Confidence Index (CCI) rate increases (month)
 
-![](img/h18.PNG)
+![](img/h18.png)
+<img src="img/h18_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE**
 When consumer confidence increases, we expect people to increase their expenditures. In our case, sales decrease when consumer confidence increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
@@ -833,7 +838,8 @@ When consumer confidence increases, we expect people to increase their expenditu
 
 #### H19. Store sales increase when Unemployment rate decreases (month)
 
-![](img/h19.PNG)
+![](img/h19.png)
+<img src="img/h19_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE**
 An increase in unemployment rate can lead a  economy slowdown. In this case, we might expect people to reduce their expenditures.
