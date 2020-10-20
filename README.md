@@ -8,10 +8,11 @@ For starters in the Data Science field, it is not always clear how to build end-
 1. Tackle a classic Data Science problem faced by many firms: sales prediction.
 2. Go through the statistics theory behind our project steps. We will go deep enough to make sense of the concepts, but won't reach to a point where we bog ourselves down in the road.
 3. Unlock insightful information for the business by doing a thorough, detailed data study over the company's data.  
-4. Deploy a complete solution suitable for the business needs. Here, we will go from understanding the business demands and prepare the data, to Machine Learning (ML) modeling and posterior production.
+4. Deploy a complete solution suitable for the business needs. Here, we will go from understanding the business demands and prepare the data, to Machine Learning (ML) modeling and posterior production. Our final product will be to generate sales predictions on a smartphone application.
 
+#### A note about Machine Learning
 
-
+In this project, we will use machine learning to predict sales. Therefore, we will intermittently use machine learning terms throughout the project such as training, test data, hyperparameter tuning, etc. **If you need a quick intro to Machine Learning**, Google's Yufeng Guo [What is Machine Learning?](https://www.youtube.com/watch?v=HcqpanDadyQ) and [The 7 steps of machine learning](https://www.youtube.com/watch?v=nKW8Ndu7Mjw) videos will get you ready to jump into this project.
 
 #### Special Mention
 
@@ -24,7 +25,6 @@ This is a very extensive README since it carries the responsibility of showing t
 1. If you are an **experienced reader and don't mind going directly to a notebook**, access the notebook [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb) and go back to the [table of contents](#table-of-contents) whenever some explanation is lacking there. 
 2. If you wish to **read the project's main findings instead of going through the entire project**, look no further and [get there.](#main-findings)
 3. **If you wanna bear the adventure with me**, just read the entire readme. A [(go to next section)]() hyperlink will be available for each section to make your reading smoother, and a [(skip theory)]() hyperlink will be there to skip technical explanations. Codes for this project can be found [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb).
-
 
 I would appreciate any comments or suggestions on how to improve this project. Please feel free to add me on GitHub or [Linkedin](https://www.linkedin.com/in/ammaehara/) - I will get back to you as soon as possible. 
 
@@ -99,29 +99,37 @@ For the purpose of this project, I adapted the CRISP-DM methodology into five st
 
 
 **I. Business Understanding**
-  * A Business Request
+Goal: to understand the business demand that originates the project in question.
+ * A Business Request
 
 **II. Data Understanding and Data Preparation**
-  * Data Preparation
-  * Feature Engineering
-  * Exploratory Data Analysis (EDA)
-  * Data Preprocessing
-  * Feature Selection
+Goal: to understand the data we are working with, generate business insights, and preprocess data towards the creation of a machine learning model.
+
+* Data Preparation
+* Feature Engineering
+* Exploratory Data Analysis (EDA)
+* Data Preprocessing
+* Feature Selection
 
 **III. Modeling**
-  * Machine Learning Modelling
-  * Hyperparameter Tuning
+Goal: to create and test a machine learning model to be used on predictions.
 
- **IV. Evaluation**
-  * Error Interpretation & Business Performance
+* Machine Learning Modelling
+* Hyperparameter Tuning
 
- **V. Deployment**
+**IV. Evaluation**
+Goal: to evaluate and translate machine learning predictions in business terms.
+
+* Error Interpretation & Business Performance
+
+**V. Deployment**
+Goal: to create a solution that enables the firm's stakeholders to access predictions.
 
 * Deploy Machine Learning Model to Production
 * A Sales Predictor Bot
 
 
-The purpose and application of each step will be shown through the project, so bear with me till the end!
+The purpose and application of each step will be explained in much more detail through the project, so bear with me till the end!
 ___
 ## Cycle Description
 
@@ -212,25 +220,36 @@ Our initial set of variables are as follows:
 
 *dummy variable is one that takes either 0 or 1. For more details, check [here](https://en.wikipedia.org/wiki/Dummy_variable_(statistics)).
 
+
 * **Data Dimensions (rows x columns)**: 
 
   * Train dataset: 969264 x 18 
   * Valid dataset: 47945  x 18
   * Date Range: 2013-01-01 (first) / 2015-07-31 (last)
   
-To build a machine learning model, we need **training data**, which is a data that a machine learning algorithm work on to learn (or "train") the data patterns to create a prediction model, and a **validation data**, which is the data that the prediction (or "trained") model will generate predictions to check whether the model accurately works. 
-
 In this project, we splitted the whole data into training and validation parts:
 * **Training data** corresponds to all data entries between **2013-01-01 to 2015-06-19**
 * **Validation data** contains entries from the last 6 weeks of available data, **2015-06-19 to 2015-07-31**. 
 
+We splitted so that we could avoid [data leakage](https://www.kaggle.com/alexisbcook/data-leakage) (we will get into this later), and also to simulate how our model will predict sales revenues for each Rossmann store on a 6-week validation data. 
 
-We splitted so that we could avoid [data leakage](https://www.kaggle.com/alexisbcook/data-leakage) (we will get into this later), and also to simulate how our model will predict sales revenues for each Rossmann store on a 6-week validation data. If our model works well, then we are good to predict sales revenues on the **test data**, which is the data we really want to predict sales revenues. 
+If our model works well, then we are good to predict sales revenues on the **test data**, which is the data we really want to predict sales revenues. 
 * **Test data** corresponds to data entries between **2015-07-31 to 2015-09-16**. 
 
-Once we validate our model, we can put it into "production", so that all stakeholders of this project can access sales predictions for the next six weeks.
+Once we validate our model, we can put it into "production", so that all stakeholders of this project can access sales predictions for the six weeks corresponding to the test data.
 
-This idea of splitting data into training, validation, and test will be clearer when we reach to the [Machine Learning Modeling](#07-machine-learning-modeling) part. For now, don't worry - just proceed to the next step.
+#### Understanding Data Terms in Machine Learning 
+_Probably you have already identified that we used three specific machine learning terms: training, validation, and test. If you know these terms, or if you have watched the videos I recommended at the [very top of this project](#a-note-on-machine-learning), you are just fine to proceed to the next step; otherwise, watch the videos and keep reading below._
+
+To build a machine learning model that predicts sales, we need **training data**, which is a data that a machine learning algorithm work on to learn (or "train") the data patterns to create a prediction model, and a **validation data**, which is the data that the prediction (or "trained") model will generate predictions to check whether the model accurately works. Once we validate the model, we can use it on the **test data**, which is the data that we really want to get predictions on.
+
+Simply put, machine learning modeling works like this:
+
+1. Split data into **training** and **validation** data;
+2. In both datasets, separate the **dependent variable** (the variable we wish to generate predictions - in this case sales) from the **independent variable**;
+3. Choose a machine learning algorithm and use the **training data** to train a model. We will get into machine learning algorithms later on;
+4. With the model ready to generate predictions, use **validation data** as a test for predictions. Input the **independent variables** from **validation data** on the model, get the predictions, and compare them with the validation data's dependent variable. If predictions are not too off from the real data, then we can use the model to predict the target variable on a data that doesn't have the target variable - **the test data**.
+
 
 
 ### III. Data Cleaning
@@ -252,7 +271,7 @@ Let's check the missing values for each dataset:
 ![](img/valid_NA.PNG)
 
 The imputation method for each variable is as follows:
-  * **promo_interval**: fill null values with 0 (store is not participating in consecutive promo sales "promo2") 
+* **promo_interval**: fill null values with 0 (store is not participating in consecutive promo sales "promo2"). With `promo_interval`, we will create a dummy variable `is_promo2` indicating whether a store is holding a consecutive promo sales in the that day. We will drop `promo_interval` afterwards. 
   * **competition_distance**: fill null values with 100000. The reason is that null values are probably an indicative that stores don't have closer competitors. Therefore we fill out with a value way above the maximum competition distance seen (75860m)
 
   The following variables don't seem to have an ideal imputation method. Imputing null values with mean, median, or zero doesn't sound good, due to the high percentage of null values. Therefore we use the `date` column:
@@ -558,17 +577,15 @@ From 44 hypothesis listed, we select **19 hypothesis** that can be tested with t
 The main purpose of feature engineering is to improve the performance of our predictive model. New variables added to a machine learning model can contribute in many ways, such as creating a more accurate model that better predicts our target variable, or making our model simpler and less complex by creating independent variables that better explain the dependent variable. In this project, we will also use the new variables to help us reject/fail to reject our hypotheses on the [Exploratory Data Analysis](#04-exploratory-data-analysis-eda) section.
 
 The following tasks were performed on this part:
-* We used the variable `date` to create time-related variables. Now we have new variables that explains how long stores were holding traditional and consecutive promotion sales, and how long stores were facing competition from other companies. All time-related variables are divided by day, month, and year;
-* We also used the variable `date` to get a better sense of seasonality - `day, month, year, year_week, is_weekday` variables were created;
-* Variables with data described by single letters were transformed into full text (e.g: all 'a' in variable `state_holiday` were transformed to 'christmas') 
+* We used the variable `date` to create time-related variables. Now we have new variables that explains how long stores were holding consecutive promotion sales (`promo2_time_week`, `promo2_time_month`), and how long stores were facing competition from other companies (`competition_since_month`). All time-related variables are valued by number of months or weeks;
+* We also used the variable `date` to get a better sense of seasonality for each sales entry in the dataset - `day`, `month`, `year`, `year_week`, `is_weekday` variables were created;
+* Variables with data described by single letters were transformed into full text (e.g: all 'a' in variable `state_holiday` were transformed to 'christmas'). New variables are: `state_holiday`, `assortment`.
 * Germany's Gross Domestic Product (GDP) per capita, Consumer Price Index (CPI), interest rates, unemployment rate, Consumer Confidence Index (CCI) datasets were added as new variables. All economic indicators correspond to month values except for GDPpc (quarters). See below a description of these indicators (retrieved from [OECD](https://stats.oecd.org/) - all dataset references are available in [Appendix I - Dataset](#appendix-dataset)):
   * **Gross Domestic Product (GDP)**: monetary measurement of all goods and services produced within a country. income per capita (per head), in US$ (current prices) and current PPPs, adjusted quartely;
   * **Consumer Price Index (CPI)**: measures inflation by looking at the average price changes from a basket of consumer goods and services of a country. The base year is 2015 (2015 = 100).
   * **Interest Rate**: interest rate is the cost of borrowing money. The rate is usually set by governments or central banks. Here we use long-term interest rates, per cent per annum, divided monthly.
   * **Unemployment Rate**: measurement of changes in unemployment within a country. Unemployment rate is the fraction of total number of unemployed population by the total number of active population. 
   * **Consumer Confidence Index (CCI)**: measurement of consumer confidence within a country, it indicates how future developments on consumption and saving will be based on the current households' economic situation. Values below 100 indicate a pessimistic attitude towards future developments in the economy, possibly resulting in a tendency to save more and consume less.  
-
-## Appendix I - Datasets
 
 ### IV. Filtering Variables
 In this part, we need to check the business restritions that should be considered in the project and filter variables/rows from the dataset that can't be used to predict sales revenues.
@@ -577,6 +594,8 @@ We divide this part into two tasks:
 * **Data Entry Filtering**: data entries with characteristics that won't be considered on the model should be excluded from the dataset. Here we removed closed stores and stores with no sales revenue, since such entries are irrelevant to our goal of predicting sales revenue. 
 * **Column Selection**: variables that won't be available at the moment of prediction must be dropped from the dataset. In the 1st CRISP-DM cycle, we dropped the number of customers from the training dataset since this feature was not present in the test dataset. It makes sense, since this is a business restriction: there is no way to know the number of customers at the time we predict sales revenues for the next six weeks. In order to keep the number of customers in the model, we have created a [new project](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/rossmann_customers_prediction.ipynb) that predicts number of customers for the next six weeks for each Rossmann store, and included results on the test dataset. Otherwise, we wouldn't be able to use this variable in our project.
 
+The following variables were dropped: `promo_interval` (deprecated - `is_promo2` will be used instead), `open`.
+The following variables were added: `promo2_time_week`, `promo2_time_month`, `competition_since_month`,`day`, `month`, `year`, `year_week`, `is_weekday`,`gdp`,`cpi`,`interest_rate`,`unemployment_rate`,`cci`.
 
 [back to top](#table-of-contents)
 
@@ -612,12 +631,9 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 
 ![](img/univariate_1.png)
 
-
-
 * **Numerical variables (histograms)**
 
 ![](img/univariate_2.png)
-
 
 * **Highlights**:
   * All variables don't follow a normal distribution;
@@ -638,7 +654,6 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
 * **Categorical variables (barplots)**
 
 ![](img/univariate_5.png)
-
 
 * **Highlights**:
   * `state_holiday`: there are more sales data points on public holidays than other holidays. Easter and Christmas are on a similar level;
@@ -665,7 +680,6 @@ Stores with bigger assortment sell less. However, the number of data points for 
 The variable `competition_distance` is the distance from a Rossmann store to a competitor.
 
 ![](img/h2.png)
-
 
 **Verdict: FALSE**
 Stores near competitors sell more than stores with competitors located far away. We can tell that because there are more concentrated data around a competition distance of 0~20000 meters (see scatterplot). From the barplot, we can also tell that sales revenue are higher for stores with competitors located within 0~4000 meters.
@@ -695,7 +709,6 @@ The variable `is_weekday` is a dummy variable in which 1 corresponds to weekdays
  From the data table and the right barplot above, sales is bigger on weekdays than weekends. The barplot on the left shows that Rossmann stores sell more on Mondays (1), has a stable sales performance across the weekdays (2-5), and starts declining till the worst day of sales on Sundays (7).
 
  As shown in the heatmap and scatterplot, the variable `day_of_week` shows a strong linear negative correlation with sales, which indicates that `day_of_week` is probably an essential feature to explain our target variable. 
-
  
 #### H5. Stores sell more during the 2nd semester
 
@@ -704,12 +717,10 @@ The variable `is_weekday` is a dummy variable in which 1 corresponds to weekdays
 **Verdict: FALSE** 
 Stores sell more on the 1st semester. The heatmap shows that `month` and `sales` have a strong, negative linear correlation: as the months go by, sales decrease.
 
-
 #### H6. Stores sell more during summer/winter breaks (schools) 
 
 **Verdict: FALSE**
 School breaks in Germany are scattered throughout the year. The longest school break is the summer break in August and mid-September. During these months, stores sell less (refer to barplot above on [H5](#h5-stores-sell-more-during-the-2nd-semester)).
-
 
 #### H7. Stores sell less during school holidays
 
@@ -720,14 +731,12 @@ School breaks in Germany are scattered throughout the year. The longest school b
 **Verdict: TRUE**
 Stores sell less during school holidays except in August. Not a surprise, since the longest school break in Germany happens in August.
 
-
 #### H8. Stores sell more on Christmas than other holidays
 
 ![](img/h8.png)
 
 **Verdict: FALSE**
 Stores sell more on public holidays and Easter. However, our data doesn't capture christmas sales in 2015 since the dataset goes until mid-June.
-
 
 #### H9. Stores are selling more along the years
 
@@ -736,7 +745,6 @@ Stores sell more on public holidays and Easter. However, our data doesn't captur
 **Verdict: FALSE**
 Stores are selling less along the years, and `year` has a strong, negative linear correlation with `sales`. However, the year 2015 is not closed (dataset goes till mid-2015) so our analysis on year should be taken as incomplete.
 
-
 #### H10. Stores sell more after day 10 of each month
 In some companies, the salary payment is set on day 10 every month. To analyze the effect of sales before and after day 10, we create the variables `before_day_10` and `after_day_10` 
 
@@ -744,7 +752,6 @@ In some companies, the salary payment is set on day 10 every month. To analyze t
 
 **Verdict: TRUE**
 Stores sell more after day 10. Not a surprise, since there are more days after day 10.
-
 
 #### H11. Stores frequently doing traditional promo sales sell more
 
@@ -755,7 +762,6 @@ To analyze traditional, single-day promotion sales, we will use the dummy variab
 **Verdict: TRUE**
 We can observe in the barplot that traditional promotion sales generate bigger sales revenue volume than regular days, although there were more regular sales days than traditional promotion sales days (see `promo` distribution on [univariate analysis section](#i-univariate-analysis)). In the scatterplot, we observe that the more traditional promo sales days a store has, the more sales revenues it makes. 
 
-
 #### H12. Stores doing consecutive promo sales in the beginning of the year sell more
 
 To analyze consecutive promotion sales, we use the dummy variable `is_promo2` that carries two values: 1 for consecutive promo sales, 0 for regular sales day.
@@ -764,7 +770,6 @@ To analyze consecutive promotion sales, we use the dummy variable `is_promo2` th
 
 **Verdict: TRUE**
 Although the sales volume is higher for regular days (see first barplot), stores running consecutive promo sales sell more in the beginning of the year (see second barplot). However, sales are unstable for February.
-
 
 #### H13. Stores participating in consecutive promo for a longer time sell more
 
@@ -777,7 +782,6 @@ To run this analysis, we will pick the variable `promo2_time_week` that shows by
 As depicted in the first barplot, stores participating in consecutive promo for a longer time sell less.
 You may find odd to see a very weak correlation between `sales` and `promo2_time_week`, and a somewhat definite linear relationship on the two scatterplots drawn above. The reason is that we have splitted the variable `promo2_time_week` into positive and negative values. While considering the entire variable as a predictor for sales prediction, dividing `promo2_time_week` into two variables could be a good idea.
 
-
 #### H14. Stores with more consecutive promo sale days sell more
 
 ![](img/h14.png)
@@ -787,11 +791,9 @@ Stores with more consecutive promo days sell more. However, sales volume is bigg
 
 We can observe in the barplot that regular sales days generate bigger sales revenue volume than consecutive promo sales days. In the scatterplot, we observe that the more consecutive promo sales days a store has, the more sales revenues it makes. 
 
-
 #### H15. Stores sales increase when GDPpc increases (month)
 
 ![](img/h15_2.png)
-
 
 **Verdict: FALSE**
 Given the caveats that including an economic indicator on a model have, we don't expect to find extremely important insights from them.
@@ -801,7 +803,6 @@ Overall, sales decrease when GDPpc increase. This is an indicative that Rossmann
 The lineplots representing sales and GDP performance over time (we used `year_month`) shows that Rossmann sales and GDP are not related. The heatmap also confirms a weak, negative linear correlation between GDP and sales.
 
 A better variable would be Germany's GDPpc per region - however, the location of each Rossmann store in the dataset is unknown. For this and other reasons already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section, we will drop it from our model.
-
 
 #### H16. Stores sales increase when interest rates decrease (month)
 
@@ -814,16 +815,13 @@ Sales increase when interest rate increase over time. However, we were expecting
 
 Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
 
-
 #### H17. Stores sales increase when Consumer Price Index (CPI) rate increase (month)
-
 
 ![](img/h17.png)
 <img src="img/h17_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE** 
 When inflation increases, we expect people to purchase more since the value of money decreases. In our case, sales decrease when inflation increases. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
-
 
 #### H18. Store sales increase when Consumer Confidence Index (CCI) rate increases (month)
 
@@ -832,8 +830,6 @@ When inflation increases, we expect people to purchase more since the value of m
 
 **Verdict: FALSE**
 When consumer confidence increases, we expect people to increase their expenditures. In our case, sales decrease when consumer confidence increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
-
-
 
 #### H19. Store sales increase when Unemployment rate decreases (month)
 
@@ -844,6 +840,11 @@ When consumer confidence increases, we expect people to increase their expenditu
 An increase in unemployment rate can lead a  economy slowdown. In this case, we might expect people to reduce their expenditures.
 In our case, sales increase when unemployment rate increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
 
+#### Hypothesis Validation
+
+See below a summary of our hypothesis list:
+
+![](img/hypothesis_validation.png)
 
 ### III. Multivariate Analysis
 
@@ -875,7 +876,6 @@ Although we have learned that correlation doesn't imply causation, understanding
 
 But how do we calculate linear correlation? There are few methods to measure association between variables, but we will focus on the **correlation coefficient** (or Pearson correlation coefficient):
 
-
 ![](img/correlation.PNG)
 
 where,
@@ -886,7 +886,6 @@ The correlation coefficient can assume values from -1 to 1. Graphically, this sh
 &nbsp;
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Pearson_Correlation_Coefficient_and_associated_scatterplots.png" alt="drawing" width="70%"/>
-
 
 | Degree of correlation | Correlation Coefficient (R) |
 |----|---|
@@ -902,15 +901,14 @@ The correlation coefficient can assume values from -1 to 1. Graphically, this sh
 Now we are ready to proceed with our multivariate analysis! There are some techniques to find out correlation depending on the kind of data you are working with:
 &nbsp;
 
-
 <img src="https://miro.medium.com/max/1000/1*6KNXPv-_3s7cJrcOQxbZCw.png" alt="drawing" width="70%"/>
 
 _Retrieved from [Outside Two Standard Deviations](https://medium.com/@outside2SDs/an-overview-of-correlation-measures-between-categorical-and-continuous-variables-4c7f85610365)_ 
 &nbsp;
 
 For **numerical variables**, we will use  a heatmap with pearson correlation coefficient values, and for **categorical variables** we use Cramer's V technique. 
-#### Numerical Variables
 
+#### Numerical Variables
 
 ![](img/multivariate.png)
 
@@ -958,12 +956,9 @@ In order to compare correlations between categorical variable, we will use Cram�
 
 We won't go into details on how to calculate the Cramér's V, but you can find more details on [Wikipedia](https://en.wikipedia.org/wiki/Cram%C3%A9r%27s_V). In this project, I created a python function `cramer_v` that calculates Cramér's V and returns a dataframe with correlation values between categorical data. In the [Jupyter notebook](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb), you can find the function in the section `0.1. Helper Functions`.
 
-
 ![](img/cramer.png)
 
-
 `store_type` and `assortment` have a mild correlation of 0.51.
-
 
 [back to top](#table-of-contents)
 
@@ -1031,9 +1026,7 @@ Ater RobustScaler transformation, distributions would look like this:
 
 ![](img/robustscaler_1.png)
 
-
 We will use RobustScaler for the following variables: `promo2_time_week`, `promo2_time_month`.
-
 
 ### Power Transformations: Box-Cox Transformation, Yeo-Johnson Transformation, Log Transformation
 
@@ -1059,7 +1052,6 @@ This thread [here](https://stats.stackexchange.com/questions/298/in-linear-regre
 
 Please note that logarithm transformations don't accept negative values. In our case, we applied the log transformation to our target variable, `sales`.
 
-
 * **Box-Cox Transformation**
 
 Box-Cox transformation is suitable for variables in which values are highly skewed, since it tries to transform them into a gaussian-like distribution. For linear models, Box-Cox transformation deals well with [heteroskedascity](http://www.statsmakemecry.com/smmctheblog/confusing-stats-terms-explained-heteroscedasticity-heteroske.html), which is a serious issue on linear models and can lead to unreliable predictions in our model.
@@ -1071,7 +1063,6 @@ The formula is as follows:
 where,
 
 ![](img/boxcox_formula_1.png)
-
 
 Note: Box-Cox transformation does not accept negative or zero values. If your variable (feature) y has zero or negative values, use the Yeo-Johnson transformation. 
 Also, please note that setting lambda equal to zero is the same as performing a log-transformation.
@@ -1104,8 +1095,7 @@ There are a myriad of encoding methods available outside, and we will utilize a 
 
 ![](img/categoricalencoding.png)
 
-
- To encode our categorical variables, we will utilize a few of them, namely: (1) One Hot Encoding; (2) Label Encoding; and (3) Ordinal Encoding
+To encode our categorical variables, we will utilize a few of them, namely: (1) One Hot Encoding; (2) Label Encoding; and (3) Ordinal Encoding
 
 #### One-hot Encoding
 
@@ -1127,7 +1117,7 @@ Label Encoding is an alternative method for One-hot encoding in case you can't b
 
 Although it avoids the creation of additional columns, it brings up a new problem: it creates some order between entries. In this example, red is zero and blue is 2, which indicates that entries containing blue color would have extra weight in the prediction time than red. But here, the color does not have an order at all.
 
-Therefore, if you have a nominal variable with a few entries or a variable with some ordering but it isn't quite clear the relationship between the entries, label encoding is a fair candidate. In our case, we used label encoding on the variable `store_type`, since it has three store types but we can't guess which type is worse/better than the other.
+Therefore, if you have a nominal variable with a few entries or a variable with some ordering but it isn't quite clear the relationship between the entries, label encoding is a fair candidate. In our case, we used label encoding on the variable `store_type`, since it has three store types but we can't guess which type is worse/better than the other. 
 
 #### Ordinal Encoding
 
@@ -1147,8 +1137,10 @@ Think of this trigonometry circle in terms of time: as you start run the circle,
 
 Note: variables related to year must not be encoded with sine and cosine. After all, once a year is done, there's no way to go back to the first day of the same year (unless you have a time machine around).
 
-I used the sine and cosine transformations on the following variables: `day`,`month`,`week_of_year`,`day_of_week`,`promo2_since_week`,`competition_open_since_month`.
+I used the sine and cosine transformations on the following variables: `day`,`month`,`week_of_year`,`day_of_week`,`promo2_since_week`,`competition_open_since_month`. 
+New variables will be created and labeled with a prefix indicating sine or cosine like this: `_sin` and `_cos`.
 
+![](img/dataprep_variables.png)
 [back to top](#table-of-contents)
 
 ---
@@ -1156,15 +1148,50 @@ I used the sine and cosine transformations on the following variables: `day`,`mo
 ## 06. Feature Selection
 [(go to next session)](#07-machine-learning-modeling)
 
-In this step, we select the variables that best explain our response (target) variable. There are three methods to do so: 
-  * Filter Methods, which is usually the simplest, fastest method to select relevant variables but exclude [multicollinearity issues](https://statisticsbyjim.com/regression/multicollinearity-in-regression-analysis/); 
-  * Embedded Methods, which simply runs a ML algorithm that already has an in-built feature selection step; 
-  * Wrapper Methods, which is computationally expensive but a reliable method that uses a ML algorithm to determine the best features to keep.
-        
-    Detailed explanation on feature selection methods can be found [here](https://www.analyticsvidhya.com/blog/2016/12/introduction-to-feature-selection-methods-with-an-example-or-how-to-select-the-right-variables/).
+For machine learning models, it is fundamental to keep the  variables that best explain our response (target) variable and remove the ones that are repetitive or irrelevant. There are three methods to do so: 
+* **Filter Methods**, which is usually the simplest, fastest method to select relevant variables. If one utilizes this method to eliminate variables for this project, it would purely use the correlation coefficients and the Cramér's V values (you can find these values on the [exploratory data analysis](#04-exploratory-data-analysis-eda) section) as a criteria to exclude or keep variables.
+* **Embedded Methods**, which simply runs a ML algorithm that already has an in-built feature selection step; 
+* **Wrapper Methods**, which is computationally expensive but a reliable method that uses a ML algorithm to determine the best features to keep.
+
+Detailed explanation on feature selection methods can be found [here](https://www.analyticsvidhya.com/blog/2016/12/introduction-to-feature-selection-methods-with-an-example-or-how-to-select-the-right-variables/). An important note is that these methods works as a supportive tool - the final decision on feature selection should be always upon the project owner. This is another reason why an EDA section is put before Feature Selection - it gives us a chance to really understand the data we are working on, and what variables will probably be good to be included in the prediction model.
+
+For this project, we will use a wrapper method called [Boruta]() that will automatically select the best features for our predictive ML model. Manish Pathak has done a wonderful job explaining Boruta [here](https://www.datacamp.com/community/tutorials/feature-selection-R-boruta), in case you want to explore this feature selection algorithm in detail.
+
+Boruta works in four steps:
+
+1. Boruta creates "shadow features" from the original dataset. These shadow features are copies of the original features with their values shuffled. Shuffling the values ensure that we won't have correlation issues between original and shadow variables (otherwise, shadow variables would be just perfect copies of the original features) 
+2. With the shadow and original features, Boruta trains a ML model, and calculates its performance. Usually a model which captures non-linear data well is used. In our case, we will use a random forest algorithm that will be able to tell us the importance of each variable when running predictions.
+3. With the importance values (performance) of each variable, Boruta uses the shadow variable with the highest importance value, and compare it with all original variables' performance values. If a original value has a higher value than the the shadow variable value in question, then it receives a "hit" (described as 1); otherwise, it receives a zero. Then, we go back to step 1 and shuffle the shadow variables values again, train the ML algorithm, retrieve importance values, and sum up hit numbers for each iteration. The summation of ones and zeroes is then gathered in a "success count" table.
+4.  From the success count table, we get binary variables. Then, we use inferential statistics¹ to determine whether a binary variable has statistical relevancy or not. For binary variables that has relevancy, boruta returns the original variables (corresponding to their binary variables) as the variables selected to our model.
+
+¹ _quick note: we won't go further on how to perform inference, but there are plenty of sources that explains how to do so. Since binary variables can be analyzed within a [binomial distribution](https://www.youtube.com/watch?v=J8jNoF-K8E8), Boruta uses inferential statistics to analyze relevancy on such distributions. A first introduction to inferential statistics can be found [here](https://www.statisticshowto.com/inferential-statistics/) and a complete free course from Udacity can be found [here](https://www.udacity.com/course/intro-to-inferential-statistics--ud201).
+
+The columns selected by Boruta were:
+
+![](img/cols_selected.png)
+
+The columns not selected by Boruta were:
+
+![](img/cols_not_selected.png)
+
+
+Remember our [hypothesis validation](#hypothesis-validation) list? We will use it to judge whether the Boruta algorithm has indeed selected relevant features to our model. Our compass is the relevance of each validated hypothesis, and a few variables were included to our final list of selected variables:
+
+1. Boruta has selected `promo2_since_year_2009` and left all the other dummy variables related to `promo2_since_year` out. Consecutive promo sales has a high relevance in our data, but we saw in the [multivariate analysis](#iii-multivariate-analysis) part that `promo2_since_year` has a high correlation with both `promo2_time_month` and `promo2_time_week`. Since these features possibly behave in a similar way, we will remove `promo2_since_year_2009`. 
+
+2. `week_of_year_cos`, `day_cos`,`month_cos` were selected by Boruta but their counterpart `week_of_year_sin`, `day_sin`,`month_sin` wasn't. We will include them to our model.
+
+3. `is_promo2` has a mild correlation with `promo_2` and no correlation at all with our target variable `sales` as noted in the [multivariate analysis](#iii-multivariate-analysis) section. We will keep `is_promo2` out of the model.
+
+4. We observed that hypothesis related to `school_holiday`, `state_holiday` variables have a low-medium impact. Therefore we will keep them out from the model.
+
+
+Our final list of selected variable is as follows:
+
+![](img/final_boruta.png)
+
 
 [back to top](#table-of-contents)
-
 
 ---
 ## 07. Machine Learning Modeling
