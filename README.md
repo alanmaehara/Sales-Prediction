@@ -790,8 +790,8 @@ We can observe in the barplot that regular sales days generate bigger sales reve
 
 #### H15. Stores sales increase when GDPpc increases (month)
 
-![](img/h15.png)
-<img src="img/h15_1.png" alt="drawing" width="67%"/>
+![](img/h15_2.png)
+
 
 **Verdict: FALSE**
 Given the caveats that including an economic indicator on a model have, we don't expect to find extremely important insights from them.
@@ -912,7 +912,7 @@ For **numerical variables**, we will use  a heatmap with pearson correlation coe
 #### Numerical Variables
 
 
-![](img/multivariate.PNG)
+![](img/multivariate.png)
 
 **1. Target variable & independent variables (predictors)**
 * **Variables with positive correlation with sales**:
@@ -959,7 +959,7 @@ In order to compare correlations between categorical variable, we will use Cram�
 We won't go into details on how to calculate the Cramér's V, but you can find more details on [Wikipedia](https://en.wikipedia.org/wiki/Cram%C3%A9r%27s_V). In this project, I created a python function `cramer_v` that calculates Cramér's V and returns a dataframe with correlation values between categorical data. In the [Jupyter notebook](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb), you can find the function in the section `0.1. Helper Functions`.
 
 
-![](img/cramer.PNG)
+![](img/cramer.png)
 
 
 `store_type` and `assortment` have a mild correlation of 0.51.
@@ -972,9 +972,182 @@ We won't go into details on how to calculate the Cramér's V, but you can find m
 ## 05. Data Preprocessing
 [(go to next session)](#06-feature-selection)
 
-Data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Some variables might be categorical or numerical, or a data type variable. The problem is: most ML models perform better when data is of numerical type. Therefore, this task is centered on standardizing, rescaling and encoding our variables.
+Data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Some variables might be categorical or numerical, or a data type variable. The problem is: most ML models perform better when data is of numerical type, and without extreme ranges. Think of our project; we are trying to predict sales. If you have a variable with a high range (say, from 0-10000) and another with a low range (from 0 to 3.5), the model will weight the high-range variable more when predicting sales, and therefore delivering biased results.
+
+We will divide data preprocessing according to our variables: numerical scaling, categorical encoding, and time-related variables (cyclic transformation)
+
+### I. Numerical Scaling
+
+This task is centered on feature scaling for numerical variables. There are many ways to scale (some you can find on Baijayanta Roy's [article](https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35)), but here we will explain and utilize the ones which suits our needs for this project. But before we go into theory again, we will analyze the skew, kurtosis, and standard deviation of numerical variables present in our data. Dummy, time-related variables (except for `year`) were excluded from the list below:
+
+![](img/numerical_dataprep.png)
+
+There are many variables with problematic statistic values in our dataset. In order to help us judging what scaling technique will be used on each variable, we plot the boxplots for the ones we need to be extra careful:
+
+![](img/numerical_dataprep_1.png)
 
 
+With no further due, let's explore feature scaling methods:
+
+#### Standardization (StandardScaler)
+
+This technique rescale the data in a way that its distribution gets a mean of zero and standard deviation of 1 - [a standard normal distribution](https://sphweb.bumc.bu.edu/otlt/mph-modules/bs/bs704_probability/bs704_probability9.html). All variable values receive a "z-score", which is obtained by subtracting the variable's mean and dividing it by the variable's standard deviation. It is a very effective feature scaling technique for variables that follows a normal distribution:
+
+![](img/standardization_1.png)
+
+[Jeff Hale](https://www.kaggle.com/discdiver/guide-to-scaling-and-standardizing) sets a nice example of scaling techniques works on beta, exponential, normal and bimodal distributions. See below how standardization works: 
+
+![](img/scaling_1.png)
+
+![](img/standardscaler.png)
+
+
+The only problem of standardization is that it assumes the data comes from a normal distribution. In our dataset, we don't have any variables like this; hence, we will not utilize standardization.
+
+
+#### MinMaxScaler
+
+This technique subtracts each variable's value to the variable's mean, and then divides by the variable's range:
+
+![](img/minmax.png)
+
+This scaling technique transform values to between 0 and 1. It is a good technique for non-gaussian (non-normal) distributions; however, it doesn't cope well with variables full of outliers (not robust), since the variable's range is in the denominator side of the MinMaxScaler formula.
+
+To illustrate the transformation, distributions would look like this:
+
+![](img/minmax_1.png)
+
+In our project, we will use this method with the variable `year` only.
+
+#### RobustScaler
+
+RobustScaler is the MinMaxScaler alternative when you have variables with a profusion of outliers:
+
+![](img/robustscaler.png)
+
+As the formula tells, the RobustScaler technique utilizes the variable's quartiles values to rescale values. While the MinMaxScaler uses the minimum and maximum values (which makes it sensible to outliers), RobustScaler doesn't include them during rescaling.
+
+Ater RobustScaler transformation, distributions would look like this:
+
+![](img/robustscaler_1.png)
+
+
+We will use RobustScaler for the following variables: `promo2_time_week`, `promo2_time_month`.
+
+
+### Power Transformations: Box-Cox Transformation, Yeo-Johnson Transformation, Log Transformation
+
+Usually, we would use the three previous feature scaling methods to scale our data. However, since we will test linear and non-linear models as candidates to become the main model for sales prediction, we want features that resemble a normal-like distribution.
+
+This is where power transformation comes into play. For features that suffers from high variance and presence of outliers, or for non-linear features that wouldn't behave well linear models, power transformation helps us transforming such features into a more normal-like distribution.
+
+The term "power" refers to the usage of a power function (such as exponents, logarithms) to perform scaling transformations. Here we will utilize three methods: 
+
+* **Logarithm Transformation**
+
+As any power transformation, a log transformation is used to make highly skewed distribution less skewed. It takes care of extreme values very well, as in this example retrieved from [Online Stat Book](http://onlinestatbook.com/2/transformations/log.html):
+
+![](img/log.png)
+
+See how values far from each other (1,10,100) are gathered in a nicely, closer pattern? A graphical example is the brain weight of animals as a function of their body weight. The first graph is the original dataset plotted with body weight in the x-axis, and brain weight in the y-axis, and the second graph is the log transformed version:
+
+![](img/log_1.jpg)
+
+The log transform is very popular for transforming target variables because it linearizes the values very well, and handle well huge variances. It also take care of residuals (aka "errors" - we will get into it later) generated by the prediction model, letting them become more symmetric and less skewed.
+
+This thread [here](https://stats.stackexchange.com/questions/298/in-linear-regression-when-is-it-appropriate-to-use-the-log-of-an-independent-va) on StackOverFlow has a detailed explanation on the benefits of using log-transforms.
+
+Please note that logarithm transformations don't accept negative values. In our case, we applied the log transformation to our target variable, `sales`.
+
+
+* **Box-Cox Transformation**
+
+Box-Cox transformation is suitable for variables in which values are highly skewed, since it tries to transform them into a gaussian-like distribution. For linear models, Box-Cox transformation deals well with [heteroskedascity](http://www.statsmakemecry.com/smmctheblog/confusing-stats-terms-explained-heteroscedasticity-heteroske.html), which is a serious issue on linear models and can lead to unreliable predictions in our model.
+
+The formula is as follows:
+
+<img src="img/boxcox.png" alt="drawing" width="70%"/>
+
+where,
+
+![](img/boxcox_formula_1.png)
+
+
+Note: Box-Cox transformation does not accept negative or zero values. If your variable (feature) y has zero or negative values, use the Yeo-Johnson transformation. 
+Also, please note that setting lambda equal to zero is the same as performing a log-transformation.
+
+Here's an example on how a distribution like this:
+
+![](img/boxcoxexample.png)
+
+becomes like this with a Box-Cox Transformation:
+
+![](img/boxcoxexample_1.png)
+
+In this project we found that a lambda value of 0.05 generates good results. We utilized Box-Cox to transform the following variables: `competition_distance`, `customers`.
+
+* **Yeo-Johnson Transformation**
+
+With similar traits as the Box-Cox transformation, the Yeo-Johnson transformation is the method to go if you have variables with zero and negative values.
+
+![](img/yeojohnsonformula.png)
+
+Yeo-Johnson's formula is much similar compared to Box-Cox's, with the exception that y can assume negative and zero values. We transformed `competition_since_month` variable with this method.
+
+For Box-Cox and Yeo-Johnson Transformation, the method `.PowerTransformer` by scikit-learn was utilized, and best lambda values were chosen by the method.
+
+### Categorical Encodings
+
+In our model, we have a few features that are categorical and need to be converted into numerical ones. We call this conversion process as "Categorical Encodings". 
+
+There are a myriad of encoding methods available outside, and we will utilize a few of them. For more details on categorical encoding methods, [Baijayanta Roy's article](https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02) is worth reading. Our criteria to choose the most adequate method for each variable follows this useful chart:
+
+![](img/categoricalencoding.png)
+
+
+ To encode our categorical variables, we will utilize a few of them, namely: (1) One Hot Encoding; (2) Label Encoding; and (3) Ordinal Encoding
+
+#### One-hot Encoding
+
+Also known as the "dummy" encoding method, One-hot encoding creates new binary (0 or 1) columns from the original column. The number of columns to be created correspond to the number of values that the original column can assume.  An [example](https://www.kaggle.com/dansbecker/using-categorical-data-with-one-hot-encoding) retrieved from Kaggle shows how a categorical variable indicating color is transformed by One-Hot Encoding:
+
+![](img/onehotencoding.png)
+
+where each entry of the original column is transformed into a new variable, with value 1 indicating the presence of that color and 0 indicating otherwise.
+
+This method is simple (and in some cases, just fine) if compared to other methods. However, depending on how many entries a variable has, using One-hot encoding can significantly expand your dataset and therefore make your model complex and prone to issues related to multicollinearity (discussed in the EDA section), which can badly affect model predictions.
+
+We will use this method with the variables `state_holiday`, `assortment`, `store_type`,`competition_open_since_year`, `promo2_since_year`, since they have entries that don't have a ordinal nature, and don't have many entries.
+
+#### Label Encoding
+
+Label Encoding is an alternative method for One-hot encoding in case you can't bear up with adding extra features in your dataset. This method encodes, in only one column, values ranging from the number of entries an original variable has. Going back to the variable color example, we would get a column like this: 
+
+![](img/labelencoding.png)
+
+Although it avoids the creation of additional columns, it brings up a new problem: it creates some order between entries. In this example, red is zero and blue is 2, which indicates that entries containing blue color would have extra weight in the prediction time than red. But here, the color does not have an order at all.
+
+Therefore, if you have a nominal variable with a few entries or a variable with some ordering but it isn't quite clear the relationship between the entries, label encoding is a fair candidate. In our case, we used label encoding on the variable `store_type`, since it has three store types but we can't guess which type is worse/better than the other.
+
+#### Ordinal Encoding
+
+As the name suggests, this method is optimal for ordinal variables. The mechanics are the same as label encoding, but with one (and only one) difference: you determine how to label each entry. For variables that has some magnitude between them, you can order values accordingly. For example, temperature: 1 for "cold", 2 for "warm", 3 for "hot", 4 for "very hot".
+
+I opted to use ordinal encoding for the variable `assortment`, since it has three labels that have some magnitude between them: "basic" , "extra", "extended". I assigned values 1, 2, and 3, respectively.
+
+### Time-related Transformation (cyclic transformation)
+
+Some time-related data has a cyclical nature and does "come back" on time. This is the case for variables indicating day, month, day of the week, year week - once they arrive to the last value possible, they return to the initial value. Take month as an example: the calendar runs from January to December, and then goes back to January again.
+
+For such variables, it makes sense to scale them by using a method that is cyclical by nature. This is when trigonometry comes to play: sine and cosine represent values ranging from -1 and 1 that are cyclical!
+
+![](img/trigo.png)
+
+Think of this trigonometry circle in terms of time: as you start run the circle, at some point you will go back to the same place you have started. This is the rationale under the usage of sine and cosine as an encoder.
+
+Note: variables related to year must not be encoded with sine and cosine. After all, once a year is done, there's no way to go back to the first day of the same year (unless you have a time machine around).
+
+I used the sine and cosine transformations on the following variables: `day`,`month`,`week_of_year`,`day_of_week`,`promo2_since_week`,`competition_open_since_month`.
 
 [back to top](#table-of-contents)
 
