@@ -969,7 +969,9 @@ We won't go into details on how to calculate the Cramér's V, but you can find m
 
 Data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Some variables might be categorical or numerical, or a data type variable. The problem is: most ML models perform better when data is of numerical type, and without extreme ranges. Think of our project; we are trying to predict sales. If you have a variable with a high range (say, from 0-10000) and another with a low range (from 0 to 3.5), the model will weight the high-range variable more when predicting sales, and therefore delivering biased results.
 
-We will divide data preprocessing according to our variables: numerical scaling, categorical encoding, and time-related variables (cyclic transformation)
+We will divide data preprocessing according to our variables: numerical scaling, categorical encoding, and time-related variables (cyclic transformation). If you wish to skip the theoretical part, you can see a summary table of scaling methods utilized for each variable at the end of this section.
+
+[(skip theory)](#summary)
 
 ### I. Numerical Scaling
 
@@ -1133,14 +1135,23 @@ For such variables, it makes sense to scale them by using a method that is cycli
 
 ![](img/trigo.png)
 
-Think of this trigonometry circle in terms of time: as you start run the circle, at some point you will go back to the same place you have started. This is the rationale under the usage of sine and cosine as an encoder.
+Think of this trigonometry circle in terms of time: as you start running the circle, at some point you will go back to the same place you have started. This is the rationale under the usage of sine and cosine as an encoder.
 
 Note: variables related to year must not be encoded with sine and cosine. After all, once a year is done, there's no way to go back to the first day of the same year (unless you have a time machine around).
 
 I used the sine and cosine transformations on the following variables: `day`,`month`,`week_of_year`,`day_of_week`,`promo2_since_week`,`competition_open_since_month`. 
 New variables will be created and labeled with a prefix indicating sine or cosine like this: `_sin` and `_cos`.
 
-![](img/dataprep_variables.png)
+### Summary
+
+Our final list of variables is as follows:
+
+`'store', 'date', 'day', 'month', 'year', 'year_month','week_of_year','year_week', 'sales', 'customers', 'day_of_week', 'is_weekday','school_holiday', 'store_type', 'assortment', 'competition_distance''competition_open_since_month', 'competition_open_since_year','competition_since', 'competition_since_month', 'promo', 'is_promo2','promo2', 'promo2_since', 'promo2_since_week', 'promo2_time_week','promo2_time_month', 'gdp', 'cpi', 'interest_rate', 'unemployment_rate',
+'cci', 'state_holiday_christmas', 'state_holiday_easter','state_holiday_public_holiday', 'state_holiday_regular_day',
+'promo2_since_year_2009', 'promo2_since_year_2010','promo2_since_year_2011', 'promo2_since_year_2012',
+'promo2_since_year_2013', 'promo2_since_year_2014','promo2_since_year_2015', 'month_sin', 'month_cos', 'day_sin',
+'day_cos', 'week_of_year_sin', 'week_of_year_cos', 'day_of_week_sin','day_of_week_cos', 'promo2_since_week_sin', 'promo2_since_week_cos','competition_open_since_month_sin', 'competition_open_since_month_cos'`
+
 [back to top](#table-of-contents)
 
 ---
@@ -1164,7 +1175,7 @@ Boruta works in four steps:
 3. With the importance values (performance) of each variable, Boruta uses the shadow variable with the highest importance value, and compare it with all original variables' performance values. If a original value has a higher value than the the shadow variable value in question, then it receives a "hit" (described as 1); otherwise, it receives a zero. Then, we go back to step 1 and shuffle the shadow variables values again, train the ML algorithm, retrieve importance values, and sum up hit numbers for each iteration. The summation of ones and zeroes is then gathered in a "success count" table.
 4.  From the success count table, we get binary variables. Then, we use inferential statistics¹ to determine whether a binary variable has statistical relevancy or not. For binary variables that has relevancy, boruta returns the original variables (corresponding to their binary variables) as the variables selected to our model.
 
-¹ _quick note: we won't go further on how to perform inference, but there are plenty of sources that explains how to do so. Since binary variables can be analyzed within a [binomial distribution](https://www.youtube.com/watch?v=J8jNoF-K8E8), Boruta uses inferential statistics to analyze relevancy on such distributions. A first introduction to inferential statistics can be found [here](https://www.statisticshowto.com/inferential-statistics/) and a complete free course from Udacity can be found [here](https://www.udacity.com/course/intro-to-inferential-statistics--ud201).
+¹ _quick note: we won't go further on how to perform inference, but there are plenty of sources that explains how to do so. Since binary variables can be analyzed within a [binomial distribution](https://www.youtube.com/watch?v=J8jNoF-K8E8), Boruta uses inferential statistics to analyze relevancy on such distributions. A first introduction to inferential statistics can be found [here](https://www.statisticshowto.com/inferential-statistics/) and a complete free course from Udacity can be found [here](https://www.udacity.com/course/intro-to-inferential-statistics--ud201)._
 
 The columns selected by Boruta were:
 
@@ -1177,7 +1188,7 @@ The columns not selected by Boruta were:
 
 Remember our [hypothesis validation](#hypothesis-validation) list? We will use it to judge whether the Boruta algorithm has indeed selected relevant features to our model. Our compass is the relevance of each validated hypothesis, and a few variables were included to our final list of selected variables:
 
-1. Boruta has selected `promo2_since_year_2009` and left all the other dummy variables related to `promo2_since_year` out. Consecutive promo sales has a high relevance in our data, but we saw in the [multivariate analysis](#iii-multivariate-analysis) part that `promo2_since_year` has a high correlation with both `promo2_time_month` and `promo2_time_week`. Since these features possibly behave in a similar way, we will remove `promo2_since_year_2009`. 
+1. Boruta has selected `promo2_since_year_2009` and left all the other dummy variables related to `promo2_since_year` out. We saw in the [multivariate analysis](#iii-multivariate-analysis) part that `promo2_since_year` has a high correlation with both `promo2_time_month` and `promo2_time_week`. Since these features possibly behave in a similar way, we will remove `promo2_since_year_2009`. 
 
 2. `week_of_year_cos`, `day_cos`,`month_cos` were selected by Boruta but their counterpart `week_of_year_sin`, `day_sin`,`month_sin` wasn't. We will include them to our model.
 
@@ -1190,7 +1201,6 @@ Our final list of selected variable is as follows:
 
 ![](img/final_boruta.png)
 
-
 [back to top](#table-of-contents)
 
 ---
@@ -1199,31 +1209,547 @@ Our final list of selected variable is as follows:
 
 The fun part has just arrived! We divide this step into four tasks:
   
-  * **Performance Metrics**: choose suitable metrics to measure performance on our model. In this case, we will use three metrics:
-    1. Mean Absolute Error (MAE)
-    2. Mean Absolute Percentage Error (MAPE)
-    3. Root Mean Squared Error (RMSE) 
-  
-  * **Modeling:** split the dataset into training and validation data, and choose ML models to get the predictions. To get a criteria for which algorithm to run, check a cheat sheet for machine learning algorithms [here](https://blogs.sas.com/content/subconsciousmusings/2017/04/12/machine-learning-algorithm-use/). 
-  For our project, we will run to run the following models:
-    1. Mean of the target variable (baseline)
-    2. Linear Regression. If performance is poor, the data is probably complex and non-linear.
-    3. Random Forest Regressor and XGBoost Regressor
+* **Performance Metrics**: choose suitable metrics to measure performance of the predictive model;
+* **Modeling:** split the dataset into training and validation data, choose ML models to train the training data, and generate predictions on the validation data;
+* **Cross-validation:** assess the trained models' performance when facing unseen data.
 
-  * **Cross-validation:** in order to measure the real performance of each algorithm, split the dataset into k-folds (usually five folds), choose one fold to be the validation dataset, and run all algorithms. Repeat until you get the results for all folds, and average all results. The algorithm that produces the best result will be used in this prediction project. 
+If you wish to see the model's performance on cross-validation section, look no further and [(skip theory)](#cross-validation-performance)!
+
+### I. Performance Metrics
+Before we start training machine learning models, we have discussed in [data preparation](#02-data-preparation) that we split the dataset into training and validation datasets. The reason is to train the training dataset into the model, and to use validation data to validate whether the model is generating accurate predictions. We do this since we cannot measure model performance on data we want to get predictions (test data) - after all, test data doesn't contain the target variable. 
+
+Let's choose a few metrics to measure performance on them. Performance will be measured by errors, which is the distance between the predicted value we get from the model and the true value. To understand these metrics, let's step back once and understand what is an error (graph retrieved retrieved [here](http://www.sthda.com/english/articles/40-regression-analysis/167-simple-linear-regression-in-r/)):
+
+![](img/mpe.png)
+
+This is a representation of a regression line (in blue). A regression line is a line which contains predicted y values for each x value. Let's say that x is number of customers of stores, and y is the number of purchases done for a day. The black dots are the observed values (the true values), and the distance between the black dots to the regression line represents the error: by how much the predictions on the regression line is off. For our purposes, the performance metrics will allow us to find and interpreting such errors.
+
+We will use three: the Mean Absolute Error, the Mean Absolute Percentage Error, the Root-Mean Squared Error, and the Mean Percentage Error. If you know these metrics, you can go directly to the modeling part.
+
+[(skip theory)](#modeling)
+
+#### Mean Absolute Error (MAE)
+
+The Mean Absolute Error (MAE) takes the absolute difference between predicted and true value, sums up all absolute differences, and averages it by the number of elements present in the target variable.
+
+![](img/mae.png)
+
+![](img/mae_1.PNG)
+
+Let's set an example. Consider the weekly income in US$ for 3 workers: \$1,000, \$500, \$100. Then assume that you have a machine learning model that predicts weekly income and you want to check whether this model can accurately predict the same weekly income listed above. Then you get: \$2000, \$100, \$10.
+
+When you apply the MAE, you get the absolute errors (respectively): \$1,000, \$400, \$90. Then you sum up these values: \$1,490. Now average it by the number of workers (3) and you get \$496.66. Your model predicts with an average error of \$496.66.
+
+This is a okay-ish model, but what if you had an even better model? Let's test with the following predictions: \$999, \$499, \$40. Subtract them by the true value: \$1, \$1, \$10. Then sum up these values and average it by 3: \$4. Your model is much better: it predicts with an average error of \$4.
+
+As the example shows, MAE is very interpretable, since it shows by how much the predictions are off (on average). This is a good estimator for businesses since we can immediately recognize the impact of errors in the business.
+
+Also, MAE is robust to outliers since it weights equally for all errors due to the averaging term 1/n. This is not necessarily an advantage: for projects where errors should be close to zero (say, predicting existence of rare diseases on patients), the MAE tends to cover up the effects of outliers in the data.
+
+#### Mean Absolute Percentage Error (MAPE)
+
+The Mean Absolute Percentage Error (MAPE) is the MAE in percentage terms. It shows how far the predictions are from the true value, and like the MAE, it is very interpretable.
+
+![](img/mape.PNG)
+
+There is no much to explain here, despite the fact that MAPE is unusable when a variable contains zero.
+
+#### Root Mean Squared Error (RMSE) 
+
+The Root Mean Squared Error (RMSE) is the square root of the average of squared differences between predicted values and true values. 
+
+![](img/rmse.PNG)
+
+Unlike the MAE that measures absolute error values, here we square the errors - which makes the RMSE very sensitive to outliers. Since the RMSE heavily weights big errors than small errors, this is a good metric to measure a model's performance in a more rigorous way.
+
+Let's set the past example with weekly incomes: \$1,000, \$500, \$100. Assume your predictions are the same as the example given: \$2000, \$100, \$10. Then, we get the error by subtracting actual with predicted values and squaring it: \$1,000,000, \$160,000, \$8,100. Sum them up and divided it by the number of workers (3) to get \$389,366. Then we take the square root: around \$623.99.
+
+The MAE was \$496.66 against a RMSE of \$623.99. Think of predicting rare diseases on patients - you will want to use the RMSE to ensure the model is very accurate. However, for fields that don't need such rigor, the MAE is preferred since it is easier to interpret in business terms than RMSE.
+
+#### Mean Percentage Error (MPE)
+
+The Mean Percentage Error (MPE) measures if the model is underestimating or overestimating the predictions in percentage terms. 
+
+![](img/mpe_1.PNG)
+
+Observe the formula's right-hand side. Unlike MAPE, MPE doesn't care about getting the absolue value of the errors - it just sums up all positive and negative errors. If the MPE turns to be positive (MPE > 0), it means that the model is underestimating predictions, while a negative MPE (MPE < 0) means that the model is overestimating them.
+
+Think of the regression line we illustrated [here](#performance-metrics). Overall, if the regression line is above the black dots, it means that errors are negative valued; if the line is below, the errors become positive valued. 
+
+Due to the denominator term in the formula, we can't use MPE if a variable y has zero entries.
+
+
+### II. Modeling 
+In data science projects that uses machine learning techniques, it is good practice to select some algorithms to train the original dataset, and evaluate predictions on them with the validation data. Our performance metrics (and business needs) will tell us which algorithm is best suited as a final solution. 
+
+Machine learning models can be of three types:
+
+* **Supervised**: a supervised machine learning model is when the variable to be predicted is well known. In supervised models, the data to be trained is well defined - the experimenter knows the dependent and independent variables from the data; 
+
+* **Unsupervised**: an unsupervised model is used when the variable to be predicted is not known. This happens when the experimenter wants to find some similarities between data points, such as dividing data into groups that have some sort of relationship.
+
+* **Reinforcement**: a reinforcement model is used when the experimenters wants to maximize the model's output. The model "learns" on the go by trial-and-error: as new data join the model, it tries to find the best solution that maximizes the "reward". Think of an automated car: its sole goal is to arrive at a particular destination by being fuel efficient, with minimal ride time, and in safe. A reinforcement model learns by trying several routes, registering their performance, and utilizing routes that best achieve the goal. 
+
+For a detailed explanation on supervised, unsupervised, and reinforcement models, check this [article](https://intellipaat.com/blog/supervised-learning-vs-unsupervised-learning-vs-reinforcement-learning/).
+
+In this project, we clearly have a target variable to get predictions on, so we will build a supervised model. To get some criteria for which algorithms to run, check a cheat sheet for machine learning algorithms [here](https://blogs.sas.com/content/subconsciousmusings/2017/04/12/machine-learning-algorithm-use/). 
+
+For our project, we will run 7 models: (1) Mean of the target variable (baseline); (2) Linear Regression; (3) Lasso Regression; (4) Ridge Regression; (5) ElasticNet Regression; (6) Random Forest Regressor; (7) XGBoost Regressor.  
+
+If you wish to see a summarized table with each model's performance, you can always [(skip theory)](#model-performance)
+
+#### A quick note on Underfitting and Overfitting
+
+Before we proceed with our models, let's talk about underfitting and overfitting. In machine learning models, we usually worry about models presenting underfitting and overfitting problems:
+
+![](img/fitting.png)
+
+In this example (retrieved from [Dados Aleatórios](https://www.dadosaleatorios.com.br/post/overfitting/)) we can get a taste on how overfitting and underfitting can affect a machine learning model. We have three graphs; each one trying to fit a best prediction line/curve that minimizes the error - the distance between the prediction line and the true value (the pink dots). The overfitting model shows a curve that perfectly fits all actual values with zero error; the optimum model predicts fairly good with a few errors; and the underfitting case presents huge error values.
+
+One would say that the overfitting model is the best one, since predictions are precisely the same as the true values (pink dots). But think of how machine learning models work: we pick an algorithm, train it with training data, and utilize a validation data to get predictions. If predictions are too accurate on validation data, it means that the model will be extremely accurate just for the validation data! In other words, when the same model tries to generate predictions on a different data (say, the test data), then results will be pretty unreliable.
+
+On the other hand, the underfitting case indicates that the model is too simple and does not capture well the features present in that model. When a model presents underfitting problems, it means that predictions will have a high bias in both validation data AND the test data - making it an unreliable model to work with.
+ 
+There are many ways to avoid overfitting/underfitting in a model. Some are: 
+* **Overfitting**: eliminate redundant variables (less complex data), add more data, use cross-validation techniques (we will get into this later), regularization;
+* **Underfitting**: add relevant variables, increase the model complexity, increase the model's training time (allowing it to better capture the data patterns)
+
+_For a concrete explanation on overfitting and underfitting, [this Kaggle course](https://www.kaggle.com/dansbecker/underfitting-and-overfitting) can be of help._ 
+
+In this project, we will often look at ways to prevent overfitting and underfitting. Some models such as the regularization models (Lasso, Ridge, ElasticNet) and tree-based models (Random Forest and XGBoost) can actually work on controlling such issues as we will see throughout this section. 
+
+#### 1. Mean of the target variable (baseline)
+We use the mean of the target variable as a comparative baseline since it is the simplest form to estimate values. We got the following results:
+
+![](img/avg.png)
+
+#### 2. Linear Regression
+Remember we saw a linear regression line when introducing [performance metrics](#performance-metrics)?
+
+![](img/mpe.png)
+
+Let's recap again. A linear regression line is a statistical technique that aims to predict a dependent variable by fitting a best line. This line (depicted in blue) is a tentative to depict the relationship of the dependent variable (y) and the independent variable (x). The black dots are the observed (true) value, and the red line connecting the regression line with the black dots is the error term (e), or by how far predictions generated by the regression line are off when compared to their true value.
+
+There are two main types of linear regression lines: simple and multiple. **Simple linear regression** predicts the dependent variable based on only one independent variable, while a **multiple linear regression** utilizes several independent variables to predict the dependent variable.
+
+The multiple linear regression looks like the case for our project, since we have several predictors. A multiple linear regression can be mathematically expressed like this:
+
+![](img/lr_1.PNG)
+
+The betas are parameters that represent the value of the dependent variable when the independent variables (the X's) have value 1. 
+
+Let's set an example. Let Y be the sales revenue for Rossmann stores for a given day, X1 the number of customers, X2 the number of customers with a membership card. Now let's assume that we didn't welcome any customer with membership card - set X2 to zero in our formula. Then, the dependent variable Y is just the beta corresponding to the variable X1, the y-intercept (beta zero) and the error term. In this case, we see the sole effect of number of customers on predicting the dependent variable Y.
+
+Beta parameters are calculated through a technique called Ordinary Least Squares (OLS). The OLS calculate each independent variable's beta parameter by minimizing the error term. More details on OLS can be found [here]((https://en.wikipedia.org/wiki/Ordinary_least_squares)).
+
+Let's go back to our example. Assume that we have calculated the beta parameters, with B0 (the y-intercept) being zero, B1 being 400, and B2 being 200. If we wish to know the predition sales when a store has zero customers (X1 = 0) and zero customers with membership card (X2 = 0), sales revenue will be just B0 = zero. If we want to know the effect of one customer on sales prediction, we set X1 = 1 and X2 = 0 to get $400. **This is the power of linear regression models: it is very interpretable, and relatively simple model for predictions.** 
+
+However, linear regression has some assumptions to be considered before one choose it as a prediction model candidate:
+
+1. **Linearity**: independent variables have a linear relationship with the dependent variables.
+
+2. **Multicollinearity**: independent variables are not highly correlated with each other.
+
+3. **Residual variance**: the variance of the errors between true and predicted values is constant. When errors are too unstable, we have a problem called [heteroscedasticity](https://en.wikipedia.org/wiki/Heteroscedasticity) - in which there is a high variance on predicted values across independent variable values, leading to unreliable predictions. 
+
+4. **Independence**: errors are uncorrelated to each other.
+
+5. **Endogeneity**: independent variables are uncorrelated with the errors.
+
+For a detailed explanation on OLS assumptions, check the [365 Data Science](https://365datascience.com/ols-assumptions/) article.
+
+In this project, we analyzed some OLS assumptions in the [exploratory data analysis](#multivariate-analysis) section by checking multicollinearity and linearity. If the linear regression model performance is poor, the data is probably complex and non-linear.
+
+Our results were as follows:
+
+![](img/lr_result.png)
+
+#### 3. Ridge, Lasso, and ElasticNet Regression
+
+_The following part explores regularization techniques for linear regression models. Some examples were retrieved from Masum Rumi's [detailed regression guide with regularization techniques](https://www.kaggle.com/masumrumi/a-detailed-regression-guide-with-house-pricing#Fitting-model-(Advanced-approach)); therefore, if you wish to consult the original source, look no further and read his article_.
+
+Ridge, Lasso, and ElasticNet are the next models we will test for this project. These are linear regression models known as regularization models, and have the ability to prevent overfitting by reducing the impact of the features (the beta parameters) on the predictions, and also to minimize the errors between the predicted value and the true value with a OLS loss function.
+
+Think about the "perfect", overfitting problem: the predicted values are the same as the observed values. When we try using different data on the overfitted model, it generates unreliable predictions. One way to get rid of this problem is to "penalize" the beta parameters that are too "perfect": we add extra weight on each of them.
+
+To understand them, let's go back to our linear regression model:
+
+![](img/regularized.PNG)
+
+We could rewrite this (excluding the error term) as:
+
+![](img/regularized_1.PNG)
+
+Now, we introduce the residual sum of the squares (RSS), which is the sum of all error terms obtained from the regression line but squared:
+
+![](img/regularized_2.PNG)
+
+![](img/regularized_3.PNG)
+
+
+Now we are ready to explore regularized models. 
+
+
+* **Ridge Regression (L2)**
+
+Known as the L2 regularization model, the Ridge regression penalize beta parameters by adding the square value of each parameter in the model:
+
+![](img/ridge.PNG)
+
+We obtained the following results:
+
+![](img/ridge_results.png)
+
+* **Lasso Regression (L1)**
+
+Known as the L1 regularization model, the Lasso regression penalize beta parameters by adding the absolute value of each parameter in the model:
+
+![](img/lasso.PNG)
+
+Lasso adds the sum of all absolute beta parameters to the loss function. This means that Lasso is more aggressive when penalizing parameters of highly correlated variables, since it can set them to zero. Therefore, the Lasso also works as a feature selection method from the standpoint of a linear regression model. 
+
+We obtained the following results:
+
+![](img/lasso_result.png)
+
+* **ElasticNet Regression (L1+L2)**
+
+ElasticNet is the just the combination of Ridge and Lasso:
+
+![](img/elasticnet.PNG)
+
+We obtained the following results:
+
+![](img/elasticnet_results.png)
+
+The next models are random forest regression and XGBoost regression. In order to understand both, let's learn the foundation behind random forests: **decision trees**.
+
+#### Decision Trees
+
+You probably have already used or heard of decision trees before. A decision tree is a predictive technique in which the data is splitted into groups (or "nodes") given its similarities. See an example of a decision tree that tries to predict sales revenue on a given day from only one variable: number of customers (also called "root node"). We set the total number of stores to N = 100. There is only one split that generates two "terminal nodes" (also called leaves):
+
+![](img/decisiontree_1.PNG)
+
+Note that we divided the number of stores by the threshold of 10,000 customers. On the left-hand side, 50 stores had below 10,000 customers on a sales day, against equally 50 stores with above 10,000 customers. Then we average sales revenue registered by all 50 stores on each side to get \$10,000 and \$15,000, respectively.
+
+Now let's evaluate this decision tree model we've just made up. If you try to predict sales revenue for one store that had below 10,000 customers on that particular day, would you trust the model and take the $10,000 prediction as given? Probably not and maybe you realize two things that are lacking in here: (1) **the model is too simple** since it uses only number of customers as a predictor; (2) **the predictor doesn't split well** our stores, since the total number of stores (observations) are splitted equally from the root node. Decision tree is a powerful tool because it prioritizes the usage of variables that splits well our data - therefore, we would ideally have a small number of stores in one side, and a big number of stores in the other side. This problem comes from the concept of **entropy**, which measures the impurity in the system (in this case, the node). 
+
+Let's add more decision nodes (variables) to the decision tree model:
+
+![](img/decisiontree_2.PNG)
+
+Now we utilized traditional promo sales as the root node. Observe that it splits our number of observations in a better way (80/20) than number of customers (50/50). Also, we utilized number of customers and distance from competitors as decision nodes, giving more depth (complexity) to our model.
+
+As we did before, let's evaluate the new model. For a store that is holding traditional promo sales, and have below 10,000 customers on a given day, the average sales revenue is \$5,000. I am not sure if you would trust this model, but at least it is way better than the previous one, since it is splitting observations into well defined categories, and have more variables influencing the final average sales revenue.
+
+In real life, we would have several variables that the decision tree can utilize to train the model. Decision trees use entropy to choose the right variables to split data, since the goal is to have less impure categories after split. Therefore, tree-based models are sensitive to changes in the dataset: removing a few entries could completely change the set of variables chosen for a tree model. 
+
+**A quick note on underfitting/overfitting.** Tree-based models such as the decision tree might suffer from underfitting issues if you make you model too simple, or overfitting issues if you add too many variables to the model. Usually, tree-based algorithms have some parameters to help us avoiding these issues - we will get into this when introducing random forests.
+
+#### 6. Random Forest Regression
+
+Roughly speaking, Random Forests uses several decision trees to generate even more accurate predictions than a singl decision forest. The idea comes from **ensemble learning**: instead of training data in a very accurate and complex model, use several low-accuracy models to "learn" the data and then combine predictions from these models to achieve high-accurate predictions. Algorithms that uses ensemble learning are random forests and gradient boosting (to be explored soon).
+
+To understand how random forests operate, imagine that we have a dataset with 7 predictors and a target variable Y (say, sales revenue) like this:
+
+![](img/random_1.PNG)
+
+In this simplified dataset, the random forest algorithm then randomly selects a **sample of data entries** AND a **sample of columns** to create an individual decision tree. Then it repeats for n decision trees, with different sample of data entries and columns on each decision tree. At the end, we will have several decision trees with totally different combinations of trees and data entries. Then we aggregate all predictions to find our final prediction - this technique is known as **bagging**. 
+
+In our example, let's say that we used n = 6 decision trees in our random forest, and the maximum depth of each tree is two (we split our root node two times). The first tree used independent variables X1 and X2, the second used X4 and X2, third used X1 and X4 and so forth - all with different data entry samples from each other:
+
+![](img/random_2.PNG)
+
+<center><img src="img/random_3.PNG" alt="drawing" width="70%"/></center>
+
+Suppose we want to predict sales revenue of a specific store of number 10. Based on the features of that store nº 10, we go over each decision tree and calculate the average sales revenue for stores with similar features to our store. Then, we average all trees' average sales revenues to get our final prediction. In this case, it is $7,000.
+
+In mathematical terms, the random forest formula is:
+
+![](img/random_4.PNG)
+
+Random forest is a powerful algorithm because it reduces the variance of our model. In other words, it ensures that each tree has a low correlation with other trees (after all, they are all distinct decision trees), giving reliable predictions by combining the performance of all trees. In our project, we obtained the following results:
+
+![](img/rf_results.png)
+
+#### 7. XGBoost Regression
+
+The XGBoost Regression is a very effective algorithm that is based on decision trees and uses the same structure of **gradient boosting** algorithms. Since we already know what is a decision tree, we are left with explaining the gradient boosting before going down to the nitty-gritty of the XGBoost Regressor.
+
+To understand gradient boosting, we will go over these steps:
+
+* I. Define the model inputs;
+* II. Calculate baseline
+* III. Calculate pseudo-residuals
+* IV. Fit a regression tree and calculate "output values"
+* V. Generate predictions
+&nbsp;
+
+##### I. Model Input
+A gradient boosting algorithm requires two inputs:
+
+* **the data itself**
+* a differentiable **loss function (or "cost function")**: in a regression context, it is a function that shows the error (observed value _minus_ the predicted value) obtained from a model. 
+
+To make things simple, imagine that we will train a gradient boosting model to predict sales revenue of stores, and we have three main features: number of customers, holiday sales day, promo sales day. In this simple model, we will have just 7 entries (n = 7):
+
+![](img/xgb.PNG)
+
+In mathematical terms, **the data** above can be described as:
+
+![](img/xgb1.PNG)
+
+The next input is the **loss function**. For regression models, the loss function could assume any formula that returns the **error** (difference between observed and predicted values); for instance, we could even use the Mean Squared Error (MSE) (already discussed in [performance metrics](#performance-metrics)) as a loss function. Just to refresh our minds, check below the linear regression line again. The red line is the errors that a loss function aims to find:
+
+![](img/mpe.png)
+For linear regression, the loss function it is the residual sum of squares (RSS) we already saw before:
+
+![](img/regularized_2.PNG)
+
+Gradient Boost models, however, don't use the MSE but the **observed value minus the predicted value squared divided by 2** as the loss function:
+
+![](img/xgb2.PNG)
+
+We usually call the errors in linear regression models as "residuals", but in gradient boost models we refer to them as "pseudo-residuals". 
+&nbsp;
+
+##### II. Calculate baseline
+
+Now that we have the data and a loss function, we can work on initiating the gradient boost model. First, we need a predicted value as a baseline to calculate the pseudo-residuals (errors) of each entry. In this case, we use the average of sales revenue ($5,571). 
+Then, we get the residuals by subtracting the observed value (sales of each store) by the predicted value (average of sales revenue): 
+
+![](img/xgb_2.PNG)
+
+Note that if the gradient boosting algorithm stops here, then our predicted value for all stores would be the average sales revenue, and the errors would be exactly as displayed in the red column. We are not satisfied by this 1st prediction, but it is the starting point of the gradient boosting model.
+
+Let's mathematically prove how we end up with average sales revenue as the first prediction value in the model. In a next step, we will find how the pseudo-residuals are calculated.
+
+Remember the F(x) term we saw earlier in the loss function? Let's define it mathematically (read the formula from right to left):
+
+![](img/xgb3.PNG)
+
+
+If you know calculus, one could find the predicted value that minimizes the sum of all individual loss functions by taking the derivative of each term, summing up the results, and setting to zero. Let's first take the partial derivative of the loss function with respect to the predicted value F(x):
+
+![](img/xgb4.PNG)
+
+then:
+
+![](img/xgb5.PNG)
+
+Now, apply the derived loss function to the prediction function, and set it equal to zero:
+
+![](img/xgb6.PNG)
+
+
+Substituting the observed values from the table to our formula:
+
+![](img/xgb7.PNG)
+
+Rearranging we have: 
+
+![](img/xgb8.PNG)
+
+which is exactly equal to the average of sales revenue. Therefore, **the first prediction value that the gradient boost model uses as a baseline is just the average value of the observed values**.
+
+##### III. Calculate pseudo-residuals
+
+The next step the model takes is to calculate the residuals for each entry based on the baseline (average sales revenue):
+
+![](img/xgb9.PNG)
+
+where,
+
+![](img/xgb10.PNG)
+
+
+This formula might look complicated, but it simply tells us that r(im) is the optimal residual value in respect to the first decision tree (m = 1). We have already taken the partial derivative of the loss function with respect to prediction function F(x), so we can rewrite the residual formula as:
+
+![](img/xgb11.PNG)
+
+Then, we calculate the residual for each store (i):
+
+![](img/xgb12.PNG)
+
+which is exactly the values displayed in the initial table:
+
+![](img/xgb_2.PNG)
+ 
+Although the average sales of all stores is not an ideal sales predictor, gradient boost model uses it as a starting point to develop more accurate predictions as we will see soon.
+
+##### IV. Fit a regression tree and calculate "output values"
+
+In this task, we will fit a base learner (a decision tree) and calculate "output values" that will help us reducing the existent pseudo-residuals. Roughly speaking, we are building trees to "predict" residuals. Although it might sound weird to predict residuals, things will be much clearer afterwards.
+
+To make things easier to understand, we will use a simple [adaboost](https://en.wikipedia.org/wiki/AdaBoost) example, which is a decision tree with one node and two leaves (also known as "stump"). In this particular case, "is holiday?" variable was used as a node.
+
+![](img/xgb_3.PNG)
+
+where each leaf has pseudo-residual values that corresponds to the stores that were opened on holidays or not. In real world, though, gradient boost uses decision trees with more depth than this.
+
+We start by creating **"terminal regions" _R(j,m)_**, where _j_ is a value from one to _j_ leaves, and _m_ is the tree number. In this case, we have two leaves in our first tree (m=1): _R(1,1)_ for the leaf in the left side, and _R(2,1)_ for the leaf in the right side. 
+
+Then, we need to calculate the output value (gamma) for each terminal region (leaf):
+
+![](img/xgb13.PNG)
+
+where,
+
+![](img/xgb14.PNG)
+
+In plain English, this formula tells us to find the output value $\gamma$ that minimizes the sum of all loss function (residuals) of the terminal region _R(j,m)_.
+
+As an example, let's calculate the output value with the terminal region _R(1,1)_:
+
+![](img/xgb15.PNG)
+
+![](img/xgb16.PNG)
+
+
+The output value that minimizes the sum of the loss function for the first leaf is just the **average of the residuals of the first leaf** (-1,071). This is similar to what we did when calculating the first prediction value (the average of sales revenue). Therefore, the output values will always be the average of the residuals within a terminal region.
+
+See below our updated tree with output values. Note that we only did the algebra for the 1st terminal region (leaf), since calculating the 2nd terminal region would be too much for our purposes.
+
+![](img/xgb_4.PNG)
+
+##### V. Generate predictions
+
+Now it's the time we generate predictions with the gradient boosting model. In our case, we had the first prediction which was the average sales revenue. Now we will use the decision tree we trained on the previous step, use its output values, and generate new predictions.
+
+We will start by an example. We will predict sales for the first store (i = 1), where we sum the first prediction (baseline) and a learning rate multiplied by the output value corresponding to that observation. The learning rate is a value between 0 and 1, and the smaller the learning rate, the less effect the trained tree has on the final prediction:
+
+![](img/xgb_5.PNG)
+
+We obtained the value \$5,463.90, which is a better prediction than the baseline and closer to the true sales revenue of $5,000.
+
+Let's check the performance for the other stores. The new predicted values are in the F1(x) column and the average sales revenue (the baseline) is denoted by F0(x):
+
+![](img/xgb_6.PNG)
+
+ Note that while some stores had their sales prediction values improved, some other didn't. The reason is that we have trained only one tree, which uses only one node and two leaves - a stump - which is not the most ideal decision tree model in the world. 
+
+Remember: the gradient boost starts with a baseline, trains a single tree based on the idea of finding the output value that decreases the error (residuals), multiply it by a learning rate to lessen the effect of that single tree on predictions, and sum up all values to get the final prediciton value. But what if that single tree was not a stump but a tree with more nodes and deeper depth? We would probably get more reliable predictions with that tree right?
+
+However, gradient boosting isn't all about single trees. What if we repeat the same process we just did by training 100 deeper trees (instead of one), and generate predictions for each tree based on the performance of previous trees? Then it will be likely the case that we will generate more good individual trees than "bad" individual trees, and we would gradually get pretty decent predictions for each store. 
+
+In mathematical terms, we can describe new prediction Fm(x) for each store x (or i) as:
+
+![](img/xgb17.PNG)
+
+We already know the values of the 1st prediction F1(x), but let's calculate it by using the presented formula:
+
+![](img/xgb18.PNG)
+
+Remember: this prediction takes into account the baseline and the first decision tree. Usually, gradient boost models use much more than 1 decision tree. 
+
+For m = 1 to M, we must iteratively go over the steps III, IV, V as we did before. For the sake of simplicity, let's add the second decision tree (m = 2) and see how the gradient boost model performs. 
+
+* **III. Calculate pseudo-residuals**
+  &nbsp;
+  ![](img/xgb19.PNG)
+  &nbsp;
+
+  ![](img/xgb_7.PNG)
+  &nbsp;
+* **IV. Fit a regression tree and calculate "output values"**
+  Let's create a new decision tree and calculate output values:
+  &nbsp;
+  ![](img/xgb_8.PNG)
+  &nbsp;
+  We know that the output values is the average of all residuals on each terminal region:
+  ![](img/xgb20.PNG)
+
+  &nbsp;
+* **V. Generate predictions**
+  &nbsp;
+  ![](img/xgb21.PNG)
+  &nbsp;
+  ![](img/xgb_9.PNG)
+
+  For stores 1, 4, 6, 7 we got much better predictions than F0(x), while for 2, 3, 5 we got worse predictions. If you compare the first prediction F0(x) and F1(x) to F2(x) prediction values, we see more variability among values, which indicates that the more trees are added, the more specific the predictions will be for each store. Therefore, even though we had some worse predictions on F2(x), the tendency is to get better predictions as the number of trees increases.
+&nbsp;
+
+Now that we have two trees in our model, what if we have new data for one store and want to predict its sales revenue?
+
+![](img/xgb_10.PNG)
+
+In this example, our gradient boosting model predicted a sales revenue of $5,328.51 for store nº 10.
+
+By setting the example above, we depicted the main message of gradient boosting: by training several individual ("weak") trees, we focus on gradually minimizing the error for each of them (hence the name ["gradient"](https://en.wikipedia.org/wiki/Gradient_descent)), and combine the outputs of all trees altogether (hence the name "boosting") to generate the final prediction value.
+
+With all of gradient boosting mechanics explained, **the XGBoost Regressor (XGB)** is a variant of the gradient boost model. There are many advantages of XGB over the gradient boost model, such as:
+
+* **Regularization**: like the Ridge/Lasso/ElasticNet regressors that penalizes parameters to lessen the effect of unrelevant features during prediction, XGB also imposes a regularization on each tree's leaves, which helps reducing overfitting.
+
+* **Tree Pruning**: If necessary, XGB prune leaves (and even trees), which helps avoiding overfitting. 
+
+* **Computation Processing**: XGB trains faster than gradient boosting and some other models due to its [parallel processing](https://searchdatacenter.techtarget.com/definition/parallel-processing)
+
+* **In-built Cross-Validation**: the algorithm can handle cross-validation for each iteration, and use the optimum number of iterations according to prediction results;
+
+Since the mechanics of the math present in the gradient boost is somewhat similar to the XGBoost, we will not cover the model here. There are two excellent videos from StatQuest on Youtube that explains the [model](https://www.youtube.com/watch?v=OtD8wVaFm6E), the [math behind the algorithm](https://www.youtube.com/watch?v=ZVFeW798-2I) and the [parameters](https://www.youtube.com/watch?v=oRrKeUCEbq8) in detail. Also, the [paper](https://arxiv.org/abs/1603.02754) written by the XGBoost creators themselves could be of some help. Xgboost parameters will be explored in depth on the [hyperparameter tuning](#08-hyperparameter-tuning) section.
+
+With the XGBoost regressor, we obtained the following results:
+
+![](img/xgb_results.png)
+
+&nbsp;
+
+#### Model Performance
+
+Here we show all algorithm performances we obtained:
+
+![](img/single_performance.png)
+
+We have the Random Forest Regressor and XGBoost Regressor models generating less errors than the others (MAPE: 5-9%), and our baseline model is the worst model (MAPE: 20%). As we can tell, linear models performed fairly good but not as good as decision-tree based models. One of the reasons is that our data is not linear - therefore, decision-tree models would perform better.
+
+&nbsp;
+
+### III. Cross-Validation
+
+The results obtained with the models gave us a taste on how well each algorithm predicted our target variable. However, in order to measure the real performance of machine learning algorithms, we must go over to one of the most important steps in data science projects: the cross-validation. 
+
+Cross-validation is a method to test an algorithm performance across the whole data by splitting it into k-folds (usually five folds), choosing one fold to represent the validation data (being the remnant the training data), training the model, and calculate the error metrics MAE, MAPE, and RMSE.. Then we go back to splitting the data but selecting a different k-fold as the validation data, and run the same process. Repeat it until you get the results for all folds, and average all the error metrics. We do this to each algorithm, and compare results across different algorithms to determine the best model. 
+
+In this project, we used time to split the data into k-folds. For k = 1, training data represents the whole data minus the last six weeks, and the validation data is exactly the last six weeks of the whole data. We train all models for this fold and obtain the performance measurement metrics. For k = 2, training data is the whole data minus the last 12 weeks, and the validation data is the last 12 weeks. We do the same thing: train all models and obtain the metrics. By the time we finish k = 5, we should be able to calculate the average of each error metric for each model.
+
+We obtained the following results:
+
+![](img/cross_valid.png)
+
+The results confirm what we saw earlier: the Random Forest Regressor and the XGBoost Regressor generates less errors with MAPE of 7% and 9%, respectively. Since the XGBoost Regressor is known to train data fastly than random forest algorithms (and the model performance is not too different), we will use the XGBoost regressor as the main machine learning model for our project.
 
 [back to top](#table-of-contents)
-
 
 ---
 ## 08. Hyperparameter Tuning
 
 [(go to next session)](#09-error-interpretation-business-performance)
 
-in this task, our goal is to find the best parameters which maximizes the learning on our model. There are three methods to find these parameters:
-    1. Random Search: this method randomly choose parameters from a given list. It is the fastest method available;
-    2. Grid Search: this method is the most complete one and find the absolute best values for each parameter on the model. Once a list of parameters is set, this method performs combination of every single possibility among parameters. Very slow and costly;
-    3. Bayesian Search: based on the Bayes' Theorem, this method defines parameters according to prior knowledge. It starts with one initial set of parameters that has its performance calculated. Then, for the next set of parameters, one parameter is changed and its performance is calculated again. If results get better, parameters will be changed. Otherwise, parameters will be kept. This method is faster than Grid Search and slower than Random Search.
+In this task, our goal is to find the best parameters that maximizes the learning in our model. The best parameters are found by testing a set of parameters iteratively - the set that best performs is the chosen one. There are three methods to find these parameters:
+  1. Random Search: this method randomly choose parameters from a given list of candidates. It is the fastest method available;
+  2. Grid Search: this method is the most complete one and find the absolute best values for each parameter on the model. Once a list of parameters is set, this method performs combination of every single possibility among parameters. Very slow and costly;
+  3. Bayesian Search: based on the Bayes' Theorem, this method defines parameters according to prior knowledge. It starts with one initial set of parameters that has its performance calculated. Then, for the next set of parameters, one parameter is changed and its performance is calculated again. If results get better, parameters will be changed. Otherwise, parameters will be kept. This method is faster than Grid Search and slower than Random Search.
+
+In this project, we will use the Random Search on the XGBoost Regressor. The XGBoost Regressor have the following parameters (descriptions retrieved from the [official documentation](https://xgboost.readthedocs.io/en/latest/parameter.html#general-parameters), and [Cambridge Spark](https://blog.cambridgespark.com/hyperparameter-tuning-in-xgboost-4ff9100a3b2f)):
+
+1. `objective`: parameter that sets the learning method and the loss function. In our model, we set `objective='reg:squarederror'` which is a regression with squared loss
+2. `n_estimators`: number of trees
+3. `eta`: the learning rate. A lower eta makes our model more robust to overfitting thus, usually, the lower the learning rate, the best. But with a lower eta, we need more boosting rounds, which takes more time to train, sometimes for only marginal improvements.
+4. `max_depth`: maximum depth of a tree (or maximum number of nodes). Deeper trees can model more complex relationships by adding more nodes, but as we go deeper, splits become less relevant and are sometimes only due to noise, causing the model to overfit.
+5. `subsample`: ratio of training sample (example: 0.5 means that XGBoost will randomly sample half of training data before growing trees. It prevents overfitting)
+6. `colsample_bytree`: ratio from 0 to 1 representing the number of columns used by each tree.
+7. `min_child_weight`: is the minimum weight (or number of samples if all samples have a weight of 1) required in order to create a new node in the tree. A smaller `min_child_weight` allows the algorithm to create children that correspond to fewer samples, thus allowing for more complex trees, but again, more likely to overfit.
+
+We found out that the best set of parameters were:
+
+`param_tuned = {'n_estimators': 1500,'eta': 0.03,'max_depth': 9,'subsample': 0.7, 'colsample_bytree': 0.9 ,'min_child_weight':8}`
+
+Using the optimal set of parameters, we obtained the following results:
+
+![](img/xgb_tuned.png)
+
+which had a MAPE improvement of 5%.
 
 [back to top](#table-of-contents)
 
@@ -1232,8 +1758,25 @@ in this task, our goal is to find the best parameters which maximizes the learni
 
 [(go to next session)](#10-deploy-machine-learning-model-to-production)
 
+In this step, we analyze the predictions' performance generated by the XGBoost model from a business perspective. Our focus is to translate and interpret errors from our ML model into three steps:
 
-Also known as _Residual Analysis_, in this step we analyze the predictions' performance from a business perspective. Our focus is to translate and interpret errors from our ML model. 
+### I. Business Performance for each store
+
+In this project, business performance for each store is measured by the average of predicted sales for the next six weeks. We then sum up the predictions with the Mean Absolute Error (MAE) to get the best scenario figures and subtract predictions with the MAE to get the worst scenario figures. Here's a sample of our model performance for 10 stores:
+
+![](img/business_performance.PNG)
+
+### II. Worst Performance
+
+To check if there's any store that our model couldn't predict well, we plot a scatterplot with stores in the x-axis and the Mean Absolute Percentage Error (MAPE) in the y-axis:
+
+![](img/worst_stores.PNG)
+
+The stores circled in red have high MAPE values. Let's identify these stores:
+
+![](img/worst_stores_1.PNG)
+
+Store 909 has a MAPE of 20%, which means that predictions are off by 20%. Store 875 and 291 are off by 16% and 14%, respectively. Usually, the business have the final word on how permissible these error percentages can be when determining the model performance. As we saw in the scatterplot above, the model performs fairly well for most of the stores with a MAPE of ~5%, but prediction for these stores should be analyzed in more detail. In this project, we don't have access to information; therefore, we will fictionally consider that the business has approved the model predictions.
 
 [back to top](#table-of-contents)
 
@@ -1276,5 +1819,3 @@ CCI https://data.oecd.org/leadind/consumer-confidence-index-cci.htm
 
 
 [back to top](#table-of-contents)
-
-
