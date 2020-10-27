@@ -1,4 +1,4 @@
-# From Statistics 101 to Production: a Sales Prediction Project for Rossmann
+# Data Science Under the Hood: a Sales Forecast Project for Rossmann
 <img src="https://insideretail.asia/wp-content/uploads/2020/09/Rossmann.jpg" alt="drawing" width="100%"/>
 
 _This sales prediction project uses data from Rossmann, a Germany-based drug store chain with operations over more than 3,000 stores across seven european countries. The dataset is publicly available from a [Kaggle competition](https://www.kaggle.com/c/rossmann-store-sales/data)._
@@ -10,21 +10,21 @@ For starters in the Data Science field, it is not always clear how to build end-
 3. Unlock insightful information for the business by doing a thorough, detailed data study over the company's data.  
 4. Deploy a complete solution suitable for the business needs. Here, we will go from understanding the business demands and prepare the data, to Machine Learning (ML) modeling and posterior production. Our final product will be to generate sales predictions on a smartphone application.
 
-#### A note about Machine Learning
+### A note about Machine Learning
 
 In this project, we will use machine learning to predict sales. Therefore, we will intermittently use machine learning terms throughout the project such as training, test data, hyperparameter tuning, etc. **If you need a quick intro to Machine Learning**, Google's Yufeng Guo [What is Machine Learning?](https://www.youtube.com/watch?v=HcqpanDadyQ) and [The 7 steps of machine learning](https://www.youtube.com/watch?v=nKW8Ndu7Mjw) videos will get you ready to jump into this project.
 
-#### Special Mention
+### Special Mention
 
 This project was born from [Meigarom Lopes](https://github.com/Meigarom)'s course _Data Science em Produção_. In this course, learners apply a data science solution from scratch from a business perspective. The course goes through the design and implementation of a machine learning project departing from data collection to deployment - for more details, please check his course (in portuguese) [here](https://sejaumdatascientist.com/como-ser-um-data-scientist/).
 
-#### How to read this README.MD?
+### How to read this README.MD?
 
-This is a very extensive README since it carries the responsibility of showing the project outcomes and also to explain the statistics under the hood of our algorithms and analyses. There is also a somewhat palatable length of explanations on the reasoning of each step in this project. Here is my suggestion for the readers:
+This is a very extensive README since it carries the responsibility of showing the project outcomes and also to explain the statistical intuition behind algorithms and analyses. There is also a somewhat palatable length of explanations on the reasoning of each step in this project. Here is my suggestion for the readers:
 
-1. If you are an **experienced reader and don't mind going directly to a notebook**, access the notebook [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb) and go back to the [table of contents](#table-of-contents) whenever some explanation is lacking there. 
+1. If you wish to **check the codes for this project**, access the Jupyter notebook [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb) and go back to the [table of contents](#table-of-contents) whenever some explanation is lacking there. 
 2. If you wish to **read the project's main findings instead of going through the entire project**, look no further and [get there.](#main-findings)
-3. **If you wanna bear the adventure with me**, just read the entire readme. A [(go to next section)]() hyperlink will be available for each section to make your reading smoother, and a [(skip theory)]() hyperlink will be there to skip technical explanations. Codes for this project can be found [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb).
+3. **If you wanna bear the adventure with me**, just read the entire readme. A [(go to next section)]() hyperlink will be available for each section to make your reading smoother, and a [(skip theory)]() hyperlink will be there to skip technical explanations. 
 
 I would appreciate any comments or suggestions on how to improve this project. Please feel free to add me on GitHub or [Linkedin](https://www.linkedin.com/in/ammaehara/) - I will get back to you as soon as possible. 
 
@@ -44,12 +44,12 @@ With no further due, let's get started!
 - [06. Feature Selection](#06-feature-selection)
 - [07. Machine Learning Modeling](#07-machine-learning-modeling)
 - [08. Hyperparameter Tuning](#08-hyperparameter-tuning)
-- [09. Error Interpretation & Business Performance](#09-error-interpretation-business-performance)
+- [09. Error Interpretation & Business Performance](#09-error-interpretation-&-business-performance)
 - [10. Deploy Machine Learning Model to Production](#10-deploy-machine-learning-model-to-production)
 - [11. A Sales Predictor Bot](#11-a-sales-predictor-bot)
 - [Conclusion](#conclusion)
-- [Appendix 1 - Datasets](#appendix-1-datasets)
-- [Appendix 2 - References](#appendix-2-references)
+- [Appendix I Datasets](#appendix-i-datasets)
+- [Appendix II References](#appendix-ii-references)
 
 ---
 ## Brief Intro - Dirk Rossmann GmbH
@@ -60,7 +60,7 @@ Dirk Rossmann GmbH (Rossmann) is a private, German drug store chain founded in 1
 
  Aside from the +2,000 on-site Germany stores (see stores location [here](https://www.rossmann.de/de/filialen/index.html)), Rossmann operations extend to Poland, Czech Republic, Turkey, Albania and Hungary, totaling +4,100 on-site stores. 
  
- Rossmann is also active on e-commerce for Germany-based customers, with around [$30 million EUR in online revenues per year](https://www.world-today-news.com/the-giant-of-cosmetics-and-drugstore-rossmann-fixed-in-valencia-the-venue-for-its-deployment-in-spain/), making up for 15.2% of market share in Germany. Complete financial data is not publicly available - although [Dun & Bradstreet](https://www.dnb.com/business-directory/company-profiles.dirk_rossmann_gmbh.7342471a5e75a2072c060665843eeecd.html#financials-anchor) claims that Rossmann's 2018 annual revenue was approximately \$9 billion EUR. 
+ Rossmann is also active on e-commerce for Germany-based customers, with around [$30 million EUR in online revenues per year](https://www.world-today-news.com/the-giant-of-cosmetics-and-drugstore-rossmann-fixed-in-valencia-the-venue-for-its-deployment-in-spain/), making up for 15.2% of market share in Germany. Rossmann's 2018 annual revenue was approximately \$9 billion EUR ([Dun & Bradstreet](https://www.dnb.com/business-directory/company-profiles.dirk_rossmann_gmbh.7342471a5e75a2072c060665843eeecd.html#financials-anchor)). Further financial information is not publicly available. 
 
 [back to top](#table-of-contents)
 
@@ -78,9 +78,9 @@ dasdadasdasdas
 
 ## Project Methodology
 
-[(go to next session)](#cycle-description)
+[(go to next section)](#cycle-description)
 
-For this project, we will use the CRISP-DM as the main method for project management. CRISP-DM stands for "**CR**oss-**I**ndustry **S**tandard **P**rocess for **D**ata **M**ining",  and is considered as one of the gold standards for project management methods in Data Science. For further details on the methodology, Himanshu Shekhar has a [great introduction article](https://medium.com/voice-tech-podcast/cross-industry-standard-process-for-data-mining-crisp-dm-9edc0c5e3a1) to CRISP-DM, although the usage of this method will be easily understood if one follow along with the project's next steps.
+For this project, we will use the CRISP-DM as the main method for project management. CRISP-DM stands for "**CR**oss-**I**ndustry **S**tandard **P**rocess for **D**ata **M**ining",  and is considered as one of the gold standards for project management methods in Data Science. For further details on the methodology, Himanshu Shekhar has a [great introduction article](https://medium.com/voice-tech-podcast/cross-industry-standard-process-for-data-mining-crisp-dm-9edc0c5e3a1) to CRISP-DM, although the usage of this method will be easily understood if one follow along with this section.
 
 The CRISP-DM is a project management methodology that shows a 360º outlook of data science projects. It is composed of six steps that together forms a complete CRISP-DM cycle as follows:
 
@@ -93,16 +93,19 @@ The CRISP-DM is a project management methodology that shows a 360º outlook of d
 Each cycle is iterative and future cycles serve as a way to improve the current project. There are many benefits for using CRISP-DM as a project management method. Here I highlight three main reasons in favor of CRISP-DM:
 *  Delivers an end-to-end solution;
 *  Each cycle should be done in a fast-paced. Why? Think of you trying to perfect each and every single step until you are satisfied with the results. It is likely that you will spend weeks (if not months) on a single step, and therefore, won't deliver true value to business since time is usually a constraint;
-* By going through a complete cycle, CRISP-DM users can get a grasp of the whole project and map all possible problems on time.
+* By going through a complete cycle, CRISP-DM users can quickly get a grasp of the whole project and map all possible problems on time.
 
-For the purpose of this project, I adapted the CRISP-DM methodology into five steps (instead of six) and allocated each item of the [table of contents](#table-of-contents) on every CRISP-DM step as follows:
+For the purpose of this project, I adapted the CRISP-DM methodology into five steps (instead of six) and allocated each item from the [table of contents](#table-of-contents) on every CRISP-DM step as follows:
 
 
 **I. Business Understanding**
+
 Goal: to understand the business demand that originates the project in question.
- * A Business Request
+
+* A Business Request
 
 **II. Data Understanding and Data Preparation**
+
 Goal: to understand the data we are working with, generate business insights, and preprocess data towards the creation of a machine learning model.
 
 * Data Preparation
@@ -112,17 +115,20 @@ Goal: to understand the data we are working with, generate business insights, an
 * Feature Selection
 
 **III. Modeling**
-Goal: to create and test a machine learning model to be used on predictions.
+
+Goal: to train a machine learning model, optimize model parameters, and measure performance based on predictions.
 
 * Machine Learning Modelling
 * Hyperparameter Tuning
 
 **IV. Evaluation**
-Goal: to evaluate and translate machine learning predictions in business terms.
+
+Goal: to evaluate and translate model predictions in business terms.
 
 * Error Interpretation & Business Performance
 
 **V. Deployment**
+
 Goal: to create a solution that enables the firm's stakeholders to access predictions.
 
 * Deploy Machine Learning Model to Production
@@ -133,7 +139,7 @@ The purpose and application of each step will be explained in much more detail t
 ___
 ## Cycle Description
 
-[(go to next session)](#01-a-business-request)
+[(go to next section)](#01-a-business-request)
 
 In this project, you will see the results of the 2nd CRISP-DM cycle. See the log of each cycle below:
 
@@ -143,40 +149,40 @@ In this project, you will see the results of the 2nd CRISP-DM cycle. See the log
 | 2º   | A few variables were added to the dataset. Number of customers (which was previously dropped from the model) were added. In order to allow this variable into the project, a complementary project to predict number of customers for each Rossmann store was done and predictions were added test dataset. We also remodeled the whole project to attend data leakage issues, although significant effects on performance were not observed.|[complementary project](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/rossmann_customers_prediction.ipynb) & [cycle 02](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb) |
 
 
-Exact source links of all datasets will be displayed on [Appendix 1 - Datasets](#appendix-1-datasets). 
+Exact source links of all datasets will be displayed on [Appendix I Datasets](#appendix-i-datasets). 
 
 [back to top](#table-of-contents)
 
 ---
 ## 01. A Business Request
-[(go to next session)](#02-data-preparation)
+[(go to next section)](#02-data-preparation)
 
 We start this project with the most important step. Here we understand why a data-driven project needs to be done in first place. There are three tasks to be done:
 
-- **Business Question**: understand the main issue to be solved/question to be answered. Answer the question: "What is the company's main problem and what information addresses this issue (what is the target variable?)
+- **Business Question**: understand the main issue to be solved or question to be answered. Answer the question: "What is the company's main problem and what kind of information addresses this issue (what is the target variable?)
 - **Issue Owner and Motive**: get to know who originated the request and why.
-- **Solution Format and Deliverables**: identify the type of data problem to be solved. Check possible methods to solve the problem. Define the solution format (how users will access your solution) and granularity (eg: will it be a six-month sales prediction project or six weeks?).
+- **Solution Format and Deliverables**: Check possible methods to solve the problem. Define the solution format (how users will access your solution) and granularity (eg: will it be a six-month sales prediction project or six weeks?).
 
-Since we just have the sales dataset from Rossmann and we don't have professional ties with the company, we will create a hypothetical business situation to guide our project. 
+Since we only have the sales dataset from Kaggle and we don't have professional ties with the company, we don't have any means to acquire internal data. Therefore, we will create a hypothetical business situation to guide our project. 
 
 ### The Business Situation
-Let's pretend that we are data scientists working for Rossmann, and that we have just received a business request from three sales managers. They were requesting the exact same thing: a sales forecast for the next six weeks on their respective regional areas. 
+Let's pretend that we are data scientists working for Rossmann, and that we have just received a business request from three sales managers. **They were requesting the exact same thing: a sales forecast for the next six weeks on their respective regional areas.** 
 
 Later on, you find out that the CFO was the one who has made this business request to all sales managers. You reached out the CFO and got to know its initial motive: to figure out the total revenue per store after six weeks in order to finance upcoming investments for each store. Then, you suggest a sales forecast project that has as the main output the 6-week sales forecast to be displayed on a smartphone app.
 
 - **Business Question**: what is the sales forecast for the next six weeks?
-- **Issue Owner and Motive**: the CFO needs to plan the finance strategy for each store after two months (~6 weeks)
+- **Issue Owner and Motive**: the CFO wants to finance upcoming investments for each store after two months (~6 weeks)
 - **Solution Format and Deliverables**:
     - **Data Problem Type**: sales forecast
     - **Possible Solution Methods**: Regression, Time Series, Neural Networks 
-    - **Deliverables**: 6-week daily sales forecast per store. Stakeholders (sales managers, CFO, CEO..) will be able to get forecasts from a smartphone app.
+    - **Deliverables**: 6-week daily sales forecast per store. Stakeholders (sales managers, CFO, CEO..) will be able to get forecasts in real time from a smartphone app.
 
 [back to top](#table-of-contents)
 
 
 ---
 ## 02. Data Preparation
-[(go to next session)](#03-feature-engineering)
+[(go to next section)](#03-feature-engineering)
 
 In this step, we work on acquiring data and get first impressions of our problem. Four tasks to be performed:
 
@@ -184,9 +190,9 @@ In this step, we work on acquiring data and get first impressions of our problem
 
 Once we've set up the business problem and deliverables of our project, let's get our hands into data. Usually, one must check the data whereabouts: is your data publicly available or do you need to acquire it from the business? Will you have enough processing and capacity power to acquire the data? Or rather you figure out that you don't have the means to get the necessary data (in this case, the project might not be feasible). 
 
-In our case, things a bit different. As mentioned in [Cycle Description](#cycle-description), our data comes from a Kaggle competition held by Rossmann. Therefore, our project is pretty limited on the information contained in the dataset. In real life, we would collect all information available in the company's data warehouse that helps answering our [Business Question](#01-a-business-request). As for this project, it is fine to proceed as it is, since we are running this project under a fictitional business standpoint.
+In our case, things are a bit different. As mentioned in [Cycle Description](#cycle-description), our data comes from a Kaggle competition held by Rossmann. Therefore, our project is pretty limited on the information contained in the dataset. In real life, we would collect all information available in the company's data warehouse that helps answering our [Business Question](#01-a-business-request). As for this project, it is fine to proceed as it is, since we are running this project under a fictitional business standpoint.
 
-**At this point, we should know what is the phenomenon that we are trying to predict (target variable): sales revenues.**
+**At this point, it should be clear what is the phenomenon that we are trying to predict (target variable): sales revenues.**
 
 ### II. Data Description
 
@@ -238,28 +244,26 @@ If our model works well, then we are good to predict sales revenues on the **tes
 
 Once we validate our model, we can put it into "production", so that all stakeholders of this project can access sales predictions for the six weeks corresponding to the test data.
 
-#### Understanding Data Terms in Machine Learning 
-_Probably you have already identified that we used three specific machine learning terms: training, validation, and test. If you know these terms, or if you have watched the videos I recommended at the [very top of this project](#a-note-on-machine-learning), you are just fine to proceed to the next step; otherwise, watch the videos and keep reading below._
+### Understanding Data Terms in Machine Learning 
+_Probably you have already identified that we used three specific machine learning terms: training, validation, and test. If you know these terms, or if you have watched the videos I recommended at the [very top of this document](#a-note-about-machine-learning), you are just fine to proceed to the next step; otherwise, watch the videos and keep reading below._
 
-To build a machine learning model that predicts sales, we need **training data**, which is a data that a machine learning algorithm work on to learn (or "train") the data patterns to create a prediction model, and a **validation data**, which is the data that the prediction (or "trained") model will generate predictions to check whether the model accurately works. Once we validate the model, we can use it on the **test data**, which is the data that we really want to get predictions on.
+To build a machine learning model that predicts sales, we need **training data**, which is a data that a machine learning algorithm work on to learn (or "train") the data patterns to create a prediction model, and a **validation data**, which is the data that the prediction (or "trained") model will generate predictions to validate whether the model accurately works. Once we validate the model, we can use it on the **test data**, which is the data that we really want to get sales predictions on.
 
 Simply put, machine learning modeling works like this:
 
 1. Split data into **training** and **validation** data;
 2. In both datasets, separate the **dependent variable** (the variable we wish to generate predictions - in this case sales) from the **independent variable**;
 3. Choose a machine learning algorithm and use the **training data** to train a model. We will get into machine learning algorithms later on;
-4. With the model ready to generate predictions, use **validation data** as a test for predictions. Input the **independent variables** from **validation data** on the model, get the predictions, and compare them with the validation data's dependent variable. If predictions are not too off from the real data, then we can use the model to predict the target variable on a data that doesn't have the target variable - **the test data**.
-
-
+4. With the model ready to generate predictions, use **validation data** to validate whether the model performs well or not. The mechanics are like this: (1) input the **independent variables** from **validation data** on the model; (2) get sales predictions, and compare them with the real sales data (dependent variable) from the validation data. If predictions are not too off from the real data, then we can use the model to predict sales on **the test data**.
+&nbsp;
 
 ### III. Data Cleaning
 
-This is a crucial step to any data science project. Many Machine Learning algorithms don't cope well with missing (null) values or data that isn't in the right format. Here we perform two tasks:
+This is a crucial step to any data science project. Many machine learning algorithms don't cope well with missing (null) values or data that isn't in the right format. Here we perform two tasks:
 
-* **Change data types**: In python, some features (columns) might not be in the right format to work on (e.g: variable "date" in string format instead of "date" format). In our case, we can simply use the pandas `.astype()` method to change data types.
-* **Imputation**: check the volume of null values on each column of your dataset, and find a method to impute null values. Usually, a good way to determine the best imputation method is to reflect upon the reasons why you have null values for each feature on your dataset. 
-    _Quick note: depending on the volume of missing values in the dataset, you might want to go back to the previous task "Data Collection"._
-
+* **Change data types**: In Python language, some features (columns) might not be in the right format to work on (e.g: variable "date" in string format instead of "date" format). In our case, we can simply use the pandas `.astype()` method to change data types.
+* **Imputation**: check the volume of null values on each column of the dataset, and find a method to impute null values. Usually, a good way to determine the best imputation method is to reflect upon the reasons why there are null values for each feature on the dataset. 
+  _Quick note: depending on the volume of missing values in the dataset, it might be desirable to go back to the previous task "Data Collection"._
     
 Let's check the missing values for each dataset:
 * Null Values for training data: 
@@ -271,18 +275,18 @@ Let's check the missing values for each dataset:
 ![](img/valid_NA.PNG)
 
 The imputation method for each variable is as follows:
-* **promo_interval**: fill null values with 0 (store is not participating in consecutive promo sales "promo2"). With `promo_interval`, we will create a dummy variable `is_promo2` indicating whether a store is holding a consecutive promo sales in the that day. We will drop `promo_interval` afterwards. 
-  * **competition_distance**: fill null values with 100000. The reason is that null values are probably an indicative that stores don't have closer competitors. Therefore we fill out with a value way above the maximum competition distance seen (75860m)
+* **promo_interval**: fill null values with 0 (store is not participating in consecutive promo sales "promo2"). With `promo_interval`, a dummy variable `is_promo2` was created to indicate whether a store is holding a consecutive promo sales in the that day. `promo_interval` will be dropped afterwards. 
+* **competition_distance**: fill null values with 100000. The reason is that null values are probably an indicative that stores don't have closer competitors. Therefore, missing values will be filled out with a value way above the maximum competition distance seen (75860m)
 
-  The following variables don't seem to have an ideal imputation method. Imputing null values with mean, median, or zero doesn't sound good, due to the high percentage of null values. Therefore we use the `date` column:
-  * **promo2_since_week**: fill with the week number located in `date` 
-  * **promo2_since_year**: fill with the year located in `date` 
-  * **competition_open_since_year**: fill with the year located in `date` 
-  * **competition_open_since_month**: fill with the year located in `date`   
+The following variables don't seem to have an ideal imputation method. Imputing null values with mean, median, or zero doesn't sound good, due to the high percentage of null values. Therefore, the `date` column will be used to support imputation:
+* **promo2_since_week**: fill with the week number located in `date` 
+* **promo2_since_year**: fill with the year located in `date` 
+* **competition_open_since_year**: fill with the year located in `date` 
+* **competition_open_since_month**: fill with the year located in `date`   
 
 ### III. Descriptive Statistics
 
-Descriptive statistics is a summary of the data. It quantitatively describes the data by using some statistic metrics depending on the nature of your data. 
+[Descriptive statistics](https://en.wikipedia.org/wiki/Descriptive_statistics) is a summary of the data. It quantitatively describes the data by using some statistic metrics depending on the nature of the data. 
 
 For numerical variables, we usually use statistics that measure **dispersion** (Variance, Standard Deviation, Range, First and Third Quartiles, Minimum, Maximum, Skewness, Kurtosis) and **central tendency** (mean, median). Find below a quick explanation on such measures.
 
@@ -290,7 +294,7 @@ For numerical variables, we usually use statistics that measure **dispersion** (
 
 Let's start with measures of **Central Tendency**, which are measures of where the center of a data set lies:
 
-##### 1. Mean
+### 1. Mean
 Most commonly known as the "average", the mean (or arithmetic mean) is equal to the sum of a list of values divided by its total number of elements:
 
 ![](img/mean.PNG)
@@ -299,7 +303,15 @@ where,
 
 ![](img/mean_1.PNG)
 
-##### 2. Median
+Let's use the following set A and calculate the mean:
+
+![](img/range.PNG)  
+
+![](img/mean_2.PNG)
+
+The mean for set A is **3.5714**.
+
+### 2. Median
 Median (or the "middle" value) is simply a value separating the data on half. It is also known as the 2nd quartile (Q2). The median is best understood when given an example:
 
 ![](img/range.PNG)  
@@ -307,9 +319,9 @@ Median (or the "middle" value) is simply a value separating the data on half. It
 * List A has 7 elements; for odd-numbered lists, we find the median by picking the middle term, which is **4**.
 * List B has 4 elements; for even-numbered lists, the median is the average of the middle two numbers: **2**
 
-Now we turn our focus to measures of **Dispersion**:
+Now we turn our focus to **measures of dispersion**:
 
-#####1. Variance:
+### 1. Variance
 
 Variance is the average of the squared differences from the mean. It measures how far a set of numbers is spread out from their mean (average) value. In order to calculate the variance, find the mean value and subtract its value from each number on your set. Then square the result, and average it:
 
@@ -320,36 +332,46 @@ where,
 
 ![](img/variance_1.PNG)
 
-**2. Standard Deviation**
+Using the same set A to calculate variance:
+
+![](img/range.PNG)  
+
+![](img/variance_2.PNG)
+
+### 2. Standard Deviation
 
 ![](img/std.PNG)
 
+As we can notice from the formula above, standard deviation is just the square root of the variance. If we use the set A as an example:
 
+![](img/std_1.PNG)
 
-As we can notice from the formula above, standard deviation is just the square root of the variance. This is usually a better statistic to measure data dispersion than variance, since it gives a meaningful interpretation to its values. To better understand the concept of standard deviation, let's graph a normal distribution curve like the one below (graph retrieved [here](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Standard_deviation_diagram.svg/1024px-Standard_deviation_diagram.svg.png)). The x-axis represents the standard deviations from the mean (centered on zero), and can assume negative or positive values. The y-axis is the probability density function (PDF) and represents the likelihood of an outcome to happen. 
-
-Data that follows a normal distribution has its mean, median and [mode](https://en.wikipedia.org/wiki/Mode_(statistics)) values centered around zero, and have a bell-shaped curve. One example of data that falls into a normal distribution is the height of human beings. Since most people aren't super tall nor very short, their height tend to converge closer to a mean value. 
-
-
+This is usually a better statistic to measure data dispersion than variance, since it gives a meaningful interpretation to its value. To better understand the concept of standard deviation, let's graph a normal distribution curve like the one below (graph retrieved [here](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Standard_deviation_diagram.svg/1024px-Standard_deviation_diagram.svg.png)). The x-axis represents the standard deviations from the mean (centered on zero), and can assume negative or positive values. The y-axis is the probability density function (PDF) and represents the likelihood (probability) of an outcome to happen. 
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Standard_deviation_diagram.svg/1024px-Standard_deviation_diagram.svg.png" alt="drawing" width="80%"/>
 
+Data that follows a normal distribution has the same value for the mean, median and [mode](https://en.wikipedia.org/wiki/Mode_(statistics)), with its value located exactly at the center of the bell-shaped curve. One example of data that falls into a normal distribution is the height of human beings. Since most people aren't super tall nor very short, their height tend to converge closer to a mean value. 
+_Quick note: the mean of human being's height is definitely not zero as the graph depicts. When the mean = median = mode is equal zero, the distribution is called "[standard normal distribution](https://sphweb.bumc.bu.edu/otlt/mph-modules/bs/bs704_probability/bs704_probability9.html)". In the case of human heights, we just substitute the zero by the mean of human heights._
 
-Here's where the standard deviation comes into play: for normal distributions, around 68% of the world's population height falls between -1 and +1 standard deviations from the mean. If we go to +-2 standard deviations, then we could say that 95% of our population height falls into that threshold. Going even further, we could say that 99.7% of the world's population heights are included within +- 3 standard deviations from the mean.
+Here's where the standard deviation comes into play: for normal distributions, around 68% of the world's population height falls between -1 and +1 standard deviations from the mean. If we go to +-2 standard deviations, then we could say that 95% of our population height falls into that threshold. Going even further, we could say that 99.7% of the world's population heights are included within +- 3 standard deviations from the mean. 
 
-In our project, however, we can´t assume that our variables follows a normal distribution (we will see graphs proving it). With this in mind, we calculate the standard deviation for each variable we got in our dataset in order to find out how spread the data is. For example, if the variable "customers" has low standard deviation (let's say 5), it means that the number of customers in our dataset is not widespread and are closer to the mean values of customers. On the other hand, if standard deviation is very high (think of 20 or higher), then the number of customers are too sparse. The following graph (with mean equal 100 customers) illustrates the situation for normal distributed variables (graph retrieved [here](http://www.skillpower.co.nz/wp-content/uploads/2015/12/mmm.png)):
+The following graph (with mean equal 100) illustrates the situation for normal distributed variables (graph retrieved [here](http://www.skillpower.co.nz/wp-content/uploads/2015/12/mmm.png)). For a variable that has a standard deviation of 5 (blue-colored curve), the distribution curve is not widespread and is closer to the mean value of 100. When standard deviation increases, however, the distribution is widespread, showing that the data entries are too sparsed from each other:
 
 <img src="http://www.skillpower.co.nz/wp-content/uploads/2015/12/mmm.png" alt="drawing" width="80%"/>
 
-
-
 _Quick note: while the result of the standard deviation can't be negative, standard deviation thresholds on a distribution can assume negative and positive values to determine dispersion from the mean value (as we showed on the first graph)_
 
-**3. Minimum/Maximum**
+In our project, however, we can´t assume that our variables follows a normal distribution (we will see graphs proving it later on). 
+
+### 3. Minimum/Maximum
 
 Minimum is the smallest value found from a list of numbers. Maximum is the biggest value found from the same list.
 
-**4. Range**
+![](img/range.PNG)  
+
+For list A, the minimum is 1 and the maximum is 6. No big deal.
+
+### 4. Range
 
 Range is the difference between the lowest and highest value. This is a useful statistic that also tell us about the statistical dispersion of the data, and shows a rough idea of the magnitude and scale of our data.
 
@@ -359,69 +381,71 @@ The range of list A is simply:
 
 ![](img/range_1.PNG)
 
-**5. Quartiles**
+### 5. Quartiles
 
 Quartiles are values that divide a list of numbers into quartiles (four or less equal parts). We usually have three types of quartiles:
-  *  **1st Quartile (Q1)**: also known as the 25th percentile, it cuts the lowest 25% of data.
-  *  **2nd Quartile (Q2)**: known as the 50th percentile, it cuts the dataset in half. Its value is also the **median**. 
-  *  **3rd Quartile (Q3)**: known as the 75th percentile, it represents the value that splits 75% of the data from the top 25%.
+*  **1st Quartile (Q1)**: also known as the 25th percentile, it cuts the lowest 25% of data.
+*  **2nd Quartile (Q2)**: known as the 50th percentile, it cuts the dataset in half. Its value is also the **median**. 
+*  **3rd Quartile (Q3)**: known as the 75th percentile, it represents the value that splits 75% of the data from the top 25%.
 
 A illustration might help internalizing the idea behind quartiles (retrieved from [here](https://www.mathsisfun.com/data/images/quartiles-c.svg)):
 
 ![](https://www.mathsisfun.com/data/images/quartiles-c.svg
 )
 
-We also have the Interquartile Range (IQR), which is the difference between Q3 and Q1. In the illustration above, IQR would be 4.
+We also have the **Interquartile Range (IQR)**, which is the difference between Q3 and Q1. In the illustration above, IQR would be 4.
 
 This is a good moment to explore **boxplots**, which is a very useful tool for statistic analysis and uses concepts related to quartiles, minimum and maximum, and outliers. I will explain just enough to make ourselves comfortable with boxplots, but you may find a complete explanation on the topic by [Michael Galarnyk](https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51).
 
 <img src="https://miro.medium.com/max/700/1*2c21SkzJMf3frPXPAR_gZA.png" alt="drawing" width="80%"/>
 
-Boxplots is a controlled, neat way to visualize the variability of our data. On the x-axis, the numbered ticks represent the values that our data can assume. The figure above shows numbers ranging from -4 to +4 but they could be really any number, for example, from 50 to 250 centimeters (human body height) to -20 to +40 Cº (temperature in celsius).
+Boxplots is a controlled, neat way to visualize the variability of data. On the x-axis, the numbered ticks represent the values that the data can assume. The figure above shows numbers ranging from -4 to +4 but they could be really any number, for example, from 50 to 250 centimeters (human body height) to -20 to +40 Cº (temperature in Celsius).
 There are many ways to read a boxplot, but whenever I deal with them I take the following steps:
   1. **Find the median**: you can identify the median (Q2) as the yellow line that divides the red box into two parts.
-  2. **Identify the Interquartile Range (IQR)**: the IQR is the whole red box and represents 50% of your data. If you read the boxplot from right to left, the Q1 is the line where the IQR box starts, and the Q3 is where the IQR box ends. 
-  Just by reading the IQR box, one can understand the variability of the data. If the median line is symmetric between Q1 and Q3, your data distribution is more symmetric. Otherwise, if the median line is closer to either Q1 or Q3, then the distribution is asymmetric.
+  2. **Identify the Interquartile Range (IQR)**: the IQR is the whole red box and represents 50% of the data. If you read the boxplot from right to left, the Q1 is the line where the box starts, and the Q3 is where the box ends. 
+  Just by reading the red box, one can understand the variability of the data. If the median line is symmetric between Q1 and Q3, the data distribution is more symmetric. Otherwise, if the median line is closer to either Q1 or Q3, then the distribution is asymmetric.
   3. **Minimum/Maximum**: the minimum and maximum values in a boxplot **are not equal** to the data's true minimum and maximum values. In a boxplot, minimum (also known as _lower fence_) is the difference between the value representing the 25th percentile of your data (Q1) and 1.5 times the IQR. Maximum (or _upper fence_) is the sum of the value representing the 75th percentile of your data (Q3) and 1.5 times the IQR.
-  4. **Outliers**: outliers are data points that differs greatly from other data points. You can identify them as mini-circles in the extreme sides of a boxplot. The threshold that determines whether a data point is an outlier or not is the minimum and maximum values.
+  4. **Outliers**: outliers are data points that differ greatly from other data points. You can identify them as mini-circles in the extreme sides of a boxplot. The threshold that determines whether a data point is an outlier or not is the minimum and maximum values.
 
 Let's check a practical example that records time slept (hours) by an individual across weekdays (graph retrieved [here](https://plot.ly/static/img/literacy/boxplot/boxplotfig9.jpg)):
 
 
 <img src="https://plot.ly/static/img/literacy/boxplot/boxplotfig9.jpg" alt="drawing" width="70%"/>
 
+&nbsp;
 Although these boxplots are in vertical position, there's nothing different in terms of data interpretation. 
-Let's start by looking at Monday's boxplot. The median for Monday is approximately 7.5 hours of sleep, with its median mark closer to the Q3 value, which indicates that the data distribution is asymmetrical (this individual has slept between 6 to 7.5 hours more frequently). Now see the box on its entirety: 50% of the time, this person has slept between 6 to 8 hourse on Mondays and no unusual time sleep hours were recorded (no outliers). 
-Now look at the Thursday boxplot. On thursdays, this individual had 5.5 to 6.5 hours of sleep 50% of the time. The box size is very small, which indicates that the data distribuion is more concentrated on the median value (and less dispersed compared to Monday). Sadly, this person slept less one day - there is an outlier around 2.5 hours of sleep.
+Let's start by looking at Monday's boxplot. The median (Q2) for Monday is approximately 7.5 hours of sleep, and it is closer to the Q3 value, which indicates that the data distribution is asymmetrical (this individual has slept between 6 to 7.5 hours more frequently than 7.5 to 8 hours). Now see the box on its entirety: 50% of the time, this person has slept between 6 to 8 hourse on Mondays and no unusual time sleep hours were recorded (no outliers). 
+Now look at the Thursday boxplot. On thursdays, this individual had 5.5 to 6.5 hours of sleep 50% of the time. The box size is very small, which indicates that the data distribuion is more concentrated on the median value (and less dispersed compared to Monday). Sadly, this person didn't sleep well one day - there is an outlier around 2.5 hours of sleep.
 
+&nbsp;
 
-**6. Skewness**
+### 6. Skewness
 
 Before explaining skewness, we need to understand what is a random variable and a probability distribution. 
 
 According to [Yale](http://www.stat.yale.edu/Courses/1997-98/101/ranvar.htm), a **random variable** (usually described as X) is a variable whose possible values are numerical outcomes of a random phenomenon. For example, flipping a coin 100 times is a random phenomenon - there is no way to know the outcome for each and every single coin flip unless you actually flip the coin 100 times. But you know that there are only two possible outcomes: heads or tails. When we quantify our possible outcomes - let's say, X = 0 for tails and X = 1 for heads, then we got a random variable.
 
-A **probability distribution** is a list of probabilities associated with each and every single possible values of a random variable. In the graph below, let's say that we calculate the probability distribution on the event (or probability) of getting heads [P(X = 1)], from 100 coin flips. Our distribution is plotted below:
+A **probability distribution** is a list of probabilities associated with each and every single possible values of a random variable. In the graph below, let's say that we calculate the probability distribution on the event (or probability) of getting heads [P(X = 1)], from 100 coin flips. The distribution is plotted below:
 
 ![](img/probability_distribution.png)
 
-Each bar represents the event of flipping a coin 100 times. Assuming that our coin is not biased (in other words, don't tend to flip one side more than the other), then we notice that our probability distribution has a bell-curve shape resembling a normal distribution with mean 50. Therefore, the probability of getting 50 heads when flipping a coin 100 times is the highest one. It makes sense - if you flip a coin 100 times on your own, you might get a number of heads that is close to 50. This has a theory behind it - the [Law of Large Numbers](https://www.investopedia.com/terms/l/lawoflargenumbers.asp), which states that as the sample size grows, its mean gets closer to the average of the whole population. In our flip-a-coin case, if we flip a coin 1000 times instead of 100 times, we would have a probability distribution with a very narrow bell-shaped curve closer to the mean 50.
+Each bar represents the event of flipping a coin 100 times. Assuming that the coin is not biased (in other words, it doesn't tend to flip one side more than the other), then we notice that our probability distribution has a bell-curve shape resembling a normal distribution with mean 50. Therefore, the probability of getting 50 heads when flipping a coin 100 times is the highest one. It makes sense - if you flip a coin 100 times on your own, you might get a number of heads that is close to 50. This has a theory behind it - the [Law of Large Numbers](https://www.investopedia.com/terms/l/lawoflargenumbers.asp), which states that as the sample size (the number of coin flips) grows, its mean gets closer to the mean value of the whole population (in this case, infinite coin flips). In our flip-a-coin case, if we flip a coin 1000 times instead of 100 times, we would have a probability distribution with a very narrow bell-shaped curve closer to the mean 50.
 
 Now we are ready to dig into **skewness**. Skewness is the degree of distortion (or a measure of the asymmetry) of a probability distribution of a random variable about its mean. In the graph below, we see three graphs: (1) a distribution with positive skew; (2) a symmetrical distribution with zero skewness; (3) a distribution with negative skew.
 
-![](img/skew.PNG)
+![](img/skew.png)
 
-Take a closer look on the graphs. The one with positive skew has a longer, fatter tail on the right side of the distribution. It has a mean value greater than the median and mode, and its peak is on the left side. Now look to the symmetrical distribution graph in the middle. It has its mean = media = mode - basically a normal distribution curve with a centered peak. The last one, with negative skew, has a longer, fatter tail on the right side and its mean value is lower than the median and mode, with a peak located on the right side. 
+Take a closer look on the graphs. The one with positive skew has a longer, fatter tail on the right side of the distribution. It has a mean value greater than the median and mode, and its peak is on the left side. Now look to the symmetrical distribution graph in the middle. It has its mean = media = mode, which is basically a normal distribution curve with a centered peak. The last one, with negative skew, has a longer, fatter tail on the left side and its mean value is lower than the median and mode, with a peak located on the left side. 
 
-You can also tell the direction (but not the number) of outliers in a skewed distribution. For positive skewed curves, outliers are most present on the right side of the curve, while for negative skewed curves is just the opposite side.
+You can also tell the direction (but not the number) of outliers in skewed distributions. For positive skewed curves, outliers are most present on the right side of the curve, while for negative skewed curves is just the opposite side.
 
 In the real world, data not always assume a normal, symmetric bell-curved shape as the graph depicted in the middle. For instance, there are many types of distribution that describes data (see a few examples [here](https://www.google.com/imgres?imgurl=http%3A%2F%2Fimage.sciencenet.cn%2Falbum%2F201609%2F13%2F175607zopgnj40j00so4ee.png&imgrefurl=https%3A%2F%2Fwww.kaggle.com%2Fgetting-started%2F81761&tbnid=t4_CFhWWxcakyM&vet=12ahUKEwiMuMipvrnsAhWEAbkGHTpyBJkQMygJegUIARCiAQ..i&docid=wiph3DFgr5Q8AM&w=680&h=735&q=distributions%20cheat%20sheet&client=firefox-b-d&ved=2ahUKEwiMuMipvrnsAhWEAbkGHTpyBJkQMygJegUIARCiAQ)). This is the reason why an analysis on skewness is important: it shows how data behaves and what we can do about it when doing ML modeling. 
 
-A very good example on how we should take care of skewness is depicted by linear models, since such models takes the assumption that the independent variable follows the same distribution as the target variable. Let's look on an example depicted by [Abhishek Sharma](https://www.analyticsvidhya.com/blog/2020/07/what-is-skewness-statistics/) on its article about skewness in statistics. Let's say you want to predict the mpg (miles per gallon) of a car by running a linear regression that has one independent variable: horsepower:
+A very good example on how we should take care of skewness is depicted by linear models, since such models can be optimized if independent variables (features) and dependent variablea have a linear relationship, which normal distributed values. Let's look on an example depicted by [Abhishek Sharma](https://www.analyticsvidhya.com/blog/2020/07/what-is-skewness-statistics/) on its article about skewness in statistics. Let's say you want to predict the mpg (miles per gallon) of a car by running a linear regression that has one independent variable: horsepower:
 
 ![](img/horsepower.png)
 
-The shape of this distribution resembles the one with positive skewness. Since your data is concentrated on the left side, our linear model will give us good mpg predictions on cars with low horsepower, but will probably perform poor predictions on cars with high horsepower. In this case, skewness is a problem and we usually use rescaling techniques that helps us reshaping the distribution of skewed variables. We will get into more details on rescaling in the [Data Preprocessing](#05-data-preprocessing) part.
+The shape of this distribution resembles the one with positive skewness. Since your data is concentrated on the left side, our linear regression model will give us good mpg predictions on cars with low horsepower, but will probably perform poor predictions on cars with high horsepower. In this case, skewness is a problem and we usually use rescaling techniques that helps us reshaping the distribution of skewed variables. We will get into more details on rescaling in the [Data Preprocessing](#05-data-preprocessing) part.
 
 
 To determine when skewness is symmetrical or not just by looking at skewness values, you can check the table below:
@@ -435,11 +459,12 @@ To determine when skewness is symmetrical or not just by looking at skewness val
 | skew higher than 1| Positive, highly skewed|
 
 &nbsp;
-**7. Kurtosis**
 
-Kurtosis is a measure of tailedness of a probability distribution - therefore, it solely focuses on the tails. This is a great statistic to measure the presence of outliers on our distribution. 
+### 7. Kurtosis
 
-Data distributions with **high kurtosis** (K > 3) indicates that the data has many outliers, and therefore, a detailed investigation on outliers are a must. Distribution with **low kurtosis** (k < 3) has fewer and less extreme outliers.
+Kurtosis is a measure of tailedness of a probability distribution - therefore, it solely focuses on the tails of a distribution. This is a great statistic to measure the presence of outliers on our distribution. 
+
+Data distributions with **high kurtosis** (K > 3) indicates that the data has many outliers, and therefore, a detailed investigation on outliers is a must. Distribution with **low kurtosis** (k < 3) has fewer and less extreme outliers.
 
 There are three types of kurtosis as follows:
   * **Leptokurtic (K > 3)**: Distribution has fatter, longer tails, a sharp peak;
@@ -452,10 +477,10 @@ In summary, skewness and kurtosis serve us to indicate: (1) how our data is dist
 
 Now, let's go back to our project! Here we separate numerical and categorical data to perform this step. 
 
-##### Numerical data:
+#### Numerical data:
 ![](img/descriptive.PNG)
 
-##### Categorical data (boxplots):
+#### Categorical data (boxplots):
 ![](img/categorical_boxplot.PNG)
 
 
@@ -470,7 +495,7 @@ Some notes from the summary statistics above:
 
 ## 03. Feature Engineering
 
-[(go to next session)](#04-exploratory-data-analysis-eda)
+[(go to next section)](#04-exploratory-data-analysis-eda)
 
 In this task, we create new features (variables) on our dataset based on the existent set of variables. Our main compass for feature creation is the business needs; therefore, three tasks must be performed:
 
@@ -529,10 +554,10 @@ _note: Location of each store is not given. Hypothesis are displayed below just 
 7. Stores located inside malls sell more than standalone stores
 
 #### External Factors (Economy, Healthcare, Weather)
-* **Economy**: usually macroeconomic data is not very relevant to analyze a firm's sales performance - there are some markets that thrive even when economic indicators are bad.  
-Another caveat to economic indicators is that Rossmann stores are not located in Germany on its entirety, and we don't know their precise location since they are unknown in the dataset. 
+* **Economy**: macroeconomic data could be not relevant to analyze a firm's sales performance - there are some markets that thrive even when economic indicators are bad.  
+Another caveat to economic indicators is that Rossmann stores are not located in Germany on its entirety, and we don't know their precise location since they are not present in the dataset. 
 Some macroeconomic data could be relevant if divided by location or month/week, but at the time this project was done, data was not available. 
-Another aspect to be considered is the Germany's economy. From 2013 to 2015, Germany has always ranked in the top 10 economies in GDP per capita with high HDI value. Therefore, economic fluctuations over the time span would not affect directly Rossmann stores. Therefore, some hypotheses are displayed below just for the purpose of completeness.
+Another aspect to be considered is the Germany's economy. From 2013 to 2015, Germany has ranked in the top 10 economies in GDP per capita with high HDI value. Therefore, economic fluctuations over the time span might not have affected Rossmann stores directly. Therefore, some hypotheses are displayed below just for the purpose of completeness.
 * **Healthcare**: relevant data (per month) was either unavailable on public datasets or not possible to be utilized. Therefore, some hypotheses are displayed for the purpose of completeness.
 * **Weather**: although Rossmann stores are mainly located in Germany, their location is not present on the dataset. Therefore, the usage of weather as a predictor for this model would be a big assumption to take, but hypotheses were written below for the purpose of completeness.
 
@@ -574,24 +599,29 @@ From 44 hypothesis listed, we select **19 hypothesis** that can be tested with t
 
 ### III. Feature Engineering
 
-The main purpose of feature engineering is to improve the performance of our predictive model. New variables added to a machine learning model can contribute in many ways, such as creating a more accurate model that better predicts our target variable, or making our model simpler and less complex by creating independent variables that better explain the dependent variable. In this project, we will also use the new variables to help us reject/fail to reject our hypotheses on the [Exploratory Data Analysis](#04-exploratory-data-analysis-eda) section.
+The main purpose of feature engineering is to improve the performance of our predictive model. It can be done in two ways: (1) adding new variables to a machine learning model to better predict the target variable; or (2) making the model simpler and less complex by creating features that better explain the target (and eliminating the ones that poorly explain the target). 
 
-The following tasks were performed on this part:
-* We used the variable `date` to create time-related variables. Now we have new variables that explains how long stores were holding consecutive promotion sales (`promo2_time_week`, `promo2_time_month`), and how long stores were facing competition from other companies (`competition_since_month`). All time-related variables are valued by number of months or weeks;
+As we will see later, feature engineering will help us to reject/fail to reject our hypotheses in the [Exploratory Data Analysis](#04-exploratory-data-analysis-eda) section.
+
+The following tasks were performed:
+* The variable `date` was used to create time-related variables. Variables that explains how long stores were holding consecutive promotion sales (`promo2_time_week`, `promo2_time_month`), and how long stores were facing competition from other companies (`competition_since_month`) are now available. All time-related variables are valued by number of months or weeks;
 * We also used the variable `date` to get a better sense of seasonality for each sales entry in the dataset - `day`, `month`, `year`, `year_week`, `is_weekday` variables were created;
 * Variables with data described by single letters were transformed into full text (e.g: all 'a' in variable `state_holiday` were transformed to 'christmas'). New variables are: `state_holiday`, `assortment`.
-* Germany's Gross Domestic Product (GDP) per capita, Consumer Price Index (CPI), interest rates, unemployment rate, Consumer Confidence Index (CCI) datasets were added as new variables. All economic indicators correspond to month values except for GDPpc (quarters). See below a description of these indicators (retrieved from [OECD](https://stats.oecd.org/) - all dataset references are available in [Appendix I - Dataset](#appendix-dataset)):
+* Germany's Gross Domestic Product (GDP) per capita, Consumer Price Index (CPI), interest rates, unemployment rate, Consumer Confidence Index (CCI) datasets were added as new variables. All economic indicators correspond to month values except for GDPpc (quarters). See below a description of these indicators (retrieved from [OECD](https://stats.oecd.org/):
   * **Gross Domestic Product (GDP)**: monetary measurement of all goods and services produced within a country. income per capita (per head), in US$ (current prices) and current PPPs, adjusted quartely;
   * **Consumer Price Index (CPI)**: measures inflation by looking at the average price changes from a basket of consumer goods and services of a country. The base year is 2015 (2015 = 100).
   * **Interest Rate**: interest rate is the cost of borrowing money. The rate is usually set by governments or central banks. Here we use long-term interest rates, per cent per annum, divided monthly.
   * **Unemployment Rate**: measurement of changes in unemployment within a country. Unemployment rate is the fraction of total number of unemployed population by the total number of active population. 
   * **Consumer Confidence Index (CCI)**: measurement of consumer confidence within a country, it indicates how future developments on consumption and saving will be based on the current households' economic situation. Values below 100 indicate a pessimistic attitude towards future developments in the economy, possibly resulting in a tendency to save more and consume less.  
 
+_All dataset references are available in [Appendix I Dataset](#appendix-i-dataset)_
+
 ### IV. Filtering Variables
-In this part, we need to check the business restritions that should be considered in the project and filter variables/rows from the dataset that can't be used to predict sales revenues.
+
+In this part, we need to check the business restritions that should be considered in the project and filter variables/rows from the dataset that reflect these restritions.
 
 We divide this part into two tasks:
-* **Data Entry Filtering**: data entries with characteristics that won't be considered on the model should be excluded from the dataset. Here we removed closed stores and stores with no sales revenue, since such entries are irrelevant to our goal of predicting sales revenue. 
+* **Data Entry Filtering**: data entries with characteristics that won't be considered on the model should be excluded from the dataset. **Here we removed closed stores and stores with no sales revenue**, since such entries are irrelevant to our goal of predicting sales revenue. 
 * **Column Selection**: variables that won't be available at the moment of prediction must be dropped from the dataset. In the 1st CRISP-DM cycle, we dropped the number of customers from the training dataset since this feature was not present in the test dataset. It makes sense, since this is a business restriction: there is no way to know the number of customers at the time we predict sales revenues for the next six weeks. In order to keep the number of customers in the model, we have created a [new project](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/rossmann_customers_prediction.ipynb) that predicts number of customers for the next six weeks for each Rossmann store, and included results on the test dataset. Otherwise, we wouldn't be able to use this variable in our project.
 
 The following variables were dropped: `promo_interval` (deprecated - `is_promo2` will be used instead), `open`.
@@ -603,20 +633,21 @@ The following variables were added: `promo2_time_week`, `promo2_time_month`, `co
 
 ## 04. Exploratory Data Analysis (EDA)
 
-[(go to next session)](#05-data-preprocessing)
+[(go to next section)](#05-data-preprocessing)
 
-We shift our focus to explore our dataset and generate valuable insights for the business. This is what Exploratory Data Analysis (EDA) really means: to go even further on our data to unlock precious insights from it. An EDA is an important step to get a sense of which variables are vital to our prediction model, and how our features relate to the target variable. 
+We shift our focus to explore our dataset and generate valuable insights for the business. This is what Exploratory Data Analysis (EDA) really means: to go even further in the data to unlock precious insights from it. An EDA is an important step to get a sense of which variables are vital to our prediction model, and how our features relate to the target variable. 
 
-We will divide this task into three parts:
+We will divide this section into three parts:
+
 1. **Univariate Analysis**: check data distribution of each feature and get a first look on how your data is organized as a whole;
 2. **Bivariate Analysis**: check how each feature behaves against the target variable. Here we validate the hypothesis list (created on the [feature engineering](#03-feature-engineering) section), generate business insights, and analyze how relevant each variable is to our model.
-3. **Multivariate Analysis**: check whether there are repetitive information across features. Since machine learning models work best when data is less complex, dimensionality reduction plays a big role on ML models.
+3. **Multivariate Analysis**: check whether there are repetitive information across features. Since machine learning models work best when data is less complex, [dimensionality reduction](https://en.wikipedia.org/wiki/Dimensionality_reduction) plays a big role on ML models.
 
-EDA's can take literally days to be performed if one doesn't narrow down the topics to be analyzed. Since we are using the CRISP-DM methodology, we ought to perform a guided EDA to deliver fast, business-driven insights from the data - and this is why the creation of a [hypothesis list](#03-feature-engineering) is very important.
+EDA's can take literally days to be performed if one doesn't narrow down the topics to be analyzed. Since we are using the CRISP-DM methodology, we ought to perform a guided EDA to deliver fast, business-driven insights from the data - and this is why the creation of a [hypothesis list](#03-feature-engineering) is very important: to guide our exploratory analysis.
 
 As mentioned before, I also performed a complementary project to predict number of customers for each Rossmann store in a separate notebook. If you wish to see a detailed EDA study on the variable `customers`, please check the project [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/rossmann_customers_prediction.ipynb).
 
-#### Quick note on Data Visualization
+### Quick note on Data Visualization
 
 We have already seen some histograms showing distributions, some line plots, barplots and boxplots. From now on, we will go deep on data exploration, and some other types of graphs will inevitably appear here, such as scatterplots, heatmaps, plots with regression lines, and we must get ourselves comfortable with understanding data relationships graphically. 
 
@@ -625,9 +656,9 @@ Data visualization is a key tool for data science practitioners. Although there 
 
 ### I. Univariate Analysis 
 
-Usually, the univariate analysis supports the [descriptive statistics](#iii-descriptive-statistics) part we have done before by showing a distribution analysis on univariate data. Here we check each single variable's distribution by using histograms, with x-axis showing all possible values that a variable can assume, and a y-axis showing the [absolute frequency](https://www.statisticshowto.com/absolute-frequency-definition-examples/):
+Usually, the univariate analysis supports the [descriptive statistics](#iii-descriptive-statistics) part we have done before by showing a distribution analysis on univariate data. Here we check each single variable's distribution by using histograms, with x-axis showing all possible values that a variable can assume, and a y-axis showing the [absolute frequency](https://www.statisticshowto.com/absolute-frequency-definition-examples/).
 
-* **Target Variable (sales)**: distribution looks like a [poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), with a positive skew and right tail. We will need to rescale our data before creating our model. 
+* **Target Variable (sales)**: distribution looks like a [poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), with a positive skew and right tail. We will need to rescale our data before training the model. 
 
 ![](img/univariate_1.png)
 
@@ -650,6 +681,7 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
   * `is_promo2`: there are more sales data points for stores which are not joining consecutive promotion sales;
   * `promo2_since_year`: most stores joined consecutive promotion sales in 2013;
   * `promo`: in the dataset, there are more stores doing traditional, single-day promotions than stores not joining such promotions;   
+  
 &nbsp;
 * **Categorical variables (barplots)**
 
@@ -659,10 +691,11 @@ Usually, the univariate analysis supports the [descriptive statistics](#iii-desc
   * `state_holiday`: there are more sales data points on public holidays than other holidays. Easter and Christmas are on a similar level;
   * `store_type`: there are more sales data points for store of type "a", and less stores of type "b";
   * `assortment`: there are less sales data points for stores with assortment of type 'extra' than other assortment types.
+
 &nbsp;
 ### II. Bivariate Analysis
 
-Now our focus goes to the bivariate analysis - when we observe how each independent variable behaves against the dependent variable (sales). Here we reject or fail to reject our viable hypothesis list, and raise valuable insights for the business. This is also the place where we analyze a variable's relevancy to the model.
+Now our focus goes to the bivariate analysis: the process of analyzing how each independent variable behaves against the dependent variable (sales). Here we reject or fail to reject our viable hypothesis list, and raise valuable insights for the business. This is also the place where we analyze a variable's relevancy to the model.
 
 ####  H1. Stores with extended assortment type sell more
 
@@ -673,7 +706,8 @@ For the variable `assortment`, we have three types of store assortment: basic, e
 ![](img/h1_2.png)
 
 **Verdict: FALSE**.
-Stores with bigger assortment sell less. However, the number of data points for stores with assortment 'extra' is very low compared to the other two (refer to [univariate analysis](#univariate-analysis)). Since assortment 'extra' follows a similar sales pattern of the other two, assortment might not be meaningful on our model.
+
+Stores with bigger assortment sell less. However, the number of data points for stores with assortment 'extra' is very low compared to the other two (refer to [univariate analysis](#i-univariate-analysis)). Since assortment 'extra' follows a similar sales pattern of the other two, assortment might not be meaningful on our model.
 
 #### H2. Stores near competitors sell less
 
@@ -682,9 +716,10 @@ The variable `competition_distance` is the distance from a Rossmann store to a c
 ![](img/h2.png)
 
 **Verdict: FALSE**
-Stores near competitors sell more than stores with competitors located far away. We can tell that because there are more concentrated data around a competition distance of 0~20000 meters (see scatterplot). From the barplot, we can also tell that sales revenue are higher for stores with competitors located within 0~4000 meters.
 
-Quick note: the third graph (from right to left) is a **heatmap**. The value of -0.28 inside the black square is the [pearson correlation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) value between the variables `sales` and `competition_distance`. I will explain the pearson correlation in detail later, but as for now think of this negative value as depicting a linear negative relationship between sales and competition distance (as competition distance increase, sales revenues decrease). Pearson correlation values goes from -1 (negative linear correlation) to 1 (positive linear correlation).
+Stores near competitors sell more than stores with competitors located far away. We can tell that because data is concentrated within the range distance of 0-20000 meters (see scatterplot). From the barplot, we can also tell that sales revenue are higher for stores with competitors located within 0-4000 meters.
+
+Quick note: the third graph (from right to left) is a **heatmap**. The value of -0.28 inside the black square is the [pearson correlation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) value between the variables `sales` and `competition_distance`. I will explain the pearson correlation in detail later, but as for now think of this negative value as depicting a linear negative relationship between sales and competition distance (as competition distance increase, sales revenues decrease). Pearson correlation values goes from -1 (negative linear correlation) to 1 (positive linear correlation), and the closest the number is to 0, the less linear (weak) is the relationship.
 
 #### H3. Stores with newly opened competitors sell less than stores with old competitors
 
@@ -693,6 +728,7 @@ The variable `competition_since_month` tells us since when a Rossmann store has 
 ![](img/h3.png)
 
 **Verdict: FALSE**
+
 Stores with newly opened competitors sell more than stores with competitors from a long date.
 
 #### H4. Stores sell more on weekdays than weekends/holidays (sales rate)
@@ -706,20 +742,23 @@ The variable `is_weekday` is a dummy variable in which 1 corresponds to weekdays
 ![](img/h4_1.png)
 
 **Verdict: TRUE**
- From the data table and the right barplot above, sales is bigger on weekdays than weekends. The barplot on the left shows that Rossmann stores sell more on Mondays (1), has a stable sales performance across the weekdays (2-5), and starts declining till the worst day of sales on Sundays (7).
 
- As shown in the heatmap and scatterplot, the variable `day_of_week` shows a strong linear negative correlation with sales, which indicates that `day_of_week` is probably an essential feature to explain our target variable. 
+From the data table and the right barplot above, sales is bigger on weekdays than weekends. The barplot on the left shows that Rossmann stores sell more on Mondays (1), has a stable sales performance across the weekdays (2-5), and starts declining till the worst day of sales on Sundays (7).
+
+As shown in the heatmap and scatterplot, the variable `day_of_week` shows a strong linear negative correlation with sales, which indicates that `day_of_week` is probably an essential feature to explain our target variable. 
  
 #### H5. Stores sell more during the 2nd semester
 
 ![](img/h5.png)
 
 **Verdict: FALSE** 
+
 Stores sell more on the 1st semester. The heatmap shows that `month` and `sales` have a strong, negative linear correlation: as the months go by, sales decrease.
 
 #### H6. Stores sell more during summer/winter breaks (schools) 
 
 **Verdict: FALSE**
+
 School breaks in Germany are scattered throughout the year. The longest school break is the summer break in August and mid-September. During these months, stores sell less (refer to barplot above on [H5](#h5-stores-sell-more-during-the-2nd-semester)).
 
 #### H7. Stores sell less during school holidays
@@ -729,6 +768,7 @@ School breaks in Germany are scattered throughout the year. The longest school b
 ![](img/h7.png)
 
 **Verdict: TRUE**
+
 Stores sell less during school holidays except in August. Not a surprise, since the longest school break in Germany happens in August.
 
 #### H8. Stores sell more on Christmas than other holidays
@@ -736,6 +776,7 @@ Stores sell less during school holidays except in August. Not a surprise, since 
 ![](img/h8.png)
 
 **Verdict: FALSE**
+
 Stores sell more on public holidays and Easter. However, our data doesn't capture christmas sales in 2015 since the dataset goes until mid-June.
 
 #### H9. Stores are selling more along the years
@@ -743,14 +784,16 @@ Stores sell more on public holidays and Easter. However, our data doesn't captur
 ![](img/h9.png)
 
 **Verdict: FALSE**
+
 Stores are selling less along the years, and `year` has a strong, negative linear correlation with `sales`. However, the year 2015 is not closed (dataset goes till mid-2015) so our analysis on year should be taken as incomplete.
 
 #### H10. Stores sell more after day 10 of each month
-In some companies, the salary payment is set on day 10 every month. To analyze the effect of sales before and after day 10, we create the variables `before_day_10` and `after_day_10` 
+In some companies, the salary payment is set on day 10 every month. To analyze the effect of sales before and after day 10, we create the variables `before_day_10` and `after_day_10`:
 
 ![](img/h10.png)
 
 **Verdict: TRUE**
+
 Stores sell more after day 10. Not a surprise, since there are more days after day 10.
 
 #### H11. Stores frequently doing traditional promo sales sell more
@@ -760,6 +803,7 @@ To analyze traditional, single-day promotion sales, we will use the dummy variab
 ![](img/h11.png)
 
 **Verdict: TRUE**
+
 We can observe in the barplot that traditional promotion sales generate bigger sales revenue volume than regular days, although there were more regular sales days than traditional promotion sales days (see `promo` distribution on [univariate analysis section](#i-univariate-analysis)). In the scatterplot, we observe that the more traditional promo sales days a store has, the more sales revenues it makes. 
 
 #### H12. Stores doing consecutive promo sales in the beginning of the year sell more
@@ -769,16 +813,18 @@ To analyze consecutive promotion sales, we use the dummy variable `is_promo2` th
 ![](img/h12.png)
 
 **Verdict: TRUE**
+
 Although the sales volume is higher for regular days (see first barplot), stores running consecutive promo sales sell more in the beginning of the year (see second barplot). However, sales are unstable for February.
 
 #### H13. Stores participating in consecutive promo for a longer time sell more
 
-To run this analysis, we will pick the variable `promo2_time_week` that shows by when a Rossmann store started consecutive promo sales (in weeks). Negative values indicate that stores haven't started consecutive promo yet, and positive values indicate that stores are already doing consecutive promo sales.
+To validate this hypothesis, we will pick the variable `promo2_time_week` that shows by when a Rossmann store started consecutive promo sales (in weeks). Negative values indicate that stores haven't started consecutive promo yet, and positive values indicate that stores are already doing consecutive promo sales.
 
 ![](img/h13.png)
 <img src="img/h131.png" alt="drawing" width="65%"/>
 
 **Verdict: FALSE**
+
 As depicted in the first barplot, stores participating in consecutive promo for a longer time sell less.
 You may find odd to see a very weak correlation between `sales` and `promo2_time_week`, and a somewhat definite linear relationship on the two scatterplots drawn above. The reason is that we have splitted the variable `promo2_time_week` into positive and negative values. While considering the entire variable as a predictor for sales prediction, dividing `promo2_time_week` into two variables could be a good idea.
 
@@ -787,6 +833,7 @@ You may find odd to see a very weak correlation between `sales` and `promo2_time
 ![](img/h14.png)
 
 **Verdict: TRUE**
+
 Stores with more consecutive promo days sell more. However, sales volume is bigger for days with no consecutive promotion.
 
 We can observe in the barplot that regular sales days generate bigger sales revenue volume than consecutive promo sales days. In the scatterplot, we observe that the more consecutive promo sales days a store has, the more sales revenues it makes. 
@@ -796,13 +843,14 @@ We can observe in the barplot that regular sales days generate bigger sales reve
 ![](img/h15_2.png)
 
 **Verdict: FALSE**
+
 Given the caveats that including an economic indicator on a model have, we don't expect to find extremely important insights from them.
 
 Overall, sales decrease when GDPpc increase. This is an indicative that Rossmann stores are not impacted by GDPpc fluctuations; therefore, we will not include GDPpc on the prediction model.
 
-The lineplots representing sales and GDP performance over time (we used `year_month`) shows that Rossmann sales and GDP are not related. The heatmap also confirms a weak, negative linear correlation between GDP and sales.
+The lineplots representing sales and GDP performance over time (we used `year_month`) shows that Rossmann sales and GDP are not correlated. The heatmap also confirms a weak, negative linear correlation between GDP and sales.
 
-A better variable would be Germany's GDPpc per region - however, the location of each Rossmann store in the dataset is unknown. For this and other reasons already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section, we will drop it from our model.
+A better variable would be Germany's GDPpc per region - however, the location of each Rossmann store in the dataset is unknown. For this and other reasons already discussed in the [feature engineering](#external-factors-economy-healthcare-weather) section, we will drop it from our model.
 
 #### H16. Stores sales increase when interest rates decrease (month)
 
@@ -811,9 +859,9 @@ A better variable would be Germany's GDPpc per region - however, the location of
 
 **Verdict: FALSE**
 
-Sales increase when interest rate increase over time. However, we were expecting to actually confirm this hypothesis, since a low interest rate stimulates people to purchase more.
+Sales increase when interest rate increase over time. However, we were expecting to actually confirm this hypothesis, since a low interest rate stimulates people to purchase more (it is cheaper to borrow for consumption).
 
-Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
+Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#external-factors-economy-healthcare-weather) section), we will drop it from our model.
 
 #### H17. Stores sales increase when Consumer Price Index (CPI) rate increase (month)
 
@@ -821,7 +869,8 @@ Since we were not able to confirm this hypothesis (and for other issues already 
 <img src="img/h17_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE** 
-When inflation increases, we expect people to purchase more since the value of money decreases. In our case, sales decrease when inflation increases. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
+
+When inflation increases, we expect people to purchase more since the value of money decreases. In our case, sales decrease when inflation increases. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#external-factors-economy-healthcare-weather) section), we will drop it from our model.
 
 #### H18. Store sales increase when Consumer Confidence Index (CCI) rate increases (month)
 
@@ -829,7 +878,8 @@ When inflation increases, we expect people to purchase more since the value of m
 <img src="img/h18_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE**
-When consumer confidence increases, we expect people to increase their expenditures. In our case, sales decrease when consumer confidence increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
+
+When consumer confidence increases, we expect people to increase their expenditures. In our case, sales decrease when consumer confidence increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#external-factors-economy-healthcare-weather) section), we will drop it from our model.
 
 #### H19. Store sales increase when Unemployment rate decreases (month)
 
@@ -837,8 +887,9 @@ When consumer confidence increases, we expect people to increase their expenditu
 <img src="img/h19_1.png" alt="drawing" width="67%"/>
 
 **Verdict: FALSE**
-An increase in unemployment rate can lead a  economy slowdown. In this case, we might expect people to reduce their expenditures.
-In our case, sales increase when unemployment rate increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#03-external-factors-economy-healthcare-weather) section), we will drop it from our model.
+
+An increase in unemployment rate can lead a economy slowdown. In this case, we might expect people to reduce their expenditures.
+In our case, sales increase when unemployment rate increase. Since we were not able to confirm this hypothesis (and for other issues already discussed in the [feature engineering](#external-factors-economy-healthcare-weather) section), we will drop it from our model.
 
 #### Hypothesis Validation
 
@@ -849,20 +900,21 @@ See below a summary of our hypothesis list:
 ### III. Multivariate Analysis
 
 In a multivariate analysis, we must answer two questions:
-1. **Target variable & independent variables (predictors)**: is there any predictor in our dataset that are highly correlated to the target (variable to be predicted)? If so, this predictor is likely to be an important feature to our prediction model.
-2. **Independent variables**: is there any predictor that is highly correlated to another predictor? If so, we might consider removing one of them since they behave in a similar way when "explaining" the target variable. We have to remove one or another due to two reasons: (1) in machine learning models, a simpler model is preferred (we will get into details on the [feature selection](#06-feature-selection) section) ; (2) it eliminates [multicollinearity](https://statisticsbyjim.com/regression/multicollinearity-in-regression-analysis/) problems, which can be a serious issue on linear regression models (we will explore linear regression models later) where independent variables should be independent to each other. Models full of highly correlated independent variables creates a lot of noise on the model, which makes our sales prediction unreliable. 
+
+1. **Target variable & independent variables (predictors)**: is there any predictor in our dataset that is highly correlated to the target (variable to be predicted)? If so, this predictor is likely to be an important feature to our prediction model.
+2. **Independent variables**: is there any predictor that is highly correlated to another predictor? If so, we might consider removing one of them since they "explain" the target variable in a similar fashion. We have to remove one or the other due to two reasons: (1) in machine learning models, a simpler model is preferred (we will get into the reasons on the [feature selection](#06-feature-selection) section); (2) it eliminates [multicollinearity](https://statisticsbyjim.com/regression/multicollinearity-in-regression-analysis/) problems, which can be a serious issue on linear regression models (we will explore linear regression models later) where independent variables should be independent to each other. Models full of highly correlated independent variables creates a lot of noise on the model, which makes our sales prediction unreliable. 
 
 But how to tell whether a variable is correlated to another one? Let's get into a bit of theory again.
 
-[(skip theory)](#heatmap)
+[(skip theory)](#numerical-variables)
 
-#### Correlation
+### Correlation
 
 In statistics, we use correlation to understand relationships between variables. Correlation can be strong (high) or weak (low), and can take positive or negative values. 
 
-Correlation is best understood graphically though (graph retrieved [ here](https://miro.medium.com/max/320/0*abk24QJL8-9JKFEz.png)):
+Correlation is best understood graphically (graph retrieved [ here](https://miro.medium.com/max/320/0*abk24QJL8-9JKFEz.png)):
 
-<img src="https://miro.medium.com/max/320/0*abk24QJL8-9JKFEz.png" alt="drawing" width="70%"/>
+<img src="https://miro.medium.com/max/320/0*abk24QJL8-9JKFEz.png" alt="drawing" width="60%"/>
 
 How to interpret these graphs? Let's see some examples:
 
@@ -870,9 +922,9 @@ How to interpret these graphs? Let's see some examples:
 * **Strong Negative Correlation**: time slept in hours and time awake in hours. This negative relationship is easy to understand: the more you sleep, the less hours you are awake.
 * **Weak-No Correlation**: your skills in data science and you driving skills. This has a weak (even zero) correlation because no matter how skilled you are in data science, it doesn't relate to your ability to drive.
 
-A quick note on correlation is needed here. A famous maxima that every statistician knows is that **correlation does not imply causation**. In other words, correlation cannot answer whether one variable **causes** the other. Let's go back to our strong positive correlation example. It may be common sense to affirm that, the more you read this project, the more you understand it. But what if the person is reading this very project in a language that he does not know? Then spending long hours reading it in a different language doesn't imply that he will in fact understand the project.
+A quick note on correlation is needed here. A famous maxim that every statistician knows is that **correlation does not imply causation**. In other words, correlation cannot answer whether one variable **causes** the other. Let's go back to our strong positive correlation example. It may be common sense to affirm that, the more you read this project, the more you understand it. But what if the person is reading this very project in a language that he does not know? Then spending long hours reading it in a different language doesn't imply that he will in fact understand the project. For other examples of correlation not implying causation, see Mark Wilson's article [Hilarious Graphs Prov That Correlation Isn't Causation](https://www.fastcompany.com/3030529/hilarious-graphs-prove-that-correlation-isnt-causation).
 
-Although we have learned that correlation doesn't imply causation, understanding association relationships between variables is crucial in data science projects. In our project, using variables which have some sort of relationship with sales revenues can increase our success rate of getting accurate predictions, and this is why we look at correlation.
+Although we have learned that correlation doesn't imply causation, understanding association relationships between variables is crucial in data science projects. In this project, using variables which have some sort of relationship with sales revenues can increase our success rate of getting accurate predictions, and this is why we look at correlation.
 
 But how do we calculate linear correlation? There are few methods to measure association between variables, but we will focus on the **correlation coefficient** (or Pearson correlation coefficient):
 
@@ -896,19 +948,18 @@ The correlation coefficient can assume values from -1 to 1. Graphically, this sh
 | No correlation | zero | 
 
 **Important**: while the pearson correlation coefficient works well to measure associative relationships between linear variables, other methods of correlation measurement should be taken for non-linear or too complex data. 
-&nbsp;
 
 Now we are ready to proceed with our multivariate analysis! There are some techniques to find out correlation depending on the kind of data you are working with:
 &nbsp;
 
-<img src="https://miro.medium.com/max/1000/1*6KNXPv-_3s7cJrcOQxbZCw.png" alt="drawing" width="70%"/>
+<img src="https://miro.medium.com/max/1000/1*6KNXPv-_3s7cJrcOQxbZCw.png" alt="drawing" width="65%"/>
 
 _Retrieved from [Outside Two Standard Deviations](https://medium.com/@outside2SDs/an-overview-of-correlation-measures-between-categorical-and-continuous-variables-4c7f85610365)_ 
 &nbsp;
 
 For **numerical variables**, we will use  a heatmap with pearson correlation coefficient values, and for **categorical variables** we use Cramer's V technique. 
 
-#### Numerical Variables
+### Numerical Variables
 
 ![](img/multivariate.png)
 
@@ -950,9 +1001,9 @@ For **numerical variables**, we will use  a heatmap with pearson correlation coe
   `cpi` vs `cci`
   `interest rate` vs `unemployment_rate` `promo2_time_week` vs `promo2_time_month`
 &nbsp;
-#### Categorical Variables
+### Categorical Variables
 
-In order to compare correlations between categorical variable, we will use Cramér's V technique. The only difference from the Pearson Correlation Coefficient is that its values varies from 0 to +1, without negative values. The closer a Cramér's V value is from 1, the stronger the association between variables.
+In order to compare correlations between categorical variable, we will use Cramér's V technique. The only difference from the Pearson Correlation Coefficient is that Cramér's V values varies from 0 to +1, without negative values. The closer a Cramér's V value is from 1, the stronger the association between variables.
 
 We won't go into details on how to calculate the Cramér's V, but you can find more details on [Wikipedia](https://en.wikipedia.org/wiki/Cram%C3%A9r%27s_V). In this project, I created a python function `cramer_v` that calculates Cramér's V and returns a dataframe with correlation values between categorical data. In the [Jupyter notebook](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb), you can find the function in the section `0.1. Helper Functions`.
 
@@ -965,30 +1016,29 @@ We won't go into details on how to calculate the Cramér's V, but you can find m
 ---
 
 ## 05. Data Preprocessing
-[(go to next session)](#06-feature-selection)
+[(go to next section)](#06-feature-selection)
 
-Data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Some variables might be categorical or numerical, or a data type variable. The problem is: most ML models perform better when data is of numerical type, and without extreme ranges. Think of our project; we are trying to predict sales. If you have a variable with a high range (say, from 0-10000) and another with a low range (from 0 to 3.5), the model will weight the high-range variable more when predicting sales, and therefore delivering biased results.
+Data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Some variables might be categorical or numerical, or a data type variable. The problem is: most ML models perform better when data is of numerical type, and without extreme ranges. Think of this project: we are trying to predict sales. If you have a variable with a high range (say, from 0-10000) and another with a low range (from 0 to 3.5), the model will weight the high-range variable more than the low-range variable when predicting sales, and therefore it could generate biased results. In addition, some models can't really interpret categorical variables with words - therefore, we must scale these words with numbers.
 
-We will divide data preprocessing according to our variables: numerical scaling, categorical encoding, and time-related variables (cyclic transformation). If you wish to skip the theoretical part, you can see a summary table of scaling methods utilized for each variable at the end of this section.
+ **We will divide data preprocessing according to our variables:(I) numerical scaling, (II) categorical encoding, and (III) time-related variables (cyclic transformation)**. If you wish to skip the theoretical part, you can see a table of new variables created at the end of this section.
 
 [(skip theory)](#summary)
 
 ### I. Numerical Scaling
 
-This task is centered on feature scaling for numerical variables. There are many ways to scale (some you can find on Baijayanta Roy's [article](https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35)), but here we will explain and utilize the ones which suits our needs for this project. But before we go into theory again, we will analyze the skew, kurtosis, and standard deviation of numerical variables present in our data. Dummy, time-related variables (except for `year`) were excluded from the list below:
+This part is focused on feature scaling for numerical variables. There are many ways to scale (some you can find on Baijayanta Roy's [article](https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35)), but here we will explain and utilize the ones which suits our needs for this project. But before we go into theory again, we will analyze the skew, kurtosis, and standard deviation of numerical variables present in our data. Dummy, time-related variables (except for `year`) were excluded from the list below:
 
 ![](img/numerical_dataprep.png)
 
-There are many variables with problematic statistic values in our dataset. In order to help us judging what scaling technique will be used on each variable, we plot the boxplots for the ones we need to be extra careful:
+As we can see, there are few variables with problematic statistic values in our dataset. In order to help us judging what scaling technique will be used on each variable, we plot the boxplots for the ones we need to be extra careful:
 
 ![](img/numerical_dataprep_1.png)
 
+Looks like we need methods that are robust to outliers for some of them. With no further due, let's explore feature scaling methods:
 
-With no further due, let's explore feature scaling methods:
+### Standardization (StandardScaler)
 
-#### Standardization (StandardScaler)
-
-This technique rescale the data in a way that its distribution gets a mean of zero and standard deviation of 1 - [a standard normal distribution](https://sphweb.bumc.bu.edu/otlt/mph-modules/bs/bs704_probability/bs704_probability9.html). All variable values receive a "z-score", which is obtained by subtracting the variable's mean and dividing it by the variable's standard deviation. It is a very effective feature scaling technique for variables that follows a normal distribution:
+This technique rescale the data in a way that its distribution gets a mean of zero and standard deviation of 1; it transforms the variable data into a [a standard normal distribution](https://sphweb.bumc.bu.edu/otlt/mph-modules/bs/bs704_probability/bs704_probability9.html). All variable values receive a "z-score", which is obtained by subtracting the variable's mean and dividing it by the variable's standard deviation. It is a very effective feature scaling technique for variables that follows a normal distribution:
 
 ![](img/standardization_1.png)
 
@@ -1002,7 +1052,7 @@ This technique rescale the data in a way that its distribution gets a mean of ze
 The only problem of standardization is that it assumes the data comes from a normal distribution. In our dataset, we don't have any variables like this; hence, we will not utilize standardization.
 
 
-#### MinMaxScaler
+### MinMaxScaler
 
 This technique subtracts each variable's value to the variable's mean, and then divides by the variable's range:
 
@@ -1012,19 +1062,23 @@ This scaling technique transform values to between 0 and 1. It is a good techniq
 
 To illustrate the transformation, distributions would look like this:
 
+![](img/scaling_1.png)
+
 ![](img/minmax_1.png)
 
 In our project, we will use this method with the variable `year` only.
 
-#### RobustScaler
+### RobustScaler
 
 RobustScaler is the MinMaxScaler alternative when you have variables with a profusion of outliers:
 
 ![](img/robustscaler.png)
 
-As the formula tells, the RobustScaler technique utilizes the variable's quartiles values to rescale values. While the MinMaxScaler uses the minimum and maximum values (which makes it sensible to outliers), RobustScaler doesn't include them during rescaling.
+As the formula tells, the RobustScaler technique utilizes the variable's quartile values for rescaling. While the MinMaxScaler uses the minimum and maximum values (which makes it sensible to outliers), RobustScaler doesn't include them, since Q3 and Q1 does not have minimum and maximum values.
 
 Ater RobustScaler transformation, distributions would look like this:
+
+![](img/scaling_1.png)
 
 ![](img/robustscaler_1.png)
 
@@ -1032,7 +1086,7 @@ We will use RobustScaler for the following variables: `promo2_time_week`, `promo
 
 ### Power Transformations: Box-Cox Transformation, Yeo-Johnson Transformation, Log Transformation
 
-Usually, we would use the three previous feature scaling methods to scale our data. However, since we will test linear and non-linear models as candidates to become the main model for sales prediction, we want features that resemble a normal-like distribution.
+Usually, the three previous feature scaling methods would be sufficient to scale our data. However, since we will test linear and non-linear models as candidates to become the main model for sales prediction, we want features that resemble a normal-like distribution.
 
 This is where power transformation comes into play. For features that suffers from high variance and presence of outliers, or for non-linear features that wouldn't behave well linear models, power transformation helps us transforming such features into a more normal-like distribution.
 
@@ -1044,7 +1098,8 @@ As any power transformation, a log transformation is used to make highly skewed 
 
 ![](img/log.png)
 
-See how values far from each other (1,10,100) are gathered in a nicely, closer pattern? A graphical example is the brain weight of animals as a function of their body weight. The first graph is the original dataset plotted with body weight in the x-axis, and brain weight in the y-axis, and the second graph is the log transformed version:
+See how values far from each other (1, 10, 100) are gathered in a nicely, closer pattern (0, 1, 2)?  
+A graphical example is the brain weight of animals as a function of their body weight. The first graph is the original dataset plotted with body weight in the x-axis, and brain weight in the y-axis, and the second graph is the log transformed version:
 
 ![](img/log_1.jpg)
 
@@ -1052,7 +1107,7 @@ The log transform is very popular for transforming target variables because it l
 
 This thread [here](https://stats.stackexchange.com/questions/298/in-linear-regression-when-is-it-appropriate-to-use-the-log-of-an-independent-va) on StackOverFlow has a detailed explanation on the benefits of using log-transforms.
 
-Please note that logarithm transformations don't accept negative values. In our case, we applied the log transformation to our target variable, `sales`.
+Please note that logarithm transformations don't accept negative values. In our case, we applied the log transformation to our target variable `sales`.
 
 * **Box-Cox Transformation**
 
@@ -1060,14 +1115,16 @@ Box-Cox transformation is suitable for variables in which values are highly skew
 
 The formula is as follows:
 
-<img src="img/boxcox.png" alt="drawing" width="70%"/>
+<img src="img/boxcox.png" alt="drawing" width="65%"/>
 
 where,
 
-![](img/boxcox_formula_1.png)
+![](img/boxcox_formula_1.PNG)
 
-Note: Box-Cox transformation does not accept negative or zero values. If your variable (feature) y has zero or negative values, use the Yeo-Johnson transformation. 
-Also, please note that setting lambda equal to zero is the same as performing a log-transformation.
+
+_Note: Box-Cox transformation does not accept negative or zero values. If your variable (feature) y has zero or negative values, use the Yeo-Johnson transformation. 
+Also, please note that setting lambda equal to zero is the same as performing a log-transformation._
+&nbsp;
 
 Here's an example on how a distribution like this:
 
@@ -1081,25 +1138,25 @@ In this project we found that a lambda value of 0.05 generates good results. We 
 
 * **Yeo-Johnson Transformation**
 
-With similar traits as the Box-Cox transformation, the Yeo-Johnson transformation is the method to go if you have variables with zero and negative values.
+With similar traits as the Box-Cox transformation, the Yeo-Johnson transformation is the method to go if you have variables with zero or negative values.
 
 ![](img/yeojohnsonformula.png)
 
-Yeo-Johnson's formula is much similar compared to Box-Cox's, with the exception that y can assume negative and zero values. We transformed `competition_since_month` variable with this method.
+Yeo-Johnson's formula is much similar compared to Box-Cox's, with the exception that y can assume negative or zero values. We transformed `competition_since_month` variable with this method.
 
 For Box-Cox and Yeo-Johnson Transformation, the method `.PowerTransformer` by scikit-learn was utilized, and best lambda values were chosen by the method.
 
-### Categorical Encodings
+### II. Categorical Encodings
 
-In our model, we have a few features that are categorical and need to be converted into numerical ones. We call this conversion process as "Categorical Encodings". 
+In the model, there are a few features that are categorical and need to be converted into numerical ones. We call this conversion process as "Categorical Encodings". 
 
-There are a myriad of encoding methods available outside, and we will utilize a few of them. For more details on categorical encoding methods, [Baijayanta Roy's article](https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02) is worth reading. Our criteria to choose the most adequate method for each variable follows this useful chart:
+There are a myriad of encoding methods available outside, and a few of them will be utilized. For more details on categorical encoding methods, [Baijayanta Roy's article](https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02) is worth reading. The criteria to choose the most adequate method for each variable follows this useful chart:
 
 ![](img/categoricalencoding.png)
 
-To encode our categorical variables, we will utilize a few of them, namely: (1) One Hot Encoding; (2) Label Encoding; and (3) Ordinal Encoding
+A few encoding methods will be used, namely: **(1) One Hot Encoding; (2) Label Encoding; and (3) Ordinal Encoding**.
 
-#### One-hot Encoding
+### One-hot Encoding
 
 Also known as the "dummy" encoding method, One-hot encoding creates new binary (0 or 1) columns from the original column. The number of columns to be created correspond to the number of values that the original column can assume.  An [example](https://www.kaggle.com/dansbecker/using-categorical-data-with-one-hot-encoding) retrieved from Kaggle shows how a categorical variable indicating color is transformed by One-Hot Encoding:
 
@@ -1111,7 +1168,7 @@ This method is simple (and in some cases, just fine) if compared to other method
 
 We will use this method with the variables `state_holiday`, `assortment`, `store_type`,`competition_open_since_year`, `promo2_since_year`, since they have entries that don't have a ordinal nature, and don't have many entries.
 
-#### Label Encoding
+### Label Encoding
 
 Label Encoding is an alternative method for One-hot encoding in case you can't bear up with adding extra features in your dataset. This method encodes, in only one column, values ranging from the number of entries an original variable has. Going back to the variable color example, we would get a column like this: 
 
@@ -1119,15 +1176,15 @@ Label Encoding is an alternative method for One-hot encoding in case you can't b
 
 Although it avoids the creation of additional columns, it brings up a new problem: it creates some order between entries. In this example, red is zero and blue is 2, which indicates that entries containing blue color would have extra weight in the prediction time than red. But here, the color does not have an order at all.
 
-Therefore, if you have a nominal variable with a few entries or a variable with some ordering but it isn't quite clear the relationship between the entries, label encoding is a fair candidate. In our case, we used label encoding on the variable `store_type`, since it has three store types but we can't guess which type is worse/better than the other. 
+Therefore, if you have a nominal variable with a few entries or a variable with some ordering but it isn't quite clear the relationship between the entries, label encoding is a fair candidate. In this project, label encoding was used on the variable `store_type`, since it has three store types but there is no way to guess which store type is worse/better than the other. 
 
-#### Ordinal Encoding
+### Ordinal Encoding
 
-As the name suggests, this method is optimal for ordinal variables. The mechanics are the same as label encoding, but with one (and only one) difference: you determine how to label each entry. For variables that has some magnitude between them, you can order values accordingly. For example, temperature: 1 for "cold", 2 for "warm", 3 for "hot", 4 for "very hot".
+As the name suggests, this method is optimal for ordinal variables. The mechanics are the same as label encoding, but with one difference: you determine how to label each entry. For variables that has some magnitude between them, you can order values accordingly. For example, temperature: 1 for "cold", 2 for "warm", 3 for "hot", 4 for "very hot".
 
 I opted to use ordinal encoding for the variable `assortment`, since it has three labels that have some magnitude between them: "basic" , "extra", "extended". I assigned values 1, 2, and 3, respectively.
 
-### Time-related Transformation (cyclic transformation)
+### III. Time-related Transformation (cyclic transformation)
 
 Some time-related data has a cyclical nature and does "come back" on time. This is the case for variables indicating day, month, day of the week, year week - once they arrive to the last value possible, they return to the initial value. Take month as an example: the calendar runs from January to December, and then goes back to January again.
 
@@ -1144,7 +1201,7 @@ New variables will be created and labeled with a prefix indicating sine or cosin
 
 ### Summary
 
-Our final list of variables is as follows:
+Our final list of 25 variables is as follows:
 
 `'store', 'date', 'day', 'month', 'year', 'year_month','week_of_year','year_week', 'sales', 'customers', 'day_of_week', 'is_weekday','school_holiday', 'store_type', 'assortment', 'competition_distance''competition_open_since_month', 'competition_open_since_year','competition_since', 'competition_since_month', 'promo', 'is_promo2','promo2', 'promo2_since', 'promo2_since_week', 'promo2_time_week','promo2_time_month', 'gdp', 'cpi', 'interest_rate', 'unemployment_rate',
 'cci', 'state_holiday_christmas', 'state_holiday_easter','state_holiday_public_holiday', 'state_holiday_regular_day',
@@ -1157,23 +1214,23 @@ Our final list of variables is as follows:
 ---
 
 ## 06. Feature Selection
-[(go to next session)](#07-machine-learning-modeling)
+[(go to next section)](#07-machine-learning-modeling)
 
-For machine learning models, it is fundamental to keep the  variables that best explain our response (target) variable and remove the ones that are repetitive or irrelevant. There are three methods to do so: 
-* **Filter Methods**, which is usually the simplest, fastest method to select relevant variables. If one utilizes this method to eliminate variables for this project, it would purely use the correlation coefficients and the Cramér's V values (you can find these values on the [exploratory data analysis](#04-exploratory-data-analysis-eda) section) as a criteria to exclude or keep variables.
-* **Embedded Methods**, which simply runs a ML algorithm that already has an in-built feature selection step; 
+For machine learning models, it is fundamental to keep the  variables that best explain our response (target) variable and remove the ones that have repetitive information or are irrelevant. There are three methods to do so: 
+* **Filter Methods**, which is usually the simplest, fastest method to select relevant variables. If one utilizes this method to eliminate variables for this project, it would purely use the correlation coefficients, the Cramér's V values, and the information retrieved from the [exploratory data analysis](#04-exploratory-data-analysis-eda) as a criteria to exclude or keep variables.
+* **Embedded Methods**, which is a method that uses a machine learning algorithm that already has an in-built feature selection step; 
 * **Wrapper Methods**, which is computationally expensive but a reliable method that uses a ML algorithm to determine the best features to keep.
 
-Detailed explanation on feature selection methods can be found [here](https://www.analyticsvidhya.com/blog/2016/12/introduction-to-feature-selection-methods-with-an-example-or-how-to-select-the-right-variables/). An important note is that these methods works as a supportive tool - the final decision on feature selection should be always upon the project owner. This is another reason why an EDA section is put before Feature Selection - it gives us a chance to really understand the data we are working on, and what variables will probably be good to be included in the prediction model.
+Detailed explanation on feature selection methods can be found [here](https://www.analyticsvidhya.com/blog/2016/12/introduction-to-feature-selection-methods-with-an-example-or-how-to-select-the-right-variables/). An important note is that these methods work as a supportive tool - the final decision on feature selection should be always upon the project owner. This is another reason why an EDA section is put before Feature Selection - it gives us a chance to really understand the data we are working on, and what variables will probably be good to be included in the prediction model.
 
-For this project, we will use a wrapper method called [Boruta]() that will automatically select the best features for our predictive ML model. Manish Pathak has done a wonderful job explaining Boruta [here](https://www.datacamp.com/community/tutorials/feature-selection-R-boruta), in case you want to explore this feature selection algorithm in detail.
+For this project, a wrapper method called [Boruta]() that automatically select the best features for our predictive ML model is used. Manish Pathak has done a wonderful job explaining Boruta [here](https://www.datacamp.com/community/tutorials/feature-selection-R-boruta), in case you want to explore this feature selection algorithm in detail.
 
 Boruta works in four steps:
 
 1. Boruta creates "shadow features" from the original dataset. These shadow features are copies of the original features with their values shuffled. Shuffling the values ensure that we won't have correlation issues between original and shadow variables (otherwise, shadow variables would be just perfect copies of the original features) 
-2. With the shadow and original features, Boruta trains a ML model, and calculates its performance. Usually a model which captures non-linear data well is used. In our case, we will use a random forest algorithm that will be able to tell us the importance of each variable when running predictions.
+2. With the shadow and original features, Boruta trains a ML model, and calculates its performance. Usually a model which captures non-linear data well is used. In this project, we will use a random forest algorithm that will be able to tell us the importance of each variable when running predictions.
 3. With the importance values (performance) of each variable, Boruta uses the shadow variable with the highest importance value, and compare it with all original variables' performance values. If a original value has a higher value than the the shadow variable value in question, then it receives a "hit" (described as 1); otherwise, it receives a zero. Then, we go back to step 1 and shuffle the shadow variables values again, train the ML algorithm, retrieve importance values, and sum up hit numbers for each iteration. The summation of ones and zeroes is then gathered in a "success count" table.
-4.  From the success count table, we get binary variables. Then, we use inferential statistics¹ to determine whether a binary variable has statistical relevancy or not. For binary variables that has relevancy, boruta returns the original variables (corresponding to their binary variables) as the variables selected to our model.
+4.  From the success count table, we get binary variables. Then, we use inferential statistics¹ to determine whether a binary variable has statistical relevancy or not. For binary variables that has relevancy, boruta returns their corresponding original variables as the variables with more relevance to the model.
 
 ¹ _quick note: we won't go further on how to perform inference, but there are plenty of sources that explains how to do so. Since binary variables can be analyzed within a [binomial distribution](https://www.youtube.com/watch?v=J8jNoF-K8E8), Boruta uses inferential statistics to analyze relevancy on such distributions. A first introduction to inferential statistics can be found [here](https://www.statisticshowto.com/inferential-statistics/) and a complete free course from Udacity can be found [here](https://www.udacity.com/course/intro-to-inferential-statistics--ud201)._
 
@@ -1186,18 +1243,17 @@ The columns not selected by Boruta were:
 ![](img/cols_not_selected.png)
 
 
-Remember our [hypothesis validation](#hypothesis-validation) list? We will use it to judge whether the Boruta algorithm has indeed selected relevant features to our model. Our compass is the relevance of each validated hypothesis, and a few variables were included to our final list of selected variables:
+Remember our [hypothesis validation](#hypothesis-validation) list? We will use it to judge whether the Boruta algorithm has indeed selected relevant features to our model. Our compass is the relevance of each validated hypothesis, and a few variables were included/excluded from the final list of selected variables:
 
 1. Boruta has selected `promo2_since_year_2009` and left all the other dummy variables related to `promo2_since_year` out. We saw in the [multivariate analysis](#iii-multivariate-analysis) part that `promo2_since_year` has a high correlation with both `promo2_time_month` and `promo2_time_week`. Since these features possibly behave in a similar way, we will remove `promo2_since_year_2009`. 
 
 2. `week_of_year_cos`, `day_cos`,`month_cos` were selected by Boruta but their counterpart `week_of_year_sin`, `day_sin`,`month_sin` wasn't. We will include them to our model.
 
-3. `is_promo2` has a mild correlation with `promo_2` and no correlation at all with our target variable `sales` as noted in the [multivariate analysis](#iii-multivariate-analysis) section. We will keep `is_promo2` out of the model.
+3. `is_promo2` has a mild correlation with `promo_2` and very weak correlation with our target variable `sales` as noted in the [multivariate analysis](#iii-multivariate-analysis) section. We will keep `is_promo2` out of the model.
 
 4. We observed that hypothesis related to `school_holiday`, `state_holiday` variables have a low-medium impact. Therefore we will keep them out from the model.
 
-
-Our final list of selected variable is as follows:
+Our final list of selected variable was reduced to 23 variables:
 
 ![](img/final_boruta.png)
 
@@ -1205,32 +1261,34 @@ Our final list of selected variable is as follows:
 
 ---
 ## 07. Machine Learning Modeling
-[(go to next session)](#08-hyperparameter-tuning)
+[(go to next section)](#08-hyperparameter-tuning)
 
-The fun part has just arrived! We divide this step into four tasks:
+The fun part has just arrived! We divide this section into four tasks:
   
 * **Performance Metrics**: choose suitable metrics to measure performance of the predictive model;
-* **Modeling:** split the dataset into training and validation data, choose ML models to train the training data, and generate predictions on the validation data;
-* **Cross-validation:** assess the trained models' performance when facing unseen data.
+* **Modeling:** split the dataset into training and validation data, choose machine learning models to train the training data, and generate predictions on the validation data;
+* **Cross-validation:** assess the trained models' real performance when facing unseen data.
 
-If you wish to see the model's performance on cross-validation section, look no further and [(skip theory)](#cross-validation-performance)!
+If you wish to see the model's performance on cross-validation section, look no further and [(skip theory)](#iii-cross-validation)!
 
 ### I. Performance Metrics
-Before we start training machine learning models, we have discussed in [data preparation](#02-data-preparation) that we split the dataset into training and validation datasets. The reason is to train the training dataset into the model, and to use validation data to validate whether the model is generating accurate predictions. We do this since we cannot measure model performance on data we want to get predictions (test data) - after all, test data doesn't contain the target variable. 
+Before we start training machine learning models, we have discussed in [data preparation](#02-data-preparation) that we split the dataset into training and validation datasets. The reason is to train some models by using the training data, and to use validation data to validate which model generates more accurate predictions. Once we define the best model, then we can use it to predict sales for unseen data (in this project, it is called "test data"). 
 
-Let's choose a few metrics to measure performance on them. Performance will be measured by errors, which is the distance between the predicted value we get from the model and the true value. To understand these metrics, let's step back once and understand what is an error (graph retrieved retrieved [here](http://www.sthda.com/english/articles/40-regression-analysis/167-simple-linear-regression-in-r/)):
+Let's choose a few metrics to measure performance on them. Performance will be measured by errors, which is the distance between the predicted value generated by the model and the true value. To understand these metrics, let's step back once and understand what is an error (graph retrieved retrieved [here](http://www.sthda.com/english/articles/40-regression-analysis/167-simple-linear-regression-in-r/)):
 
 ![](img/mpe.png)
 
-This is a representation of a regression line (in blue). A regression line is a line which contains predicted y values for each x value. Let's say that x is number of customers of stores, and y is the number of purchases done for a day. The black dots are the observed values (the true values), and the distance between the black dots to the regression line represents the error: by how much the predictions on the regression line is off. For our purposes, the performance metrics will allow us to find and interpreting such errors.
+This is a representation of a regression line (in blue). A regression line is a line which contains predicted y values for each x value. Let's say that x is the number of customers of an individual store, and y is the number of purchases done for a day in that store. The black dots are the observed values (the true values), and the distance between the black dots to the regression line represents the error: by how much the predictions on the regression line is off. For our purposes, the performance metrics will allow us to find and interpreting such errors.
 
-We will use three: the Mean Absolute Error, the Mean Absolute Percentage Error, the Root-Mean Squared Error, and the Mean Percentage Error. If you know these metrics, you can go directly to the modeling part.
+Note that the test data doesn't have "observed values" - therefore, we can't measure error there. It is quite obvious, but worth remembering: the only way we can guess which model would predict more accurate values for unknown data is to measure the error on data that is known.
 
-[(skip theory)](#modeling)
+In this project, three metrics will be used: the Mean Absolute Error, the Mean Absolute Percentage Error, the Root-Mean Squared Error, and the Mean Percentage Error. If you know these metrics, you can skip the theory and go directly to the modeling part.
 
-#### Mean Absolute Error (MAE)
+[(skip theory)](#II-modeling)
 
-The Mean Absolute Error (MAE) takes the absolute difference between predicted and true value, sums up all absolute differences, and averages it by the number of elements present in the target variable.
+### Mean Absolute Error (MAE)
+
+The Mean Absolute Error (MAE) takes the absolute difference between predicted and true (observed) value, sums up all absolute differences, and averages it by the number of elements present in the target variable.
 
 ![](img/mae.png)
 
@@ -1246,15 +1304,15 @@ As the example shows, MAE is very interpretable, since it shows by how much the 
 
 Also, MAE is robust to outliers since it weights equally for all errors due to the averaging term 1/n. This is not necessarily an advantage: for projects where errors should be close to zero (say, predicting existence of rare diseases on patients), the MAE tends to cover up the effects of outliers in the data.
 
-#### Mean Absolute Percentage Error (MAPE)
+### Mean Absolute Percentage Error (MAPE)
 
 The Mean Absolute Percentage Error (MAPE) is the MAE in percentage terms. It shows how far the predictions are from the true value, and like the MAE, it is very interpretable.
 
 ![](img/mape.PNG)
 
-There is no much to explain here, despite the fact that MAPE is unusable when a variable contains zero.
+There is no much to explain here, despite the fact that MAPE is unusable when a variable contains zero (see the denominator term).
 
-#### Root Mean Squared Error (RMSE) 
+### Root Mean Squared Error (RMSE) 
 
 The Root Mean Squared Error (RMSE) is the square root of the average of squared differences between predicted values and true values. 
 
@@ -1266,7 +1324,7 @@ Let's set the past example with weekly incomes: \$1,000, \$500, \$100. Assume yo
 
 The MAE was \$496.66 against a RMSE of \$623.99. Think of predicting rare diseases on patients - you will want to use the RMSE to ensure the model is very accurate. However, for fields that don't need such rigor, the MAE is preferred since it is easier to interpret in business terms than RMSE.
 
-#### Mean Percentage Error (MPE)
+### Mean Percentage Error (MPE)
 
 The Mean Percentage Error (MPE) measures if the model is underestimating or overestimating the predictions in percentage terms. 
 
@@ -1274,7 +1332,11 @@ The Mean Percentage Error (MPE) measures if the model is underestimating or over
 
 Observe the formula's right-hand side. Unlike MAPE, MPE doesn't care about getting the absolue value of the errors - it just sums up all positive and negative errors. If the MPE turns to be positive (MPE > 0), it means that the model is underestimating predictions, while a negative MPE (MPE < 0) means that the model is overestimating them.
 
-Think of the regression line we illustrated [here](#performance-metrics). Overall, if the regression line is above the black dots, it means that errors are negative valued; if the line is below, the errors become positive valued. 
+Think of the regression line we showed earlier: 
+
+![](img/mpe.png)
+
+Overall, if the regression line is above the black dots, it means that errors are negative valued (overestimation); if the line is below, the errors become positive valued (underestimation). 
 
 Due to the denominator term in the formula, we can't use MPE if a variable y has zero entries.
 
@@ -1286,45 +1348,45 @@ Machine learning models can be of three types:
 
 * **Supervised**: a supervised machine learning model is when the variable to be predicted is well known. In supervised models, the data to be trained is well defined - the experimenter knows the dependent and independent variables from the data; 
 
-* **Unsupervised**: an unsupervised model is used when the variable to be predicted is not known. This happens when the experimenter wants to find some similarities between data points, such as dividing data into groups that have some sort of relationship.
+* **Unsupervised**: an unsupervised model is used when the variable to be predicted is not known. This happens when the experimenter wants to find some similarities between data points, such as dividing data into groups/clusters that have some sort of relationship.
 
-* **Reinforcement**: a reinforcement model is used when the experimenters wants to maximize the model's output. The model "learns" on the go by trial-and-error: as new data join the model, it tries to find the best solution that maximizes the "reward". Think of an automated car: its sole goal is to arrive at a particular destination by being fuel efficient, with minimal ride time, and in safe. A reinforcement model learns by trying several routes, registering their performance, and utilizing routes that best achieve the goal. 
+* **Reinforcement**: a reinforcement model is used when the experimenters wants to maximize the model's output. The model "learns" on the go by trial-and-error: as new data join the model, it tries to find the best solution that maximizes the "reward". Think of an automated car: its sole goal is to arrive at a particular destination by being fuel efficient, with minimal ride time, and in safety. A reinforcement model learns by trying several routes, registering their performance, and utilizing better routes at each drive.
 
 For a detailed explanation on supervised, unsupervised, and reinforcement models, check this [article](https://intellipaat.com/blog/supervised-learning-vs-unsupervised-learning-vs-reinforcement-learning/).
 
 In this project, we clearly have a target variable to get predictions on, so we will build a supervised model. To get some criteria for which algorithms to run, check a cheat sheet for machine learning algorithms [here](https://blogs.sas.com/content/subconsciousmusings/2017/04/12/machine-learning-algorithm-use/). 
 
-For our project, we will run 7 models: (1) Mean of the target variable (baseline); (2) Linear Regression; (3) Lasso Regression; (4) Ridge Regression; (5) ElasticNet Regression; (6) Random Forest Regressor; (7) XGBoost Regressor.  
+For this project, we will run 7 models: (1) Mean of the target variable (baseline); (2) Linear Regression; (3) Lasso Regression; (4) Ridge Regression; (5) ElasticNet Regression; (6) Random Forest Regressor; (7) XGBoost Regressor.  
 
-If you wish to see a summarized table with each model's performance, you can always [(skip theory)](#model-performance)
+If you wish to see a summarized table with each model's performance, you can always [(skip theory)](#model-performance).
 
-#### A quick note on Underfitting and Overfitting
+### A quick note on Underfitting and Overfitting
 
 Before we proceed with our models, let's talk about underfitting and overfitting. In machine learning models, we usually worry about models presenting underfitting and overfitting problems:
 
 ![](img/fitting.png)
 
-In this example (retrieved from [Dados Aleatórios](https://www.dadosaleatorios.com.br/post/overfitting/)) we can get a taste on how overfitting and underfitting can affect a machine learning model. We have three graphs; each one trying to fit a best prediction line/curve that minimizes the error - the distance between the prediction line and the true value (the pink dots). The overfitting model shows a curve that perfectly fits all actual values with zero error; the optimum model predicts fairly good with a few errors; and the underfitting case presents huge error values.
+In the graph below (retrieved from [Dados Aleatórios](https://www.dadosaleatorios.com.br/post/overfitting/)) we can get a taste on how overfitting and underfitting can affect a machine learning model. We have three graphs; each one trying to fit a best prediction line/curve that minimizes the error - the distance between the prediction line and the true value (the pink dots). The overfitting model shows a curve that perfectly fits all actual values with zero error; the optimum model predicts fairly good with a few errors; and the underfitting case presents huge error values.
 
 One would say that the overfitting model is the best one, since predictions are precisely the same as the true values (pink dots). But think of how machine learning models work: we pick an algorithm, train it with training data, and utilize a validation data to get predictions. If predictions are too accurate on validation data, it means that the model will be extremely accurate just for the validation data! In other words, when the same model tries to generate predictions on a different data (say, the test data), then results will be pretty unreliable.
 
 On the other hand, the underfitting case indicates that the model is too simple and does not capture well the features present in that model. When a model presents underfitting problems, it means that predictions will have a high bias in both validation data AND the test data - making it an unreliable model to work with.
  
 There are many ways to avoid overfitting/underfitting in a model. Some are: 
-* **Overfitting**: eliminate redundant variables (less complex data), add more data, use cross-validation techniques (we will get into this later), regularization;
+* **Overfitting**: eliminate redundant variables (less complex data), add more data, use cross-validation techniques (we will get into this later), apply regularization techniques;
 * **Underfitting**: add relevant variables, increase the model complexity, increase the model's training time (allowing it to better capture the data patterns)
 
 _For a concrete explanation on overfitting and underfitting, [this Kaggle course](https://www.kaggle.com/dansbecker/underfitting-and-overfitting) can be of help._ 
 
 In this project, we will often look at ways to prevent overfitting and underfitting. Some models such as the regularization models (Lasso, Ridge, ElasticNet) and tree-based models (Random Forest and XGBoost) can actually work on controlling such issues as we will see throughout this section. 
 
-#### 1. Mean of the target variable (baseline)
+### 1. Mean of the target variable (baseline)
 We use the mean of the target variable as a comparative baseline since it is the simplest form to estimate values. We got the following results:
 
 ![](img/avg.png)
 
-#### 2. Linear Regression
-Remember we saw a linear regression line when introducing [performance metrics](#performance-metrics)?
+### 2. Linear Regression
+Remember we saw a linear regression line when introducing [performance metrics](#i-performance-metrics)?
 
 ![](img/mpe.png)
 
@@ -1338,7 +1400,7 @@ The multiple linear regression looks like the case for our project, since we hav
 
 The betas are parameters that represent the value of the dependent variable when the independent variables (the X's) have value 1. 
 
-Let's set an example. Let Y be the sales revenue for Rossmann stores for a given day, X1 the number of customers, X2 the number of customers with a membership card. Now let's assume that we didn't welcome any customer with membership card - set X2 to zero in our formula. Then, the dependent variable Y is just the beta corresponding to the variable X1, the y-intercept (beta zero) and the error term. In this case, we see the sole effect of number of customers on predicting the dependent variable Y.
+Let's set an example. Let Y be the sales revenue for Rossmann stores for a given day, X1 the number of customers, X2 the number of customers with a membership card. Now let's assume that we didn't welcome any customer with membership card - set X2 to zero in our formula. Then, the dependent variable Y is just the beta corresponding to the variable X1, the y-intercept (beta zero) and the error term. In this case, we see the sole effect of number of customers on predicting sales (the dependent variable Y).
 
 Beta parameters are calculated through a technique called Ordinary Least Squares (OLS). The OLS calculate each independent variable's beta parameter by minimizing the error term. More details on OLS can be found [here]((https://en.wikipedia.org/wiki/Ordinary_least_squares)).
 
@@ -1346,7 +1408,7 @@ Let's go back to our example. Assume that we have calculated the beta parameters
 
 However, linear regression has some assumptions to be considered before one choose it as a prediction model candidate:
 
-1. **Linearity**: independent variables have a linear relationship with the dependent variables.
+1. **Linearity**: independent variables have a linear relationship with the dependent variable.
 
 2. **Multicollinearity**: independent variables are not highly correlated with each other.
 
@@ -1364,9 +1426,9 @@ Our results were as follows:
 
 ![](img/lr_result.png)
 
-#### 3. Ridge, Lasso, and ElasticNet Regression
+### 3. Ridge, Lasso, and ElasticNet Regression
 
-_The following part explores regularization techniques for linear regression models. Some examples were retrieved from Masum Rumi's [detailed regression guide with regularization techniques](https://www.kaggle.com/masumrumi/a-detailed-regression-guide-with-house-pricing#Fitting-model-(Advanced-approach)); therefore, if you wish to consult the original source, look no further and read his article_.
+_The following part explores regularization techniques for linear regression models. Some examples were retrieved from Masum Rumi's [detailed regression guide with regularization techniques](https://www.kaggle.com/masumrumi/a-detailed-regression-guide-with-house-pricing#Fitting-model-(Advanced-approach)); therefore, if you wish to consult the original source, read his article_.
 
 Ridge, Lasso, and ElasticNet are the next models we will test for this project. These are linear regression models known as regularization models, and have the ability to prevent overfitting by reducing the impact of the features (the beta parameters) on the predictions, and also to minimize the errors between the predicted value and the true value with a OLS loss function.
 
@@ -1424,7 +1486,7 @@ We obtained the following results:
 
 The next models are random forest regression and XGBoost regression. In order to understand both, let's learn the foundation behind random forests: **decision trees**.
 
-#### Decision Trees
+### Decision Trees
 
 You probably have already used or heard of decision trees before. A decision tree is a predictive technique in which the data is splitted into groups (or "nodes") given its similarities. See an example of a decision tree that tries to predict sales revenue on a given day from only one variable: number of customers (also called "root node"). We set the total number of stores to N = 100. There is only one split that generates two "terminal nodes" (also called leaves):
 
@@ -1432,7 +1494,7 @@ You probably have already used or heard of decision trees before. A decision tre
 
 Note that we divided the number of stores by the threshold of 10,000 customers. On the left-hand side, 50 stores had below 10,000 customers on a sales day, against equally 50 stores with above 10,000 customers. Then we average sales revenue registered by all 50 stores on each side to get \$10,000 and \$15,000, respectively.
 
-Now let's evaluate this decision tree model we've just made up. If you try to predict sales revenue for one store that had below 10,000 customers on that particular day, would you trust the model and take the $10,000 prediction as given? Probably not and maybe you realize two things that are lacking in here: (1) **the model is too simple** since it uses only number of customers as a predictor; (2) **the predictor doesn't split well** our stores, since the total number of stores (observations) are splitted equally from the root node. Decision tree is a powerful tool because it prioritizes the usage of variables that splits well our data - therefore, we would ideally have a small number of stores in one side, and a big number of stores in the other side. This problem comes from the concept of **entropy**, which measures the impurity in the system (in this case, the node). 
+Now let's evaluate this decision tree model we've just made up. If you try to predict sales revenue for one store that had below 10,000 customers on that particular day, would you trust the model and take the $10,000 prediction as given? Probably not and maybe you realize two things that are lacking in here: (1) **the model is too simple** since it only uses number of customers as a predictor; (2) **the model doesn't split well** our stores, since the total number of stores (observations) are splitted equally from the root node. Decision tree is a powerful tool because it prioritizes the usage of variables that splits well our data - therefore, we would ideally have a small number of stores in one side, and a big number of stores in the other side. This problem comes from the concept of **entropy**, which measures the impurity in the system (in this case, the node). The more "Pure" a node is, the more reliable the predictions coming from that node are.
 
 Let's add more decision nodes (variables) to the decision tree model:
 
@@ -1446,9 +1508,9 @@ In real life, we would have several variables that the decision tree can utilize
 
 **A quick note on underfitting/overfitting.** Tree-based models such as the decision tree might suffer from underfitting issues if you make you model too simple, or overfitting issues if you add too many variables to the model. Usually, tree-based algorithms have some parameters to help us avoiding these issues - we will get into this when introducing random forests.
 
-#### 6. Random Forest Regression
+### 6. Random Forest Regression
 
-Roughly speaking, Random Forests uses several decision trees to generate even more accurate predictions than a singl decision forest. The idea comes from **ensemble learning**: instead of training data in a very accurate and complex model, use several low-accuracy models to "learn" the data and then combine predictions from these models to achieve high-accurate predictions. Algorithms that uses ensemble learning are random forests and gradient boosting (to be explored soon).
+Roughly speaking, Random Forests uses several decision trees to generate even more accurate predictions than a single decision forest. The idea comes from **ensemble learning**: instead of training data in a very accurate and complex model, use several low-accuracy models to "learn" the data and then combine predictions from these models to achieve high-accurate predictions. Algorithms that uses ensemble learning are random forests and gradient boosting (to be explored soon).
 
 To understand how random forests operate, imagine that we have a dataset with 7 predictors and a target variable Y (say, sales revenue) like this:
 
@@ -1472,20 +1534,20 @@ Random forest is a powerful algorithm because it reduces the variance of our mod
 
 ![](img/rf_results.png)
 
-#### 7. XGBoost Regression
+### 7. XGBoost Regression
 
 The XGBoost Regression is a very effective algorithm that is based on decision trees and uses the same structure of **gradient boosting** algorithms. Since we already know what is a decision tree, we are left with explaining the gradient boosting before going down to the nitty-gritty of the XGBoost Regressor.
 
 To understand gradient boosting, we will go over these steps:
 
-* I. Define the model inputs;
+* I. Define the model inputs
 * II. Calculate baseline
 * III. Calculate pseudo-residuals
 * IV. Fit a regression tree and calculate "output values"
 * V. Generate predictions
 &nbsp;
 
-##### I. Model Input
+### I. Model Input
 A gradient boosting algorithm requires two inputs:
 
 * **the data itself**
@@ -1499,7 +1561,7 @@ In mathematical terms, **the data** above can be described as:
 
 ![](img/xgb1.PNG)
 
-The next input is the **loss function**. For regression models, the loss function could assume any formula that returns the **error** (difference between observed and predicted values); for instance, we could even use the Mean Squared Error (MSE) (already discussed in [performance metrics](#performance-metrics)) as a loss function. Just to refresh our minds, check below the linear regression line again. The red line is the errors that a loss function aims to find:
+The next input is the **loss function**. For regression models, the loss function could assume any formula that returns the **error** (difference between observed and predicted values); for instance, we could even use the Mean Squared Error (MSE) (already discussed in [performance metrics](#i-performance-metrics)) as a loss function. Just to refresh our minds, check below the linear regression line again. The red line is the errors that a loss function aims to find:
 
 ![](img/mpe.png)
 For linear regression, the loss function it is the residual sum of squares (RSS) we already saw before:
@@ -1512,8 +1574,7 @@ Gradient Boost models, however, don't use the MSE but the **observed value minus
 
 We usually call the errors in linear regression models as "residuals", but in gradient boost models we refer to them as "pseudo-residuals". 
 &nbsp;
-
-##### II. Calculate baseline
+### II. Calculate baseline
 
 Now that we have the data and a loss function, we can work on initiating the gradient boost model. First, we need a predicted value as a baseline to calculate the pseudo-residuals (errors) of each entry. In this case, we use the average of sales revenue ($5,571). 
 Then, we get the residuals by subtracting the observed value (sales of each store) by the predicted value (average of sales revenue): 
@@ -1550,9 +1611,9 @@ Rearranging we have:
 
 ![](img/xgb8.PNG)
 
-which is exactly equal to the average of sales revenue. Therefore, **the first prediction value that the gradient boost model uses as a baseline is just the average value of the observed values**.
+which is exactly equal to the average of sales revenue. Therefore, **the first prediction value that the gradient boost model uses as a baseline is just the average of the observed values**.
 
-##### III. Calculate pseudo-residuals
+### III. Calculate pseudo-residuals
 
 The next step the model takes is to calculate the residuals for each entry based on the baseline (average sales revenue):
 
@@ -1577,7 +1638,7 @@ which is exactly the values displayed in the initial table:
  
 Although the average sales of all stores is not an ideal sales predictor, gradient boost model uses it as a starting point to develop more accurate predictions as we will see soon.
 
-##### IV. Fit a regression tree and calculate "output values"
+### IV. Fit a regression tree and calculate "output values"
 
 In this task, we will fit a base learner (a decision tree) and calculate "output values" that will help us reducing the existent pseudo-residuals. Roughly speaking, we are building trees to "predict" residuals. Although it might sound weird to predict residuals, things will be much clearer afterwards.
 
@@ -1599,28 +1660,28 @@ where,
 
 In plain English, this formula tells us to find the output value $\gamma$ that minimizes the sum of all loss function (residuals) of the terminal region _R(j,m)_.
 
-As an example, let's calculate the output value with the terminal region _R(1,1)_:
+As an example, let's calculate the output value for the terminal region _R(1,1)_ in our first tree (m = 1):
 
 ![](img/xgb15.PNG)
 
 ![](img/xgb16.PNG)
 
 
-The output value that minimizes the sum of the loss function for the first leaf is just the **average of the residuals of the first leaf** (-1,071). This is similar to what we did when calculating the first prediction value (the average of sales revenue). Therefore, the output values will always be the average of the residuals within a terminal region.
+The output value that minimizes the sum of the loss function for the first leaf is just the **average of the residuals of the first leaf** (-1,071). This is similar to what we did when calculating the first prediction value (the average of sales revenue). Therefore, **the output values will always be the average of the residuals within a terminal region.**
 
 See below our updated tree with output values. Note that we only did the algebra for the 1st terminal region (leaf), since calculating the 2nd terminal region would be too much for our purposes.
 
 ![](img/xgb_4.PNG)
 
-##### V. Generate predictions
+### V. Generate predictions
 
 Now it's the time we generate predictions with the gradient boosting model. In our case, we had the first prediction which was the average sales revenue. Now we will use the decision tree we trained on the previous step, use its output values, and generate new predictions.
 
-We will start by an example. We will predict sales for the first store (i = 1), where we sum the first prediction (baseline) and a learning rate multiplied by the output value corresponding to that observation. The learning rate is a value between 0 and 1, and the smaller the learning rate, the less effect the trained tree has on the final prediction:
+We will start by an example. We will predict sales for the first store (i = 1), where we sum the first prediction (baseline) and a learning rate multiplied by the output value corresponding to that observation. The learning rate is a value between 0 and 1, and the smaller the learning rate, the less effect the trained tree has on the final prediction. Here we used 0.1 for the learning rate:
 
 ![](img/xgb_5.PNG)
 
-We obtained the value \$5,463.90, which is a better prediction than the baseline and closer to the true sales revenue of $5,000.
+We obtained the value \$5,463.90, which is a better prediction than the baseline (\$5,571) and closer to the true sales revenue of $5,000.
 
 Let's check the performance for the other stores. The new predicted values are in the F1(x) column and the average sales revenue (the baseline) is denoted by F0(x):
 
@@ -1628,9 +1689,9 @@ Let's check the performance for the other stores. The new predicted values are i
 
  Note that while some stores had their sales prediction values improved, some other didn't. The reason is that we have trained only one tree, which uses only one node and two leaves - a stump - which is not the most ideal decision tree model in the world. 
 
-Remember: the gradient boost starts with a baseline, trains a single tree based on the idea of finding the output value that decreases the error (residuals), multiply it by a learning rate to lessen the effect of that single tree on predictions, and sum up all values to get the final prediciton value. But what if that single tree was not a stump but a tree with more nodes and deeper depth? We would probably get more reliable predictions with that tree right?
+Remember: the gradient boost starts with a baseline, trains a single tree based on the idea of finding the output value that decreases the error (residuals), multiply it by a learning rate to lessen the effect of that single tree on predictions, and sum up all values to get the final prediciton value. But what if that single tree was not a stump but a tree with more nodes and deeper depth? We would probably get better predictions with that tree right?
 
-However, gradient boosting isn't all about single trees. What if we repeat the same process we just did by training 100 deeper trees (instead of one), and generate predictions for each tree based on the performance of previous trees? Then it will be likely the case that we will generate more good individual trees than "bad" individual trees, and we would gradually get pretty decent predictions for each store. 
+However, gradient boosting isn't all about single trees. What if we repeat the same process we just did by training 100 deeper trees (instead of one), and generate predictions for each tree based on the performance of previous trees? Then it will be likely the case that we will generate more good individual trees than "bad" individual trees, and we would gradually get pretty decent predictions for each store (mental note: the term "boosting" comes from this idea).
 
 In mathematical terms, we can describe new prediction Fm(x) for each store x (or i) as:
 
@@ -1666,16 +1727,17 @@ For m = 1 to M, we must iteratively go over the steps III, IV, V as we did befor
   &nbsp;
   ![](img/xgb_9.PNG)
 
-  For stores 1, 4, 6, 7 we got much better predictions than F0(x), while for 2, 3, 5 we got worse predictions. If you compare the first prediction F0(x) and F1(x) to F2(x) prediction values, we see more variability among values, which indicates that the more trees are added, the more specific the predictions will be for each store. Therefore, even though we had some worse predictions on F2(x), the tendency is to get better predictions as the number of trees increases.
+  
+  For stores 1, 2, 3, 4, 6, 7 we got much better predictions than F0(x), while for store 5 we got worse prediction. If you compare the first prediction F0(x) and F1(x) to F2(x) prediction values, we see more variability among values, which indicates that the more trees are added, the more specific the predictions will be for each store. Therefore, even though we had a worse prediction for store 5 on F2(x), the tendency is to get better predictions as the number of trees increases.
 &nbsp;
 
-Now that we have two trees in our model, what if we have new data for one store and want to predict its sales revenue?
+Now that we have two trees in our model, what if we wanted to predict sales revenue for a store by using this trained model? Let's say we have some data from store nº10:
 
 ![](img/xgb_10.PNG)
 
 In this example, our gradient boosting model predicted a sales revenue of $5,328.51 for store nº 10.
 
-By setting the example above, we depicted the main message of gradient boosting: by training several individual ("weak") trees, we focus on gradually minimizing the error for each of them (hence the name ["gradient"](https://en.wikipedia.org/wiki/Gradient_descent)), and combine the outputs of all trees altogether (hence the name "boosting") to generate the final prediction value.
+By setting the example above, we depicted the main message of gradient boosting: by training several individual ("weak") trees, we focus on gradually minimizing the error for each of them (hence the name ["gradient"](https://en.wikipedia.org/wiki/Gradient_descent)), and combine the outputs of all trees altogether (again, hence the name "boosting") to generate the final prediction value.
 
 With all of gradient boosting mechanics explained, **the XGBoost Regressor (XGB)** is a variant of the gradient boost model. There are many advantages of XGB over the gradient boost model, such as:
 
@@ -1695,21 +1757,19 @@ With the XGBoost regressor, we obtained the following results:
 
 &nbsp;
 
-#### Model Performance
+### Model Performance
 
-Here we show all algorithm performances we obtained:
+Here we show all algorithm performances we obtained so far:
 
 ![](img/single_performance.png)
 
 We have the Random Forest Regressor and XGBoost Regressor models generating less errors than the others (MAPE: 5-9%), and our baseline model is the worst model (MAPE: 20%). As we can tell, linear models performed fairly good but not as good as decision-tree based models. One of the reasons is that our data is not linear - therefore, decision-tree models would perform better.
 
-&nbsp;
-
 ### III. Cross-Validation
 
 The results obtained with the models gave us a taste on how well each algorithm predicted our target variable. However, in order to measure the real performance of machine learning algorithms, we must go over to one of the most important steps in data science projects: the cross-validation. 
 
-Cross-validation is a method to test an algorithm performance across the whole data by splitting it into k-folds (usually five folds), choosing one fold to represent the validation data (being the remnant the training data), training the model, and calculate the error metrics MAE, MAPE, and RMSE.. Then we go back to splitting the data but selecting a different k-fold as the validation data, and run the same process. Repeat it until you get the results for all folds, and average all the error metrics. We do this to each algorithm, and compare results across different algorithms to determine the best model. 
+Cross-validation is a method to test an algorithm performance across the whole data by splitting it into k-folds (usually five folds), choosing one fold to represent the validation data (being the remnant the training data), training the model, and calculate the error metrics MAE, MAPE, and RMSE. Then we go back to splitting the data but selecting a different k-fold as the validation data, and run the same process. Repeat it until you get the results for all folds, and average all the error metrics. We do this to each algorithm, and compare results across different algorithms to determine the best model. 
 
 In this project, we used time to split the data into k-folds. For k = 1, training data represents the whole data minus the last six weeks, and the validation data is exactly the last six weeks of the whole data. We train all models for this fold and obtain the performance measurement metrics. For k = 2, training data is the whole data minus the last 12 weeks, and the validation data is the last 12 weeks. We do the same thing: train all models and obtain the metrics. By the time we finish k = 5, we should be able to calculate the average of each error metric for each model.
 
@@ -1719,12 +1779,14 @@ We obtained the following results:
 
 The results confirm what we saw earlier: the Random Forest Regressor and the XGBoost Regressor generates less errors with MAPE of 7% and 9%, respectively. Since the XGBoost Regressor is known to train data fastly than random forest algorithms (and the model performance is not too different), we will use the XGBoost regressor as the main machine learning model for our project.
 
+One important note: we performed the cross-validation step for each k-fold by using the raw data. We did this in order to avoid data leakage, which is when information from the validation/test data is leaked to the trained model. This issue usually reflects as an overestimated predictions coming from the contaminated model. Using raw data to perform the cross-validation step ensure us we use completely distinct data for training and for validation.
+
 [back to top](#table-of-contents)
 
 ---
 ## 08. Hyperparameter Tuning
 
-[(go to next session)](#09-error-interpretation-business-performance)
+[(go to next section)](#09-error-interpretation-business-performance)
 
 In this task, our goal is to find the best parameters that maximizes the learning in our model. The best parameters are found by testing a set of parameters iteratively - the set that best performs is the chosen one. There are three methods to find these parameters:
   1. Random Search: this method randomly choose parameters from a given list of candidates. It is the fastest method available;
@@ -1756,15 +1818,17 @@ which had a MAPE improvement of 5%.
 ---
 ## 09. Error Interpretation & Business Performance
 
-[(go to next session)](#10-deploy-machine-learning-model-to-production)
+[(go to next section)](#10-deploy-machine-learning-model-to-production)
 
 In this step, we analyze the predictions' performance generated by the XGBoost model from a business perspective. Our focus is to translate and interpret errors from our ML model into three steps:
 
-### I. Business Performance for each store
+### I. Business Performance
 
 In this project, business performance for each store is measured by the average of predicted sales for the next six weeks. We then sum up the predictions with the Mean Absolute Error (MAE) to get the best scenario figures and subtract predictions with the MAE to get the worst scenario figures. Here's a sample of our model performance for 10 stores:
 
 ![](img/business_performance.PNG)
+
+Considering all stores, we would have total predicted sales for the next six weeks of $284,153,920, being $283,772,779 for the worst scenario sales prediction, and $284,535,044 for the best scenario.
 
 ### II. Worst Performance
 
@@ -1778,17 +1842,39 @@ The stores circled in red have high MAPE values. Let's identify these stores:
 
 Store 909 has a MAPE of 20%, which means that predictions are off by 20%. Store 875 and 291 are off by 16% and 14%, respectively. Usually, the business have the final word on how permissible these error percentages can be when determining the model performance. As we saw in the scatterplot above, the model performs fairly well for most of the stores with a MAPE of ~5%, but prediction for these stores should be analyzed in more detail. In this project, we don't have access to information; therefore, we will fictionally consider that the business has approved the model predictions.
 
+### II. Machine Learning Performance
+
+Our last step before deploying our model to production is to evaluate the overall model's performance. As the lineplot below shows, predictions (in orange) were fairly on par with the true, observed sales values (in blue) across the last six weeks of sales represented by the validation data. 
+
+![](img/performance1.png)
+
+The following graph shows the error rate (the ratio between prediction values and observed values) across the six weeks of sales. Ideally, errors should be close to the dashed line, since it represents an error rate of 1 (predicted values = observed values). As we can observe, the model performs fairly well since it doesn't achieve error rates above 1.075 or below 0.925. The 3rd and 5th weeks were the ones that the model performed not so well compared to other weeks; but again, the error rate range is short, so our model looks just fine. 
+
+![](img/performance2.png)
+
+One of the premises for a good machine learning model is to have a normal-shaped distribution of residuals with mean zero. In the following graph, we can observe that the errors are centered around zero, and its distribution resembles a normal, bell-shaped curve.
+
+![](img/performance3.png)
+
+The following graph is a scatterplot with predictions plotted against the error for each sales day. Ideally, we would have all data points concentrated within a "tube", since it represents low error variance across all values that sales prediction can assume:
+
+![](img/performance4.png)
+
+There are six sales days that the model generated errors above \$10,000. Ideally we would separate these days and conduct a thorough analysis to check why they have such errors. Since it is only six, we will proceed with the trained model to production.
+
+
+
 [back to top](#table-of-contents)
 
 ---
 ## 10. Deploy Machine Learning Model to Production
-[(go to next session)](#11-a-sales-bot)
+[(go to next section)](#11-a-sales-bot)
 
 
 
 ---
 ## 11. A Sales Predictor Bot
-[(go to next session)](#conclusion)
+[(go to next section)](#conclusion)
 
 [back to top](#table-of-contents)
 
