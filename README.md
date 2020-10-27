@@ -1868,6 +1868,73 @@ There are six sales days that the model generated errors above \$10,000. Ideally
 
 ---
 ## 10. Deploy Machine Learning Model to Production
+
+In this section, we will deploy the model we have just done in a cloud server so that the company's stakeholders can access predictions online. 
+
+1. API = Application Programming Interface
+2. Request = Ask API for something
+
+3. Endpoint = URL/Api port
+
+4. Deploy = Implementation
+
+5. Local ENvironment = your pc
+
+6. Production environment = servidores na nuvem
+
+7. Development environment = copy of production environment
+
+API = Contrato entre vocÊ e o cliente. "manual" de como utilizar o software. SE passar algumas informações, te dou alguma informação 
+
+API pode ser usado por qualquer usuário/APP/Site/DAshboard
+
+Arquitetura de Produção (three classes)
+
+1. Handler API: ele espera receber uma requisição. Nao sabe fazer nada (predicao nem nada). Ele sabe quem sabe. Ele sabe quem chamar. (handler.py)
+
+Passos:
+
+I. Carregar o modelo pickle na variável "model". Importar a biblioteca FLask que lida bem com ambiente web. Criar variável app que leva o método flask com argumento construtor (__name__). 
+
+II. Criar condicional vinculando __name__ com __main__. Quando rodar o api handler, o interpretador python busca a função __main__ e roda o flask no local host '0.0.0.0'
+
+III. Criar endpoint (url) para receber requests com app.route. Usar methods POST (envia dados para receber dados) e não GET (pede dados). Toda vez que endpoint recebe chamada via POST, ele executa a proxima função que contem os dados a serem trabalhados (numero da loja)
+
+IV. A função que falamos é para pegar os dados JSON que vieram do stakeholder. Usa-se o metodo request do pacote flask. Construir if else para checar se os dados vieram direitinho. Se vier certo, transformar JSON em pandas dataframe. Se não, returnar erro 200. NEssa mesma função, checar se os dados são em uma unica linha (dict) ou multiplas. Para cada um, tem uma forma diferente de gerar um pandas dataframe. (Não esquecer de importar pandas)
+
+V. Instanciar ROssmann class (copiar) em uma variavel chamada pipeline, e chamar rossmann para fazer data cleaning, feature engineering, data preprocessing no dado do usuário. Gerar predições (df_response)
+
+
+2. Data Preparation: arquivo para transformar os dados que vieram crus no mesmo formato que o modelo está(encoding, transformation, feature engineering, etc). (ROssmann.py). CRiar uma classe com limpezas, transformacoes e encodings.
+
+PAssos para preparar rossmann class (com parametro object):
+I. salvar em pickle todas as transformacoes de rescala
+
+II. Criar class Rossmann com init function e argumento self. QUando rodar a classe, init sera a primeira funcao a ser ativada. Self sao variaveis que estao dentro da classe ROssmann e nao podem ser instanciadas fora da classe.
+
+III. criar funcao data cleaning com 1o argumento o self (usar os dados da classe) e um dataframe df1. Adicionar todas as transformacoes de limpeza na funcao data cleaning 
+
+IV. Criar funcao data_preparation com 1o argumento self e dataframe df3. Adicionar todas trasnsformações de data prep. Load pickle for each scaler in init function in new variables self., and use them to rescale data. 
+
+V. Criar funcao 
+
+3. API tester: criar script para testar api
+
+PAssos:
+I. Load test dataset
+II. merge store dataset on test dataset
+III. remover dias fechados e coluna ID
+IV. convert data into JSON. EAch row of the data is a json
+V. FAzer um API Call: chamar a api. Crie uma url (onde vai o seu pedido endpoint), header = que tipo de dado estou enviando, data = o dado.
+
+url = 'http://0.0.0.0:5000/rossmann/predict'
+'http://0.0.0.0: acessa o servidor local (endereço)
+5000 = porta padrão do flask
+
+" eu quero entrar no servidor local (endereço 0000) na porta 5000, a minha endpoint é rossmann/predict"
+
+VI. Crie um requests.posts(url, data, header)
+
 [(go to next section)](#11-a-sales-bot)
 
 
