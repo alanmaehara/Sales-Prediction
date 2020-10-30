@@ -1122,7 +1122,7 @@ where,
 ![](img/boxcox_formula_1.PNG)
 
 
-_Note: Box-Cox transformation does not accept negative or zero values. If your variable (feature) y has zero or negative values, use the Yeo-Johnson transformation. 
+_Note: Box-Cox transformation does not accept negative, zeroes, or constant values. If your variable (feature) y has zero, negative, or constant values, use the Yeo-Johnson transformation. 
 Also, please note that setting lambda equal to zero is the same as performing a log-transformation._
 &nbsp;
 
@@ -1134,7 +1134,7 @@ becomes like this with a Box-Cox Transformation:
 
 ![](img/boxcoxexample_1.png)
 
-In this project we found that a lambda value of 0.05 generates good results. We utilized Box-Cox to transform the following variables: `competition_distance`, `customers`.
+In this project we found that a lambda value of 0.05 generates good results. However, since we don't know what kind of data we will predict, we will not utilize the Box-Cox to transform due to its limitations.
 
 * **Yeo-Johnson Transformation**
 
@@ -1142,9 +1142,9 @@ With similar traits as the Box-Cox transformation, the Yeo-Johnson transformatio
 
 ![](img/yeojohnsonformula.png)
 
-Yeo-Johnson's formula is much similar compared to Box-Cox's, with the exception that y can assume negative or zero values. We transformed `competition_since_month` variable with this method.
+Yeo-Johnson's formula is much similar compared to Box-Cox's, with the exception that y can assume negative, zero, and constant values. We transformed `competition_since_month`,`customers`, and `competition_distance` variable with this method.
 
-For Box-Cox and Yeo-Johnson Transformation, the method `.PowerTransformer` by scikit-learn was utilized, and best lambda values were chosen by the method.
+For Box-Cox and Yeo-Johnson Transformation, the method `.PowerTransformer` by scikit-learn is utilized. The best lambda values were chosen by the algorithm itself.
 
 ### II. Categorical Encodings
 
@@ -1888,9 +1888,16 @@ API = Contrato entre vocÊ e o cliente. "manual" de como utilizar o software. SE
 
 API pode ser usado por qualquer usuário/APP/Site/DAshboard
 
-Arquitetura de Produção (three classes)
+## Arquitetura de Produção (three classes) no ambiente desenvolvimento:
 
 1. Handler API: ele espera receber uma requisição. Nao sabe fazer nada (predicao nem nada). Ele sabe quem sabe. Ele sabe quem chamar. (handler.py)
+
+2. Data Preparation: arquivo para transformar os dados que vieram crus no mesmo formato que o modelo está(encoding, transformation, feature engineering, etc). (ROssmann.py). CRiar uma classe com limpezas, transformacoes e encodings.
+
+3. API tester: criar script para testar api
+
+
+### 1. Handler API: ele espera receber uma requisição. Nao sabe fazer nada (predicao nem nada). Ele sabe quem sabe. Ele sabe quem chamar. (handler.py)
 
 Passos:
 
@@ -1905,7 +1912,7 @@ IV. A função que falamos é para pegar os dados JSON que vieram do stakeholder
 V. Instanciar ROssmann class (copiar) em uma variavel chamada pipeline, e chamar rossmann para fazer data cleaning, feature engineering, data preprocessing no dado do usuário. Gerar predições (df_response)
 
 
-2. Data Preparation: arquivo para transformar os dados que vieram crus no mesmo formato que o modelo está(encoding, transformation, feature engineering, etc). (ROssmann.py). CRiar uma classe com limpezas, transformacoes e encodings.
+### 2. Data Preparation: arquivo para transformar os dados que vieram crus no mesmo formato que o modelo está(encoding, transformation, feature engineering, etc). (ROssmann.py). CRiar uma classe com limpezas, transformacoes e encodings.
 
 PAssos para preparar rossmann class (com parametro object):
 I. salvar em pickle todas as transformacoes de rescala
@@ -1916,9 +1923,11 @@ III. criar funcao data cleaning com 1o argumento o self (usar os dados da classe
 
 IV. Criar funcao data_preparation com 1o argumento self e dataframe df3. Adicionar todas trasnsformações de data prep. Load pickle for each scaler in init function in new variables self., and use them to rescale data. 
 
-V. Criar funcao 
+V. import all necessary packages to run Rossmann.py. Retirar todas as variáveis target do script.
 
-3. API tester: criar script para testar api
+VI. Criar função get_prediction para gerar as predições. COlocar predição em variável pred que recebe o valor predito em escala exp. Retornar original_data em json.
+
+### 3. API tester: criar script para testar api
 
 PAssos:
 I. Load test dataset
@@ -1930,10 +1939,50 @@ V. FAzer um API Call: chamar a api. Crie uma url (onde vai o seu pedido endpoint
 url = 'http://0.0.0.0:5000/rossmann/predict'
 'http://0.0.0.0: acessa o servidor local (endereço)
 5000 = porta padrão do flask
-
 " eu quero entrar no servidor local (endereço 0000) na porta 5000, a minha endpoint é rossmann/predict"
 
-VI. Crie um requests.posts(url, data, header)
+VI. Crie um requests.post(url, data, header)  para fazer a requisição POST e printa o status code
+
+404 = servidor desligado
+200 = ok
+
+-------------------
+
+Criar o terminal
+
+I. Criar duas pastas api/rossmann (use mkdir -m api/rossmann)
+II. Criar arquivo vazio handler.py (use touch handler.py) e arquivo vazio Rossmann.py (touch rossmann/Rossmann.py). Transferir tudo que foi escrito nos steps acima (salvo api tester) nos arquivos vazios
+III. Ativar a API (python handler.py). Se quiser modificar o handler.py e reiniciar a API, coloca debug mode on. The message "running on" means that the handler is waiting for a API request.
+
+![](img/api.png)
+
+IV. Now let's test the API on the local host server (development environment)! Run the API Tester on jupyter notebook.
+V. If it shows 200, everything is correct. Check the results by running a dataframe with r.json()
+
+### Ambiente de Produção
+
+Handler, model trained, data preparation will be in the cloud (HEroku)
+
+1. Install Heroku client
+2. login into Heroku via terminal
+3. Create 3 archives: procfile (substitute for python handler.py command on terminal - API CAll), requirements.txt (all libraries so that heroku can setup the model environment), git init 
+4. Create folder webapp so that we can transfer it to heroku. Inside webapp, create folders model, parameter, rossmann. COpy all contents of model, parameter and rossmann on its respect new folder.
+5. Create empty file Procfile
+6. Copy API (handler.py) to webapp. Access handler.py and change path (in heroku, the path should be relative to folder, not local host path).
+7. In handler.py, we need to set the environment variables since Heroku doesn't know Flask's port (5000). Use os.environ.get('PORT', 5000) as save as a variable "port". Update app.run by adding the host = '0.0.0.0' (local host), and the port=port.
+8. Go to Rossmann.py and substitute complete path for scalers to relative path
+9. on Procfile, write python handler.py and save
+10. use pip freeze > requirements.txt and put into webapp folder
+11. git init on webapp folder to create repository
+12. Install heroku on terminal and do a heroku login. Create heroku app with heroku apps:create <name of app>
+
+![](img/deploy_heroku.png)
+
+right link is the endpoint where the app is running, left link is the git path to send the info for deployment
+
+13. DEploy model: go to webapp folder on terminal and: git status >> git add. >> git commit >> git push heroku master. Once the files are sent to Heroku, Heroku will start building the app and install all libraries, execute the procfile to start the API. THe API will be located at the endpoint (right link), which is the endpoint to make the API requests
+
+14. On jupyter notebook, substitute the url with the right link and run api call. If necessary, run a request on postman (no need to create a new account - google chrome extension available)
 
 [(go to next section)](#11-a-sales-bot)
 
