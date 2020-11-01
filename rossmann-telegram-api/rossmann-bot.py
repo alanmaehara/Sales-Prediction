@@ -22,7 +22,7 @@ bot = telegram.Bot(token=TOKEN)
 # https://api.telegram.org/bot1499227844:AAErjtmgpQnW5N5qU1c_CiVi_eEsgxBFzl0/setWebhook?url=https://f690a0cf7282.ngrok.io
 
 # # Webhook Heroku
-# https://api.telegram.org/bot1499227844:AAErjtmgpQnW5N5qU1c_CiVi_eEsgxBFzl0/setWebhook?url=https://rossmann-telegram-bot-final.herokuapp.com/
+# https://api.telegram.org/bot1499227844:AAErjtmgpQnW5N5qU1c_CiVi_eEsgxBFzl0/setWebhook?url=https://rossmann-telegram-bot-final.herokuapp.com
 
 
 # # Send message to users:
