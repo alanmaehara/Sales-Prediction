@@ -1891,7 +1891,7 @@ Next step is to describe our production architecture and the steps for putting o
 ### I. Production Architecture
 
 <p align="center">
-  <img width="40%" alt="drawing" src="img/architecture.PNG">
+  <img width="100%" alt="drawing" src="img/architecture.PNG">
 </p>
 
 The production architecture for this project is fairly straight-forward. Users (which could be a person, a smartphone, a website, and app, really anything that can access the API) make a API request (Handler API - handler.py) by sending the store(s) the user wishes to retrieve predictions, and the API uses the information received to prepare the data (Data Preparation - Rossmann.py) and get predictions (Model). Once the process is completed, the API returns the prediction back to the user. 
@@ -2020,7 +2020,7 @@ This is the last section of the project. The goal is to provide a solution where
 Let's update the Production Architecture we had by including the  Telegram environment on it:
 
 <p align="center">
-  <img width="50%" alt="drawing" src="img/architecture_2.PNG">
+  <img width="100%" alt="drawing" src="img/architecture_2.PNG">
 </p>
 
 The architecture works like this: (1) a user texts the store number it wishes to receive sales prediction to a Telegram Bot; (2) the Rossmann API (rossmann-bot.py) receives the request and retrieve all the data pertaining to that store number from the test dataset; (3) the Rossmann API send the data to Handler API (handler.py); (4) the Handler API calls the data preparation (Rossmann.py) to shape the raw data and generate predictions using the `xgb_tuned_model`; (5) the API returns the prediction to Rossmann API; (6) the API returns the sales prediction to the user on Telegram.
@@ -2141,11 +2141,11 @@ In this task, we will set the Telegram Bot to connect with our cloud-based platf
   - Activate the rossmann API by running `python rossmann-bot.py` on terminal;
 
   - Test all entry possibilities on Telegram. Seems like our app is working fine:
-
-  <img src="img/telegram.gif" alt="drawing" width="30%"/>
+  &nbsp; 
+  <p align="center"><img width="40%" alt="drawing" src="img/telegram.gif"></p>
+  &nbsp;
 
   Telegram is returning messages, graphs, and sales predictions correctly, so  we are ready to put our entire project on Heroku!
-
 
 ### III. Final Deploy on Heroku
 
