@@ -2101,10 +2101,8 @@ Let's **test the bot in the local host**:
 
   and copy the https url that ends in ngrok.io.
 
-  - To make Telegram send the user's messages to the endpoint, we use the WebHook method from Telegram. We copy the same link from the GetUpdates method, but substitute it by webhook and include the url we just copied in the previous step:
-
-  `https://api.telegram.org/bot1499227844:AAErjtmgpQnW5N5qU1c_CiVi_eEsgxBFzl0/setWebhook?url=https://f690a0cf7282.ngrok.io`
-
+  - To make Telegram send the user's messages to the endpoint, we use the WebHook method from Telegram. We copy the same link from the GetUpdates method, but substitute it by the webhook method and include the url we just copied in the previous step.
+  
   Then, we copy and paste the link to the web browser. If message "Webhook was set" is shown, then Telegram is connected with our endpoint `https://f690a0cf7282.ngrok.io`:
 
   ![](img/webhook.png)
