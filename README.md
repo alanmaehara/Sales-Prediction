@@ -284,7 +284,7 @@ The following variables don't seem to have an ideal imputation method. Imputing 
 * **competition_open_since_year**: fill with the year located in `date` 
 * **competition_open_since_month**: fill with the year located in `date`   
 
-### III. Descriptive Statistics
+### IV. Descriptive Statistics
 
 [Descriptive statistics](https://en.wikipedia.org/wiki/Descriptive_statistics) is a summary of the data. It quantitatively describes the data by using some statistic metrics depending on the nature of the data. 
 
@@ -1869,132 +1869,258 @@ There are six sales days that the model generated errors above \$10,000. Ideally
 ---
 ## 10. Deploy Machine Learning Model to Production
 
-In this section, we will deploy the model we have just done in a cloud server so that the company's stakeholders can access predictions online. 
-
-1. API = Application Programming Interface
-2. Request = Ask API for something
-
-3. Endpoint = URL/Api port
-
-4. Deploy = Implementation
-
-5. Local ENvironment = your pc
-
-6. Production environment = servidores na nuvem
-
-7. Development environment = copy of production environment
-
-API = Contrato entre vocÊ e o cliente. "manual" de como utilizar o software. SE passar algumas informações, te dou alguma informação 
-
-API pode ser usado por qualquer usuário/APP/Site/DAshboard
-
-## Arquitetura de Produção (three classes) no ambiente desenvolvimento:
-
-1. Handler API: ele espera receber uma requisição. Nao sabe fazer nada (predicao nem nada). Ele sabe quem sabe. Ele sabe quem chamar. (handler.py)
-
-2. Data Preparation: arquivo para transformar os dados que vieram crus no mesmo formato que o modelo está(encoding, transformation, feature engineering, etc). (ROssmann.py). CRiar uma classe com limpezas, transformacoes e encodings.
-
-3. API tester: criar script para testar api
-
-
-### 1. Handler API: ele espera receber uma requisição. Nao sabe fazer nada (predicao nem nada). Ele sabe quem sabe. Ele sabe quem chamar. (handler.py)
-
-Passos:
-
-I. Carregar o modelo pickle na variável "model". Importar a biblioteca FLask que lida bem com ambiente web. Criar variável app que leva o método flask com argumento construtor (__name__). 
-
-II. Criar condicional vinculando __name__ com __main__. Quando rodar o api handler, o interpretador python busca a função __main__ e roda o flask no local host '0.0.0.0'
-
-III. Criar endpoint (url) para receber requests com app.route. Usar methods POST (envia dados para receber dados) e não GET (pede dados). Toda vez que endpoint recebe chamada via POST, ele executa a proxima função que contem os dados a serem trabalhados (numero da loja)
-
-IV. A função que falamos é para pegar os dados JSON que vieram do stakeholder. Usa-se o metodo request do pacote flask. Construir if else para checar se os dados vieram direitinho. Se vier certo, transformar JSON em pandas dataframe. Se não, returnar erro 200. NEssa mesma função, checar se os dados são em uma unica linha (dict) ou multiplas. Para cada um, tem uma forma diferente de gerar um pandas dataframe. (Não esquecer de importar pandas)
-
-V. Instanciar ROssmann class (copiar) em uma variavel chamada pipeline, e chamar rossmann para fazer data cleaning, feature engineering, data preprocessing no dado do usuário. Gerar predições (df_response)
-
-
-### 2. Data Preparation: arquivo para transformar os dados que vieram crus no mesmo formato que o modelo está(encoding, transformation, feature engineering, etc). (ROssmann.py). CRiar uma classe com limpezas, transformacoes e encodings.
-
-PAssos para preparar rossmann class (com parametro object):
-I. salvar em pickle todas as transformacoes de rescala
-
-II. Criar class Rossmann com init function e argumento self. QUando rodar a classe, init sera a primeira funcao a ser ativada. Self sao variaveis que estao dentro da classe ROssmann e nao podem ser instanciadas fora da classe.
-
-III. criar funcao data cleaning com 1o argumento o self (usar os dados da classe) e um dataframe df1. Adicionar todas as transformacoes de limpeza na funcao data cleaning 
-
-IV. Criar funcao data_preparation com 1o argumento self e dataframe df3. Adicionar todas trasnsformações de data prep. Load pickle for each scaler in init function in new variables self., and use them to rescale data. 
-
-V. import all necessary packages to run Rossmann.py. Retirar todas as variáveis target do script.
-
-VI. Criar função get_prediction para gerar as predições. COlocar predição em variável pred que recebe o valor predito em escala exp. Retornar original_data em json.
-
-### 3. API tester: criar script para testar api
-
-PAssos:
-I. Load test dataset
-II. merge store dataset on test dataset
-III. remover dias fechados e coluna ID
-IV. convert data into JSON. EAch row of the data is a json
-V. FAzer um API Call: chamar a api. Crie uma url (onde vai o seu pedido endpoint), header = que tipo de dado estou enviando, data = o dado.
-
-url = 'http://0.0.0.0:5000/rossmann/predict'
-'http://0.0.0.0: acessa o servidor local (endereço)
-5000 = porta padrão do flask
-" eu quero entrar no servidor local (endereço 0000) na porta 5000, a minha endpoint é rossmann/predict"
-
-VI. Crie um requests.post(url, data, header)  para fazer a requisição POST e printa o status code
-
-404 = servidor desligado
-200 = ok
-
--------------------
-
-Criar o terminal
-
-I. Criar duas pastas api/rossmann (use mkdir -m api/rossmann)
-II. Criar arquivo vazio handler.py (use touch handler.py) e arquivo vazio Rossmann.py (touch rossmann/Rossmann.py). Transferir tudo que foi escrito nos steps acima (salvo api tester) nos arquivos vazios
-III. Ativar a API (python handler.py). Se quiser modificar o handler.py e reiniciar a API, coloca debug mode on. The message "running on" means that the handler is waiting for a API request.
-
-![](img/api.png)
-
-IV. Now let's test the API on the local host server (development environment)! Run the API Tester on jupyter notebook.
-V. If it shows 200, everything is correct. Check the results by running a dataframe with r.json()
-
-### Ambiente de Produção
-
-Handler, model trained, data preparation will be in the cloud (HEroku)
-
-1. Install Heroku client
-2. login into Heroku via terminal
-3. Create 3 archives: procfile (substitute for python handler.py command on terminal - API CAll), requirements.txt (all libraries so that heroku can setup the model environment), git init 
-4. Create folder webapp so that we can transfer it to heroku. Inside webapp, create folders model, parameter, rossmann. COpy all contents of model, parameter and rossmann on its respect new folder.
-5. Create empty file Procfile
-6. Copy API (handler.py) to webapp. Access handler.py and change path (in heroku, the path should be relative to folder, not local host path).
-7. In handler.py, we need to set the environment variables since Heroku doesn't know Flask's port (5000). Use os.environ.get('PORT', 5000) as save as a variable "port". Update app.run by adding the host = '0.0.0.0' (local host), and the port=port.
-8. Go to Rossmann.py and substitute complete path for scalers to relative path
-9. on Procfile, write python handler.py and save
-10. use pip freeze > requirements.txt and put into webapp folder
-11. git init on webapp folder to create repository
-12. Install heroku on terminal and do a heroku login. Create heroku app with heroku apps:create <name of app>
-
-![](img/deploy_heroku.png)
-
-right link is the endpoint where the app is running, left link is the git path to send the info for deployment
-
-13. DEploy model: go to webapp folder on terminal and: git status >> git add. >> git commit >> git push heroku master. Once the files are sent to Heroku, Heroku will start building the app and install all libraries, execute the procfile to start the API. THe API will be located at the endpoint (right link), which is the endpoint to make the API requests
-
-14. On jupyter notebook, substitute the url with the right link and run api call. If necessary, run a request on postman (no need to create a new account - google chrome extension available)
-
 [(go to next section)](#11-a-sales-bot)
 
+In this section, we will deploy the prediction model we have just built in a cloud server. For non-computer science background people, some terminology might be daunting as they were to me when I first deployed the model in the cloud. Some are:
 
+**1. Application Programming Interface (API)**. I'm pretty sure there are better definitions on internet, but in palatable words, API is kind of a "manual" of how to send/retrieve information from an application or web platform. For example, in this project we want to send a request to the API by sending a store number, and want the API to send us back the predictions for that store;
+
+**2. API Request:** as the name suggests, it is a request a user makes for an API;
+
+**3. Endpoint:** the connection between the user and a service/app. In this project, it is the URL/Api port where the service can be access by users;
+
+**4. Deploy:** in our project, deploy means to set the model into a production environment (like the cloud) so that other users can access the model and retrieve predictions from it;
+
+**5. Local Development Environment:**  we use a local development environment (your PC) to test the model before taking it to a production environment. This is usually described as '0.0.0.0'. in an url;
+
+**6. Production environment:** once testing is done, the model is ready to operate (or go to "production") on the web and make itself available for users. In this project, we use cloud-based servers in Heroku as our production environment.
+
+Next step is to describe our production architecture and the steps for putting our model into production.
+
+### I. Production Architecture
+
+![](img/architecture.PNG)
+
+The production architecture for this project is fairly straight-forward. Users (which could be a person, a smartphone, a website, and app, really anything that can access the API) make a API request (Handler API - handler.py) by sending data from the store(s) the user wishes to retrieve predictions, and the API uses the information received to prepare the data (Data Preparation - Rossmann.py) and get predictions (Model). Once the prediction is known, the API returns the prediction back to the user. 
+
+There are three main steps to deploy our model to production:
+
+- **Build handler.py**: this archive is the API; it essentialy redirects the information received by the user to Data Preparation and the Model.
+  - Steps in the project's main directory:
+    - Create a folder `api`. Within api, create a folder `rossmann` (use `mkdir -m api/rossmann` command on terminal);
+    - Create an empty handler.py file on `api` folder. (use `touch handler.py` on terminal)
+  - Steps in the project's notebook:
+    - Save the model `xgb_model_tuned` in a serialized format (we use [pickle](https://docs.python.org/3/library/pickle.html) for that).
+  - Steps in the file handler.py:
+    - Import `pickle` and load the serialized model and save it in a variable called `model`;
+    - Import Flask in the file. Flask is a python-based library for web development;
+    - Import `pandas` library;
+    - Import Rossmann class as `from rossmann.Rossmann import Rossmann`. This line means: from folder `rossmann` at file Rossmann.py, import `Rossmann` class;
+    - Create new variable `app` that uses the flask method with a builder argument (`__name__`); 
+    - Create endpoint (url) to enable API requests by `@app.route`. Use the method POST, which is a method indicating that the user sends data to retrieve data from the API. The endpoint is `/rossmann/predict`;
+    - Create function `rossmann_predict()` that receives the store information from the user, and manages the data preparation and prediction generation. Now, everytime that the endpoint receives an API call via POST, it executes this function. it has an `request.get_json()` method to retrieve the JSON formatted data containing the store information, an if/else statement to validate the data, and transform the JSON data into a pandas dataframe. If information is not valid, the API returns the error 200 for the user (request was correct but execution failed). Then, we check whether the data is a single line or has multiple lines. For each case, there's a different way to generate the pandas dataframe;
+    - Within the function `rossmann_predict()`, create a conditional statement with `__name__` and `__main__`. When the API runs, the python interpreter searches `__main__` and runs flask on local host ('0.0.0.0');
+    - Within the function `rossmann_predict()`, instantiate (copy) Rossmann class in a variable called `pipeline`.
+    - Call Rossmann to run data cleaning, feature engineering, data preprocessing, and prediction on the raw data sent by the user.
+&nbsp;
+    At the end, it should look like this:
+&nbsp;
+    ![](img/handler.PNG)
+    &nbsp;
+- **Build Rossmann.py (Data Preparation)**: this archive is called by the handler.py. It transforms the raw data in the right format (encoding, transformation, feature engineering, etc) in order to fit the XGBoost model we created. It returns the predictions.
+  - Steps:
+    - Create an empty Rossmann.py file on `rossmann` folder;
+    - Create a class called `Rossmann(object)` in the file;
+    - Within Rossmann class, create `__init__` function with argument `self`. When the Rossmann class is called, the `init` function will be activated. `self` are variables within Rossmann class that can't be instantiate from outside the class;
+    - Save all rescaling methods used at [data preparation](#05-data-preparation) section by using pickle, and load them in the `__init__` function;
+    - Create `data_cleaning` function. 1st argument is `self` and 2nd is a dataframe `df1`. In this function, write all data cleaning steps done in the [data cleaning](#iii-data-cleaning) section;
+    - Create `data_preparation` function. 1st argument is `self` and 2nd is a dataframe `df2`. Add all data preparation steps done in the [data preparation](#05-data-preprocessing) section;
+    - Import all necessary packages to run Rossmann.py. Remove the target variable from script - after all, the raw data to be transformed doesn't have the sales variable on it (we are trying to predict it);
+    - Create `get_prediction` function to generate predictions. Transform the predicted values into exponential values (remember: the model `xgb_model_tuned` had sales in log scale). Return data to API in JSON format.
+&nbsp;
+    Since the file is very large, we won't show it here - you can access the Rossmann.py in the `api` folder located in this repository.
+&nbsp;
+- **API tester: create a script to test the API**
+  - Steps in Jupyter notebook:
+    - Load test dataset;
+    - Merge store dataset on test dataset;
+    - Remove closed stores and ID column;
+    - Select some stores as if we were the user requesting predictions. In this case we selected stores 22, 100, 40 for testing;
+    - Convert data into JSON;
+    - Create an API Call (`requests.post`) with the following items:
+      - `url` (where the endpoint request goes)
+      - `header `(what kind of data it is sent to the API)
+      - `data` (the raw data sent by the user)
+
+    &nbsp;
+
+    At the end, it should look like this:
+    &nbsp;
+    ![](img/apitester.PNG)
+
+    The `http://0.0.0.0:5000/rossmann/predict` part means that the API call is made to the local host `0.0.0.0` at the `5000` flask port at endpoint `rossmann/predict`. If it returns the code 200, it means that our API call succeded.
+    &nbsp;  
+  
+### II. Development Environment
+
+Once all archives are set, we can run the API on the local host (your PC) to test whether our production architecture is working.  
+- Steps on terminal:
+  - Run the API by running `python handler.py` on terminal. The message "running on" means that the handler is waiting for a API request:
+
+  ![](img/api.png)
+  &nbsp; 
+  - Now let's test the API on the local host server (development environment). Run the API tester on jupyter notebook. If it shows status code 200, everything is correct. Check the results by running a dataframe with r.json()
+  &nbsp; 
+  ![](img/localtest.png)
+
+  - Here we can see predictions for stores 22, 100, 40. Seems like our production architecture is working perfectly; we can now proceed to deployment. 
+
+
+### III. Production Environment
+
+In this task, we include all the environment set on local host in the cloud. For this project, we are using [Heroku](https://www.heroku.com/), a cloud-based platform for building, scaling and running applications in the web.
+
+Steps:
+  - Create folder `webapp`. Inside the folder, create folders `model`, `parameter`, `rossmann`. Copy all contents of model, parameter and rossmann from the main directory on their respective new folders.
+  - In `webapp` folder, create an empty file `Procfile` containing `python handler.py` on it. By doing this, we will set the API on Heroku instead of running it on terminal;
+  - With the virtual environment activated, create `requirements.txt` file on webapp folder with `pip freeze > requirements.txt` command on terminal. `requirements.txt` is a file that contains all libraries used in this project, and Heroku will install the packages to set the same environment we had on the local host but in the cloud;
+  - Create a git repository with the command `git init` on terminal in the `webapp` folder;
+  - Copy API (handler.py) to `webapp`. Access handler.py and change path (in heroku, the path should be relative to folder, not the absolute path);
+  - In handler.py, set environment variables since Heroku doesn't know Flask's port (5000). Use `os.environ.get('PORT', 5000)` and save as a variable `port`. Update `app.run` by adding the `host = '0.0.0.0'` (local host), and the `port=port`;
+  - Go to `Rossmann.py` and substitute absolute path to relative path on scalers;
+  - Install Heroku client on your computer. To check how to install it, see the link [here](https://devcenter.heroku.com/articles/heroku-cli);
+  - Login into Heroku via terminal with `heroku login`
+  - On terminal, create heroku app with `heroku apps:create <name-of-the-app>`:
+  ![](img/deploy_heroku.png)
+  The right link is the endpoint where the app is running, and the left link is the git path where all the data we have will be sent for deployment;
+  - Deploy model: in the terminal, go to the `webapp` directory and run the following commands: `git status` >> `git add .` >> `git commit -m 'initial commit` >> `git push heroku master`. This series of git commands will send all data we have in our local environment to Heroku, and Heroku will start building the app by installing libraries and executing the Procfile to start the API. Then, the API will be located at the endpoint (right link) where API requests can be made;
+  
+  - On Jupyter Notebook, substitute the url with the right link and run api call. If necessary, run a request on [Postman](https://www.postman.com/) (no need to create a new account - google chrome extension available):
+  to test the production environment.
+
+  ![](img/urlheroku.PNG) 
+
+    &nbsp; 
+  
+If everything goes well, a status code 200 will be shown. The only difference from the development environment to the production environment is that the former is ran locally (your PC), and the latter is ran at Heroku (cloud).
+
+
+
+
+[back to top](#table-of-contents)
 
 ---
 ## 11. A Sales Predictor Bot
 [(go to next section)](#conclusion)
 
+This is the last section of the project. The goal is to provide a solution where stakeholders of the company can easily access sales predictions made by the model through a smartphone app. In this project, [Telegram](https://telegram.org) bot will be used.
+
+
+
+### I. Production Architecture + Telegram Bot
+
+Let's update the Production Architecture we had by including the  Telegram environment on it:
+
+![](img/)
+
+The architecture works like this: (1) a user texts the store number it wishes to receive sales prediction to a Telegram Bot, the Rossmann API receives the request and retrieve all the data pertaining to that store number from the test dataset; (2) the Rossmann API send the data to Handler API (handler.py); (3) the Handler API calls the data preparation (Rossmann.py) to shape the raw data and generate predictions; (4) the API returns the prediction to Rossmann API; (5) the API returns the sales prediction to the user as a text message.
+
+### II. Create the Rossmann API
+Our first task is to create the Rossmann API and make it available on Heroku. In other words, we will replicate the API Tester script we ran on Jupyter Notebook in a file called rossmann-bot.py. 
+
+- In the main directory, create folder `rossmann-telegram-api` and create an empty file rossmann-bot.py;
+- Within rossmann-bot.py, copy the whole API Test section from Jupyter Notebook. Import necessary libraries, and load store.csv dataset. By the end, it should look like this:
+
+![](img/rossmann-bot.png)
+
+- Testing the Rossmann API: call API by running `python rossmann-bot.py` on terminal to check whether the rossmann-bot.py is working correctly. By running this command, it will call the API hosted in Heroku. It may take some seconds, since Heroku is in idle state (I'm using Heroku's free account).
+_Note: in the rossmann-bot.py file, we used the store 22 to run the test but it could be any store(s)_;
+![](img/rossmann-bot_success.png)
+As we can observe, the test was successful. Terminal returned status code 200 and the sales prediction for store 22. 
+
+- Since it is unknown what store number the user wants to retrieve sales prediction, let's substitute the store number (previously 22) for a variable named `store_Id` in rossmann-bot.py,. Then, create a `load_dataset` function that takes `store_Id` as an argument, and include all steps related to loading the test data. Return data in JSON format as `data`;
+- Still in rossmann-bot.py, create `predict` function that takes the argument `data`, and include all steps related to API Call. Return pandas dataframe `d1` with the sales prediction;
+
+At the end, the rossmann-bot.py should look like this:
+
+![](img/rossmann-bot-all.png)
+
+### II. Set up Telegram Bot
+
+In this task, we will set the Telegram Bot to connect with our cloud-based platform (Heroku). We must perform four tasks: (1) Set the telegram bot; (2) Customizing the bot; (3) Testing the bot on local host; (4) Connecting local host bot with production environment,
+
+**Set the Telegram Bot**:
+- Steps:
+  - Activate virtual env on terminal;
+  - In your smartphone, install Telegram app. Then search for "BotFather" on Telegram, which is a telegram account that manage Telegram bots.
+  ![](img/bot.jpg)
+  - Text `/newbot`. BotFather will ask you to name your bot - I named it as `RossmannBot`. Then you choose the bot username that ends in "bot" (I named it as `rossmann_prediction_bot`)
+  .
+  ![](img/bot1.jpg)
+
+  Observe that BotFather returns a confirmation message with the HTTP API: this is a token used to connect users with the telegram API. 
+  - Press on `t.me/rossmann_prediction_bot` link to find the bot we have just created and press start on the new screen;
+
+  ![](img/bot2.png)
+
+  - In the rossmann-bot.py, create variable `TOKEN` and insert the Telegram bot token we just received;
+  - To check how to make API requests, access [https://core.telegram.org/bots/api](https://core.telegram.org/bots/api). At the time this project was done, the url for API requests was https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe.
+  - Add the url in rossmann-bot.py. The `\bot` in the middle of the url is the endpoint, and after the endpoint till `/getMe` is the token. Replace the token with our token;
+  _Quick note: `/getMe` is a method that gives information about the Telegram Bot.
+  - Copy and add the same url in the file but change the `/getMe` method by `/getUpdates` method. With this method, we can get any messages a user sends to the bot. 
+  - Test the getUpdates method by texting a message to RossmannBot on Telegram:
+
+  ![](img/getupdate1.jpg)
+
+  and copy-paste the url in the web browser:
+
+  ![](img/getupdate.png)
+
+  The `"text": "Hi!"` is shown, which indicates that the message I texted on telegram was captured by the method;
+
+  - Copy and add the same url in rossmann-bot.py but change the end part by `/sendMessage?chat_id=& text=Hi! I will send your sales prediction soon.`. With this method, we will send back the message `Hi! I will send your sales prediction soon` for the telegram user. The question mark after the method indicates the parameters `chat_id` and `text`; the `chat_id` is shown in the picture above ("id": 1288672672) and the text is the message we wish to send. Then, copy-paste the url in the web browser;
+  - If we receive the message `Hi! I will send your sales prediction soon` on Telegram, then our bot is ready to connect with our handler API:
+
+  ![](img/sendmessage.jpg)
+
+  The rossmann-bot.py script should look like this:
+
+  ![](img/rossmann-bot-test.png)
+
+Now we are all set to **customize our bot to our needs**:
+- Steps:
+  - to send a customized message to users, we create `send_message` function with chat_id and text arguments. In the test we ran above, we already knew the chat_id and the text we wanted to sent to Telegram; however, in real life, we won't know who's requesting (chat_id) and we would want to customize the text according to the information the user sent:
+
+  ![](img/sendpredictions.png)
+
+  - to receive the store prediction request from users, we create a new endpoint (flask app) connected to a port 5000 (flask port). When the user sends a request, Telegram will redirect it to the endpoint. Once the endpoint is called, it runs the `index` function that checks whether the information sent by the user is valid or not. If valid, it calls the data transformation steps and generate sales predictions for the store the user requested a prediction. Note that `send_message` function is constantly called under the if-else conditional statements: this is to ensure that our user gets an customized answer according to the data he sent to our bot:
+  ![](img/endpoint.png)
+
+  - a `parse_message` function was created to extract the chat_id and store_id from the user's request. If the store_id is invalid, it returns the message "error":
+
+  ![](img/parsemessage.png)
+
+  - the `load_dataset` function was updated in case there is no sales' data entry for a specific store a user wishes to get predictions. In such case, the function returns the message "error":
+  
+  ![](img/loadataset1.png)
+
+Let's **test the bot in the local host**:
+  - Use ngrok service (for free) to make the local host (your pc) available in the internet. Whenever a API request comes from Telegram, the request is redirected from the internet (by port 80) to your pc (port 5000 - flask). Complete installation and set the service to connect with port 5000:
+
+  ![](img/ngrok.png)
+
+  and copy the https url that ends in ngrok.io.
+
+  - To make Telegram send the user's messages to the endpoint, we use the WebHook method from Telegram. We copy the same link from the GetUpdates method, but substitute it by webhook and include the url we just copied in the previous step:
+
+  `https://api.telegram.org/bot1499227844:AAErjtmgpQnW5N5qU1c_CiVi_eEsgxBFzl0/setWebhook?url=https://f690a0cf7282.ngrok.io`
+
+  Then, we copy and paste the link to the web browser. If message "Webhook was set" is shown, then Telegram is connected with our endpoint `https://f690a0cf7282.ngrok.io`:
+
+  ![](img/webhook.png)
+
+  - Activate the rossmann API by running `python rossmann-bot.py` on terminal;
+
+  - Test all entry possibilities on Telegram. If telegram returns messages/sales predictions correctly, then we are ready to put our entire project on Heroku!
+
+  ![](img/telegramfinaltest.png)
+
+
+  
 [back to top](#table-of-contents)
 
 ---
+
 
 ## Conclusion
 

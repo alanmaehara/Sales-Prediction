@@ -8,7 +8,7 @@ model = pickle.load(open('/home/alan/Sales-Prediction/model/model_rossmann.pkl',
 
 
 # initialize API
-app = Flask(__name__) # __name__ = construtor
+app = Flask(__name__) # __name__ = constructor
 
 @app.route('/rossmann/predict', methods = ['POST']) # creating endpoint with method POST
 def rossmann_predict():  #function that is executed when an endpoint receives a POST request. This function works on the data received.
