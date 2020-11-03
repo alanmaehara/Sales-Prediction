@@ -125,7 +125,7 @@ def index(): #runs every time the endpoint / is called;
                 buffer.seek(0)
                 bot.send_photo(chat_id=chat_id, photo=buffer)
                 # send intro message
-                msg = 'Store {} will sell R${:,.2f} for the next six weeks. If you wish to get predictions for a different store, just text me another store number.'.format(d2['store'].values[0],d2['prediction'].values[0])
+                msg = 'Store {} will sell ${:,.2f} for the next six weeks. If you wish to get predictions for a different store, just text me another store number.'.format(d2['store'].values[0],d2['prediction'].values[0])
                 send_message(chat_id, msg)
 
                 return Response('Ok', status = 200)
@@ -136,7 +136,7 @@ def index(): #runs every time the endpoint / is called;
                 return Response('0k', status = 200) 
 
         else:
-            send_message(chat_id, 'Sorry, something went wrong. Please use only integer store numbers.')
+            send_message(chat_id, 'Sorry, something went wrong. Please use only integer numbers.')
             return Response('0k', status = 200)
 
     else:  # if GET, means that user didn't send any data

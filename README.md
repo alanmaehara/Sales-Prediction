@@ -1,4 +1,5 @@
-# Data Science Under the Hood: a Sales Forecast Project for Rossmann
+# A Complete Guide for Sales Forecast Project Implementation Using Machine Learning: a Rossmann Case
+
 <img src="https://insideretail.asia/wp-content/uploads/2020/09/Rossmann.jpg" alt="drawing" width="100%"/>
 
 _This sales prediction project uses data from Rossmann, a Germany-based drug store chain with operations over more than 3,000 stores across seven european countries. The dataset is publicly available from a [Kaggle competition](https://www.kaggle.com/c/rossmann-store-sales/data)._
@@ -12,15 +13,15 @@ For starters in the Data Science field, it is not always clear how to build end-
 
 ### A note about Machine Learning
 
-In this project, we will use machine learning to predict sales. Therefore, we will intermittently use machine learning terms throughout the project such as training, test data, hyperparameter tuning, etc. **If you need a quick intro to Machine Learning**, Google's Yufeng Guo [What is Machine Learning?](https://www.youtube.com/watch?v=HcqpanDadyQ) and [The 7 steps of machine learning](https://www.youtube.com/watch?v=nKW8Ndu7Mjw) videos will get you ready to jump into this project.
+In this project, we will use machine learning to predict sales. Therefore, we will intermittently use machine learning terms throughout the project such as _training_, _test data_, _hyperparameter tuning_, and so forth. **If you need a quick intro to Machine Learning**, Google's Yufeng Guo [What is Machine Learning?](https://www.youtube.com/watch?v=HcqpanDadyQ) and [The 7 steps of machine learning](https://www.youtube.com/watch?v=nKW8Ndu7Mjw) videos will get you ready to jump into this project.
 
 ### Special Mention
 
-This project was born from [Meigarom Lopes](https://github.com/Meigarom)'s course _Data Science em Produção_. In this course, learners apply a data science solution from scratch from a business perspective. The course goes through the design and implementation of a machine learning project departing from data collection to deployment - for more details, please check his course (in portuguese) [here](https://sejaumdatascientist.com/como-ser-um-data-scientist/).
+This project was born from [Meigarom Lopes](https://github.com/Meigarom)'s excellent course _Data Science em Produção_. In this course, learners apply data science techniques to deploy a data science solution from scratch from a business perspective. The course is thorough: it goes through data collection and data cleaning, machine learning modeling and project deployment. For more details, please check his course (in portuguese) [here](https://sejaumdatascientist.com/como-ser-um-data-scientist/). 
 
 ### How to read this README.MD?
 
-This is a very extensive README since it carries the responsibility of showing the project outcomes and also to explain the statistical intuition behind algorithms and analyses. There is also a somewhat palatable length of explanations on the reasoning of each step in this project. Here is my suggestion for the readers:
+This is a very extensive README since it carries the responsibility of showing the project outcomes and also to explain the intuition behind algorithms and statistical analyses. There is also a somewhat palatable length of explanations on the reasoning of each step in this project. Here is my suggestion for the readers:
 
 1. If you wish to **check the codes for this project**, access the Jupyter notebook [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb) and go back to the [table of contents](#table-of-contents) whenever some explanation is lacking there. 
 2. If you wish to **read the project's main findings instead of going through the entire project**, look no further and [get there.](#main-findings)
@@ -44,7 +45,7 @@ With no further due, let's get started!
 - [06. Feature Selection](#06-feature-selection)
 - [07. Machine Learning Modeling](#07-machine-learning-modeling)
 - [08. Hyperparameter Tuning](#08-hyperparameter-tuning)
-- [09. Error Interpretation & Business Performance](#09-error-interpretation-&-business-performance)
+- [09. Error Interpretation and Business Performance](#09-error-interpretation-and-business-performance)
 - [10. Deploy Machine Learning Model to Production](#10-deploy-machine-learning-model-to-production)
 - [11. A Sales Predictor Bot](#11-a-sales-predictor-bot)
 - [Conclusion](#conclusion)
@@ -69,7 +70,101 @@ Dirk Rossmann GmbH (Rossmann) is a private, German drug store chain founded in 1
 
 [(go to next section)](#project-methodology)
 
-dasdadasdasdas
+_(If you intend to read the entire project, you can skip this section.)_
+
+In this project, a machine learning model was trained to predict sales revenues for Rossmann. The following setup was utilized:
+
+- [Project Methodology](#project-methodology): the CRISP-DM was used as the main project management methodology. Two cycles were completed within the total project implementation length of 2-months; a log of each CRISP-DM cycle can be accessed [here](#cycle-description).
+- [Business Problem and Solution](#01-a-business-request): a fictitious business problem was created to motivate our project. Due to a upper-management request, a 6-week sales prediction project for each Rossmann store will be delivered to the business. Predictions will be available through a Telegram Bot where stakeholders can retrieve information on their smartphones. 
+- [Data Collection](#02-data-preparation): Data was acquired from [Rossmann's Store Sales Kaggle competition](https://www.kaggle.com/c/rossmann-store-sales/data):
+  - **Data Dimensions (rows x columns):** 
+    * Train dataset: 969264 x 18 
+    * Valid dataset: 47945  x 18
+    * Date Range: 2013-01-01 (first) / 2015-07-31 (last)
+  
+    In this project, we splitted the whole data into training and validation parts:
+    * **Training data** corresponds to all data entries between **2013-01-01 to 2015-06-19**
+    * **Validation data** contains entries from the last 6 weeks of available data, **2015-06-19 to 2015-07-31**. 
+    * **Test data** corresponds to data entries between **2015-07-31 to 2015-09-16**. This data doesn't have the target variable `sales` and will be used as the input to generate predictions in production;
+
+The following steps were performed on the collected data:
+
+- [Data Cleaning](#iii-data-cleaning): All variables presenting missing values are influenced by time. Therefore, variable statistics weren't used for imputation but the `date` of each sales data entry were used instead; 
+- [Feature Engineering](#03-feature-engineering): In order to guide the feature engineering step, a [mindmap](#i-hypothesis-list) was created to map traits that possibly explain sales revenues for the company. As a result, 44 business hypotheses were derived and 19 hypotheses could be addressed on the [Exploratory Data Analysis](#04-exploratory-data-analysis-eda) section with the current dataset. To support the analysis, 13 new features were created including Germany's macroeconomic data: Gross Domestic Product (GDP) per capita, interest rates, Consumer Price Index (CPI), Consumer Confidence Indexe (CCI), and unemployment rates were added (data retrieved from [OECD.stats](#appendix-i-datasets)). 
+- [Filtering Variables](#iv-filtering-variables): closed stores or stores without revenues were excluded from the model;
+- In the [Exploratory Data Analysis](#04-exploratory-data-analysis-eda) section, univariate, bivariate, and multivariate analysis were conducted. We validated the hypothesis list built previously in the bivariate analysis:
+
+![](img/hypothesis_validation.png)
+ 
+In the multivariate analysis, we observed 19 multicollinearity cases (either linear positive or negative strong correlation). This indicated that we would have some problems training a linear model unless some of these variables were excluded. Since data could be non-linear - and decision-based tree algorithms can handle non-linear data well - I opted to keep these variables, rescale and transform some of them, and run both linear and non-linear algorithms to check overall performance.
+
+- [Data Preprocessing](#05-data-preprocessing): MinMax Scaler, Robust Scaler and Yeo-Johnson Transformation were used to rescale numerical variables showing unusual range, skew, and kurtosis. For categorical variables, One-Hot Encoding, Label Encoding and Ordinal Encoding were used according to each variable's case. For the target variable `sales`, Logarithm transformation was utilized. Also, Sine/Cosine Transformation was utilized on time-related variables that are cyclical in nature;
+
+- [Feature Selection](#06-feature-selection): For this project, a wrapper method called Boruta that automatically select the best features for our predictive ML model was used. Boruta selected 21/36 variables. I added two variables to the final list of variables, making it to 23 variables.
+
+- [Machine Learning Modeling](#07-machine-learning-modeling): Seven models were tested as candidates for this project: (1) Mean of the target variable (baseline); (2) Linear Regression; (3) Lasso Regression; (4) Ridge Regression; (5) ElasticNet Regression; (6) Random Forest Regressor; (7) XGBoost Regressor. The following cross-validation results were observed:
+
+**1st CRISP-DM Cycle**:
+
+![](img/CV_01.PNG)
+
+**2nd CRISP-DM Cycle**:
+
+![](img/cross_valid.png)
+
+_Quick note: all cross-validation steps were built to avoid data leakage issues. In order to do so, a `cross_validation()` function was created - for more details, check the [notebook](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb)._
+
+The **Random Forest Regressor** and the **XGBoost Regressor** were the best model performers at both cycles, with a Mean Average Percentage Error (MAPE) of 7% and 9%, respectively. Since the XGBoost Regressor is known to train data fastly than random forest algorithms (and the model performance is not too different), we used the XGBoost regressor as the main machine learning model for our project.
+
+- [Hyperparameter Tuning](#08-hyperparameter-tuning): Using the optimal set of parameters, we obtained the following results with the XGBoost model:
+
+![](img/xgb_tuned.png)
+
+which had a MAPE improvement of ~4.2%.
+
+- [Model Performance](#09-error-interpretation-and-business-performance): Considering all Rossmann stores, we would have a total predicted sales for the next six weeks of \$284,153,920, being \$283,772,779 for the worst scenario sales prediction, and \$284,535,044 for the best scenario. Scenarios were created to reflect MAPE variations. 
+
+- The XGBoost model performed quite well across Rossmann stores except for three stores with MAPE above 14%:
+
+![](img/worst_stores_1.PNG)
+
+![](img/worst_stores.PNG)
+
+Usually, the business have the final word on how permissible these error percentages can be. However, the model performs fairly well for most of the stores with a MAPE of ~5%. Since we have created a business case for this project, we will fictionally consider that the business has approved the model predictions.
+
+The lineplot below shows that predictions (in orange) were fairly on par with the observed sales values (in blue) across the last six weeks of sales represented by the validation data. 
+
+![](img/performance1.png)
+
+The following graph shows the error rate (the ratio between prediction values and observed values) across six weeks of sales. The model performs fairly well since it doesn't achieve error rates above 1.075 or below 0.925. The 3rd and 5th weeks were the ones that the model performed not so well compared to other weeks:
+
+![](img/performance2.png)
+
+One of the premises for a good machine learning model is to have a normal-shaped distribution of residuals with mean zero. In the following graph, we can observe that the errors are centered around zero, and its distribution resembles a normal, bell-shaped curve.
+
+![](img/performance3.png)
+
+The following graph is a scatterplot with predictions plotted against the error for each sales day. Ideally, we would have all data points concentrated within a "tube", since it represents low error variance across all values that sales prediction can assume:
+
+![](img/performance4.png)
+
+There are six sales days that the model generated errors above \$10,000. Ideally we would separate these days and conduct a thorough analysis to check why they have such errors. Since it is only six, we proceeded with the trained model to production.
+
+
+- [Project Deployment to Production](#11-a-sales-predictor-bot): In this project, we deploy a machine learning model that predicts sales for Rossmann stores, and put it into production in the cloud with Heroku. By the end, Rossmann stakeholders will be able to access predictions with a Telegram Bot on their smartphones.
+
+  The production architecture for this project is as follows:
+  &nbsp; 
+  <p align="center">
+    <img width="100%" alt="drawing" src="img/architecture_2.PNG">
+  </p>
+  &nbsp; 
+  The architecture works like this: (1) a user texts the store number it wishes to receive sales prediction to a Telegram Bot; (2) the Rossmann API (rossmann-bot.py) receives the request and retrieve all the data pertaining to that store number from the test dataset; (3) the Rossmann API send the data to Handler API (handler.py); (4) the Handler API calls the data preparation (Rossmann.py) to shape the raw data and generate predictions using the trained XGBoost model; (5) the API returns the prediction to Rossmann API; (6) the API returns the total sales prediction for a specific store + a graph of sales prediction across the next six weeks to the user on Telegram: 
+ 
+ 
+  &nbsp; 
+  <p align="center"><img width="40%" alt="drawing" src="img/telegram.gif"></p>
+  &nbsp;
 
 [back to top](#table-of-contents)
 
@@ -84,11 +179,11 @@ For this project, we will use the CRISP-DM as the main method for project manage
 The CRISP-DM is a project management methodology that shows a 360º outlook of data science projects. It is composed of six steps that together forms a complete CRISP-DM cycle as follows:
 
 ### The CRISP-DM Cycle
-  <p>&nbsp;</p>
-<img src="https://miro.medium.com/max/700/1*JYbymHifAk7aQ1pHm_IdMQ.png" alt="drawing" width="80%"/>  
-<p>&nbsp;</p>
-
-
+  &nbsp; 
+  <p align="center">
+    <img width="100%" alt="drawing" src="https://miro.medium.com/max/700/1*JYbymHifAk7aQ1pHm_IdMQ.png">
+  </p>
+  &nbsp; 
 Each cycle is iterative and future cycles serve as a way to improve the current project. There are many benefits for using CRISP-DM as a project management method. Here I highlight three main reasons in favor of CRISP-DM:
 *  Delivers an end-to-end solution;
 *  Each cycle should be done in a fast-paced. Why? Think of you trying to perfect each and every single step until you are satisfied with the results. It is likely that you will spend weeks (if not months) on a single step, and therefore, won't deliver true value to business since time is usually a constraint;
@@ -198,9 +293,7 @@ In our case, things are a bit different. As mentioned in [Cycle Description](#cy
 Once you get your hands on data for the first time, analyze the dimension of your data (how many rows vs columns?) and the data types (categorical data? numerical data? Discrete or continuous data?). For a reference on data types, check this diagram:
 
 ![](https://o.quizlet.com/8UUywzzaMhY2ZGHrWE7VkA_b.png)
-
 Our initial set of variables are as follows:
-
 
 | Variable      | Description | Data Type |
 | ----------- | ----------- | ----------- | 
@@ -223,22 +316,20 @@ Our initial set of variables are as follows:
 | promo2_since_year   |describes the year when the store started participating in Promo2 | numerical (discrete) |
 | promo_interval   |describes the consecutive intervals Promo2 is started, naming the months the promotion is started anew. E.g. "Feb,May,Aug,Nov" means each round starts in February, May, August, November of any given year for that store | categorical (nominal) |
 
-*dummy variable is one that takes either 0 or 1. For more details, check [here](https://en.wikipedia.org/wiki/Dummy_variable_(statistics)).
+_*dummy variable is one that takes either 0 or 1. For more details, check [here](https://en.wikipedia.org/wiki/Dummy_variable_(statistics))._
 
 
 * **Data Dimensions (rows x columns)**: 
 
-  * Train dataset: 969264 x 18 
-  * Valid dataset: 47945  x 18
+  * Train dataset: 969,264 x 18 
+  * Valid dataset: 47,945  x 18
   * Date Range: 2013-01-01 (first) / 2015-07-31 (last)
   
 In this project, we splitted the whole data into training and validation parts:
 * **Training data** corresponds to all data entries between **2013-01-01 to 2015-06-19**
 * **Validation data** contains entries from the last 6 weeks of available data, **2015-06-19 to 2015-07-31**. 
 
-We splitted so that we could avoid [data leakage](https://www.kaggle.com/alexisbcook/data-leakage) (we will get into this later), and also to simulate how our model will predict sales revenues for each Rossmann store on a 6-week validation data. 
-
-If our model works well, then we are good to predict sales revenues on the **test data**, which is the data we really want to predict sales revenues. 
+We splitted so that we could test the model performance on a validation data before we use **test data**, which is the data we really want to predict sales revenues. 
 * **Test data** corresponds to data entries between **2015-07-31 to 2015-09-16**. 
 
 Once we validate our model, we can put it into "production", so that all stakeholders of this project can access sales predictions for the six weeks corresponding to the test data.
@@ -289,7 +380,7 @@ The following variables don't seem to have an ideal imputation method. Imputing 
 
 [Descriptive statistics](https://en.wikipedia.org/wiki/Descriptive_statistics) is a summary of the data. It quantitatively describes the data by using some statistic metrics depending on the nature of the data. 
 
-For numerical variables, we usually use statistics that measure **dispersion** (Variance, Standard Deviation, Range, First and Third Quartiles, Minimum, Maximum, Skewness, Kurtosis) and **central tendency** (mean, median). Find below a quick explanation on such measures.
+For numerical variables, we usually use statistics that measure **dispersion** (Variance, Standard Deviation, Range, First and Third Quartiles, Minimum, Maximum, Skewness, Kurtosis) and **central tendency** (mean, median). Find below a quick explanation on such measures - if you wish to skip and access the descriptive statistics for this project's data, skip theory.
 
 [(skip theory)](#numerical-data)
 
@@ -410,14 +501,12 @@ There are many ways to read a boxplot, but whenever I deal with them I take the 
 
 Let's check a practical example that records time slept (hours) by an individual across weekdays (graph retrieved [here](https://plot.ly/static/img/literacy/boxplot/boxplotfig9.jpg)):
 
-
 <img src="https://plot.ly/static/img/literacy/boxplot/boxplotfig9.jpg" alt="drawing" width="70%"/>
-
 &nbsp;
+
 Although these boxplots are in vertical position, there's nothing different in terms of data interpretation. 
 Let's start by looking at Monday's boxplot. The median (Q2) for Monday is approximately 7.5 hours of sleep, and it is closer to the Q3 value, which indicates that the data distribution is asymmetrical (this individual has slept between 6 to 7.5 hours more frequently than 7.5 to 8 hours). Now see the box on its entirety: 50% of the time, this person has slept between 6 to 8 hourse on Mondays and no unusual time sleep hours were recorded (no outliers). 
 Now look at the Thursday boxplot. On thursdays, this individual had 5.5 to 6.5 hours of sleep 50% of the time. The box size is very small, which indicates that the data distribuion is more concentrated on the median value (and less dispersed compared to Monday). Sadly, this person didn't sleep well one day - there is an outlier around 2.5 hours of sleep.
-
 &nbsp;
 
 ### 6. Skewness
@@ -573,6 +662,7 @@ Another aspect to be considered is the Germany's economy. From 2013 to 2015, Ger
 9. Store sales increase when the weather is above 28ºC or below 18ºC
 10. Store sales increase when Consumer Confidence Index (CCI) rate increases (month)
 11. Store sales increase when Unemployment rate decreases (month)
+&nbsp;
 
 ### II. Viable Hypothesis List
 
@@ -597,6 +687,7 @@ From 44 hypothesis listed, we select **19 hypothesis** that can be tested with t
 17. Stores sales increase when Consumer Price Index (CPI) rate increases (month)
 18. Stores sales increase when Consumer Confidence Index (CCI) rate increases (month)
 19. Stores sales increase when Unemployment rate decreases (month)
+&nbsp;
 
 ### III. Feature Engineering
 
@@ -607,15 +698,15 @@ As we will see later, feature engineering will help us to reject/fail to reject 
 The following tasks were performed:
 * The variable `date` was used to create time-related variables. Variables that explains how long stores were holding consecutive promotion sales (`promo2_time_week`, `promo2_time_month`), and how long stores were facing competition from other companies (`competition_since_month`) are now available. All time-related variables are valued by number of months or weeks;
 * We also used the variable `date` to get a better sense of seasonality for each sales entry in the dataset - `day`, `month`, `year`, `year_week`, `is_weekday` variables were created;
-* Variables with data described by single letters were transformed into full text (e.g: all 'a' in variable `state_holiday` were transformed to 'christmas'). New variables are: `state_holiday`, `assortment`.
-* Germany's Gross Domestic Product (GDP) per capita, Consumer Price Index (CPI), interest rates, unemployment rate, Consumer Confidence Index (CCI) datasets were added as new variables. All economic indicators correspond to month values except for GDPpc (quarters). See below a description of these indicators (retrieved from [OECD](https://stats.oecd.org/):
+* Variables with data described by single letters were transformed into full text (e.g: all 'a' in variable `state_holiday` were transformed to 'christmas'). These variables are: `state_holiday`, `assortment`.
+* Germany's Gross Domestic Product (GDP) per capita, Consumer Price Index (CPI), interest rates, unemployment rate, Consumer Confidence Index (CCI) datasets were added as new variables. All economic indicators correspond to month values except for GDPpc (quarters). See below a description of these indicators (retrieved from [OECD](https://stats.oecd.org/)):
   * **Gross Domestic Product (GDP)**: monetary measurement of all goods and services produced within a country. income per capita (per head), in US$ (current prices) and current PPPs, adjusted quartely;
   * **Consumer Price Index (CPI)**: measures inflation by looking at the average price changes from a basket of consumer goods and services of a country. The base year is 2015 (2015 = 100).
   * **Interest Rate**: interest rate is the cost of borrowing money. The rate is usually set by governments or central banks. Here we use long-term interest rates, per cent per annum, divided monthly.
   * **Unemployment Rate**: measurement of changes in unemployment within a country. Unemployment rate is the fraction of total number of unemployed population by the total number of active population. 
   * **Consumer Confidence Index (CCI)**: measurement of consumer confidence within a country, it indicates how future developments on consumption and saving will be based on the current households' economic situation. Values below 100 indicate a pessimistic attitude towards future developments in the economy, possibly resulting in a tendency to save more and consume less.  
 
-_All dataset references are available in [Appendix I Dataset](#appendix-i-dataset)_
+_All dataset references are available in [Appendix I Dataset](#appendix-i-dataset)._
 
 ### IV. Filtering Variables
 
@@ -905,7 +996,7 @@ In a multivariate analysis, we must answer two questions:
 1. **Target variable & independent variables (predictors)**: is there any predictor in our dataset that is highly correlated to the target (variable to be predicted)? If so, this predictor is likely to be an important feature to our prediction model.
 2. **Independent variables**: is there any predictor that is highly correlated to another predictor? If so, we might consider removing one of them since they "explain" the target variable in a similar fashion. We have to remove one or the other due to two reasons: (1) in machine learning models, a simpler model is preferred (we will get into the reasons on the [feature selection](#06-feature-selection) section); (2) it eliminates [multicollinearity](https://statisticsbyjim.com/regression/multicollinearity-in-regression-analysis/) problems, which can be a serious issue on linear regression models (we will explore linear regression models later) where independent variables should be independent to each other. Models full of highly correlated independent variables creates a lot of noise on the model, which makes our sales prediction unreliable. 
 
-But how to tell whether a variable is correlated to another one? Let's get into a bit of theory again.
+But how to tell whether a variable is correlated to another one? Let's get into a bit of theory again. To directly see the results of the multivariate analysis, skip theory.
 
 [(skip theory)](#numerical-variables)
 
@@ -1000,7 +1091,8 @@ For **numerical variables**, we will use  a heatmap with pearson correlation coe
   `cci` vs `year`
   `cci` vs `gdp`
   `cpi` vs `cci`
-  `interest rate` vs `unemployment_rate` `promo2_time_week` vs `promo2_time_month`
+  `interest rate` vs `unemployment_rate` 
+  `promo2_time_week` vs `promo2_time_month`
 &nbsp;
 ### Categorical Variables
 
@@ -1021,7 +1113,7 @@ We won't go into details on how to calculate the Cramér's V, but you can find m
 
 Data is usually not ordered in a similar manner. Some variables might have an extremely high range, while others might have minimal range. Some variables might be categorical or numerical, or a data type variable. The problem is: most ML models perform better when data is of numerical type, and without extreme ranges. Think of this project: we are trying to predict sales. If you have a variable with a high range (say, from 0-10000) and another with a low range (from 0 to 3.5), the model will weight the high-range variable more than the low-range variable when predicting sales, and therefore it could generate biased results. In addition, some models can't really interpret categorical variables with words - therefore, we must scale these words with numbers.
 
- **We will divide data preprocessing according to our variables:(I) numerical scaling, (II) categorical encoding, and (III) time-related variables (cyclic transformation)**. If you wish to skip the theoretical part, you can see a table of new variables created at the end of this section.
+ **We will divide data preprocessing according to our variables:(I) numerical scaling, (II) categorical encoding, and (III) time-related variables (cyclic transformation)**. If you wish to skip the theoretical part, skip theory to see the list of current variables present in this project after data preprocessing.
 
 [(skip theory)](#summary)
 
@@ -1128,11 +1220,9 @@ Also, please note that setting lambda equal to zero is the same as performing a 
 &nbsp;
 
 Here's an example on how a distribution like this:
-
 ![](img/boxcoxexample.png)
 
 becomes like this with a Box-Cox Transformation:
-
 ![](img/boxcoxexample_1.png)
 
 In this project we found that a lambda value of 0.05 generates good results. However, since we don't know what kind of data we will predict, we will not utilize the Box-Cox to transform due to its limitations.
@@ -1146,13 +1236,14 @@ With similar traits as the Box-Cox transformation, the Yeo-Johnson transformatio
 Yeo-Johnson's formula is much similar compared to Box-Cox's, with the exception that y can assume negative, zero, and constant values. We transformed `competition_since_month`,`customers`, and `competition_distance` variable with this method.
 
 For Box-Cox and Yeo-Johnson Transformation, the method `.PowerTransformer` by scikit-learn is utilized. The best lambda values were chosen by the algorithm itself.
+&nbsp;
 
 ### II. Categorical Encodings
 
 In the model, there are a few features that are categorical and need to be converted into numerical ones. We call this conversion process as "Categorical Encodings". 
 
-There are a myriad of encoding methods available outside, and a few of them will be utilized. For more details on categorical encoding methods, [Baijayanta Roy's article](https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02) is worth reading. The criteria to choose the most adequate method for each variable follows this useful chart:
-
+There are a myriad of encoding methods available outside, and a few of them will be utilized. For more details on categorical encoding methods, [Baijayanta Roy's article](https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02) is worth the reading. The criteria to choose the most adequate method for each variable follows this useful chart:
+&nbsp;
 ![](img/categoricalencoding.png)
 
 A few encoding methods will be used, namely: **(1) One Hot Encoding; (2) Label Encoding; and (3) Ordinal Encoding**.
@@ -1224,7 +1315,7 @@ For machine learning models, it is fundamental to keep the  variables that best 
 
 Detailed explanation on feature selection methods can be found [here](https://www.analyticsvidhya.com/blog/2016/12/introduction-to-feature-selection-methods-with-an-example-or-how-to-select-the-right-variables/). An important note is that these methods work as a supportive tool - the final decision on feature selection should be always upon the project owner. This is another reason why an EDA section is put before Feature Selection - it gives us a chance to really understand the data we are working on, and what variables will probably be good to be included in the prediction model.
 
-For this project, a wrapper method called [Boruta]() that automatically select the best features for our predictive ML model is used. Manish Pathak has done a wonderful job explaining Boruta [here](https://www.datacamp.com/community/tutorials/feature-selection-R-boruta), in case you want to explore this feature selection algorithm in detail.
+For this project, a wrapper method called **Borut**a that automatically select the best features for our predictive ML model is used. Manish Pathak has done a wonderful job explaining Boruta [here](https://www.datacamp.com/community/tutorials/feature-selection-R-boruta), in case you want to explore this feature selection algorithm in detail.
 
 Boruta works in four steps:
 
@@ -1254,7 +1345,7 @@ Remember our [hypothesis validation](#hypothesis-validation) list? We will use i
 
 4. We observed that hypothesis related to `school_holiday`, `state_holiday` variables have a low-medium impact. Therefore we will keep them out from the model.
 
-Our final list of selected variable was reduced to 23 variables:
+Our final list was reduced to 23 variables:
 
 ![](img/final_boruta.png)
 
@@ -1421,7 +1512,7 @@ However, linear regression has some assumptions to be considered before one choo
 
 For a detailed explanation on OLS assumptions, check the [365 Data Science](https://365datascience.com/ols-assumptions/) article.
 
-In this project, we analyzed some OLS assumptions in the [exploratory data analysis](#multivariate-analysis) section by checking multicollinearity and linearity. If the linear regression model performance is poor, the data is probably complex and non-linear.
+In this project, we analyzed some OLS assumptions in the [exploratory data analysis](#iii-multivariate-analysis) section by checking multicollinearity and linearity. If the linear regression model performance is poor, the data is probably complex and non-linear.
 
 Our results were as follows:
 
@@ -1429,7 +1520,7 @@ Our results were as follows:
 
 ### 3. Ridge, Lasso, and ElasticNet Regression
 
-_The following part explores regularization techniques for linear regression models. Some examples were retrieved from Masum Rumi's [detailed regression guide with regularization techniques](https://www.kaggle.com/masumrumi/a-detailed-regression-guide-with-house-pricing#Fitting-model-(Advanced-approach)); therefore, if you wish to consult the original source, read his article_.
+_The following part explores regularization techniques for linear regression models. Examples were retrieved from Masum Rumi's [detailed regression guide with regularization techniques](https://www.kaggle.com/masumrumi/a-detailed-regression-guide-with-house-pricing#Fitting-model-(Advanced-approach)); therefore, if you wish to consult the original source, read his article_.
 
 Ridge, Lasso, and ElasticNet are the next models we will test for this project. These are linear regression models known as regularization models, and have the ability to prevent overfitting by reducing the impact of the features (the beta parameters) on the predictions, and also to minimize the errors between the predicted value and the true value with a OLS loss function.
 
@@ -1565,6 +1656,7 @@ In mathematical terms, **the data** above can be described as:
 The next input is the **loss function**. For regression models, the loss function could assume any formula that returns the **error** (difference between observed and predicted values); for instance, we could even use the Mean Squared Error (MSE) (already discussed in [performance metrics](#i-performance-metrics)) as a loss function. Just to refresh our minds, check below the linear regression line again. The red line is the errors that a loss function aims to find:
 
 ![](img/mpe.png)
+
 For linear regression, the loss function it is the residual sum of squares (RSS) we already saw before:
 
 ![](img/regularized_2.PNG)
@@ -1707,27 +1799,32 @@ Remember: this prediction takes into account the baseline and the first decision
 For m = 1 to M, we must iteratively go over the steps III, IV, V as we did before. For the sake of simplicity, let's add the second decision tree (m = 2) and see how the gradient boost model performs. 
 
 * **III. Calculate pseudo-residuals**
+
   &nbsp;
   ![](img/xgb19.PNG)
   &nbsp;
 
   ![](img/xgb_7.PNG)
   &nbsp;
+
 * **IV. Fit a regression tree and calculate "output values"**
   Let's create a new decision tree and calculate output values:
+
   &nbsp;
   ![](img/xgb_8.PNG)
   &nbsp;
+  
   We know that the output values is the average of all residuals on each terminal region:
+  
   ![](img/xgb20.PNG)
 
-  &nbsp;
 * **V. Generate predictions**
+
   &nbsp;
   ![](img/xgb21.PNG)
+
   &nbsp;
   ![](img/xgb_9.PNG)
-
   
   For stores 1, 2, 3, 4, 6, 7 we got much better predictions than F0(x), while for store 5 we got worse prediction. If you compare the first prediction F0(x) and F1(x) to F2(x) prediction values, we see more variability among values, which indicates that the more trees are added, the more specific the predictions will be for each store. Therefore, even though we had a worse prediction for store 5 on F2(x), the tendency is to get better predictions as the number of trees increases.
 &nbsp;
@@ -1780,14 +1877,14 @@ We obtained the following results:
 
 The results confirm what we saw earlier: the Random Forest Regressor and the XGBoost Regressor generates less errors with MAPE of 7% and 9%, respectively. Since the XGBoost Regressor is known to train data fastly than random forest algorithms (and the model performance is not too different), we will use the XGBoost regressor as the main machine learning model for our project.
 
-One important note: we performed the cross-validation step for each k-fold by using the raw data. We did this in order to avoid data leakage, which is when information from the validation/test data is leaked to the trained model. This issue usually reflects as an overestimated predictions coming from the contaminated model. Using raw data to perform the cross-validation step ensure us we use completely distinct data for training and for validation.
+One important note: we performed the cross-validation step for each k-fold by using the raw data. We did this in order to avoid [data leakage](https://www.kaggle.com/alexisbcook/data-leakage), which is when information from the validation/test data is leaked to the trained model. This issue usually reflects as an overestimated predictions coming from the contaminated model. Using raw data to perform the cross-validation step ensure us we use completely distinct data for training and for validation.
 
 [back to top](#table-of-contents)
 
 ---
 ## 08. Hyperparameter Tuning
 
-[(go to next section)](#09-error-interpretation-business-performance)
+[(go to next section)](#09-error-interpretation-and-business-performance)
 
 In this task, our goal is to find the best parameters that maximizes the learning in our model. The best parameters are found by testing a set of parameters iteratively - the set that best performs is the chosen one. There are three methods to find these parameters:
   1. Random Search: this method randomly choose parameters from a given list of candidates. It is the fastest method available;
@@ -1817,7 +1914,7 @@ which had a MAPE improvement of 5%.
 [back to top](#table-of-contents)
 
 ---
-## 09. Error Interpretation & Business Performance
+## 09. Error Interpretation and Business Performance
 
 [(go to next section)](#10-deploy-machine-learning-model-to-production)
 
@@ -1825,11 +1922,11 @@ In this step, we analyze the predictions' performance generated by the XGBoost m
 
 ### I. Business Performance
 
-In this project, business performance for each store is measured by the average of predicted sales for the next six weeks. We then sum up the predictions with the Mean Absolute Error (MAE) to get the best scenario figures and subtract predictions with the MAE to get the worst scenario figures. Here's a sample of our model performance for 10 stores:
+In this project, business performance for each store is measured by the average of all predicted sales for the next six weeks. We then sum up the predictions with the Mean Absolute Error (MAE) to get the best scenario figures and subtract predictions with the MAE to get the worst scenario figures. Here's a sample of our model performance for 10 stores:
 
 ![](img/business_performance.PNG)
 
-Considering all stores, we would have total predicted sales for the next six weeks of $284,153,920, being $283,772,779 for the worst scenario sales prediction, and $284,535,044 for the best scenario.
+Considering all stores, we would have total predicted sales for the next six weeks of \$284,153,920, being \$283,772,779 for the worst scenario sales prediction, and \$284,535,044 for the best scenario.
 
 ### II. Worst Performance
 
@@ -2195,21 +2292,34 @@ Then, we connect Heroku and Telegram by substituting the end part of the url by 
 
 ## Conclusion
 
+In this project, all necessary steps to deploy a complete Data Science project to production were taken. Using two CRISP-DM project management methodology cycles, a satisfatory model performance was obtained by using the XGBoost algorithm to predict sales revenue for Rossmann stores, and useful business information was retrieved during the exploratory data analysis section. Other than that, the project met the criteria of arranging a suitable solution for the company's stakeholders to access sales predictions on a smartphone application.
+
+I took approximately two months to complete this project. From retrieving and cleaning the company's data, conducting descriptive statistics analysis, modeling the machine learning algorithms for regression, to grasp the main ideas behind deployment and production environment settings, this project was challenging in many ways. Among the challenges, the biggest one was documenting this project in a clear, neat way - I hope I had delivered it in the right tone. 
+
+Other challenges would include: (1) the need for further information on each Rossmann store designated in the dataset - mainly geolocation information; (2) the lack of publicly available data about Rossmann in English; (3) more precise definition on the variables' description from the Kaggle dataset - especially the variables `assortment` and `store_type`; (4) time management and computer processing limitations, since the entire project was done in my personal laptop - processing times were extremely long when training machine learning models and running feature selection algorithms. 
+
+However, it is important to note that solutions for the aforementioned challenges could be easily overcame if one has tackled this project from within the company. Therefore, this project is not targeted at achieving the best solution possible but to show how a Data Science project can be implemented in a structured, fast-paced way with the CRISP-DM methodology. 
+
+Hope you have enjoyed the journey with me!
+
 
 [back to top](#table-of-contents)
 
 ---
 
-## Appendix I - Datasets
+## Appendix I Datasets
 
 | No | Name | Source | Link |
 | -- | -- | -- | -- |
-| 1 | CPI | OECD | https://stats.oecd.org/Index.aspx?DataSetCode=PRICES_CPI |
-| 2 | Interest Rate  | OECD | https://stats.oecd.org/index.aspx?queryid=86 |
-| 3 | GDP | OECD | https://stats.oecd.org/index.aspx?queryid=66948# |
-| 4 | Unemployment Rate | OECD | https://stats.oecd.org/index.aspx?queryid=36324 |
-| 5 | CCI | OECD | https://data.oecd.org/leadind/consumer-confidence-index-cci.htm |
-
+| 1 | cpi_germany.csv | OECD | https://stats.oecd.org/Index.aspx?DataSetCode=PRICES_CPI |
+| 2 | interest_germany.csv  | OECD | https://stats.oecd.org/index.aspx?queryid=86 |
+| 3 | germany_gdp.csv | OECD | https://stats.oecd.org/index.aspx?queryid=66948# |
+| 4 | unemployment_germany.csv | OECD | https://stats.oecd.org/index.aspx?queryid=36324 |
+| 5 | CCI_germany.csv | OECD | https://data.oecd.org/leadind/consumer-confidence-index-cci.htm |
+| 6 | stores.csv | Kaggle | https://www.kaggle.com/c/rossmann-store-sales/data?select=store.csv |
+| 6 | train.csv | Kaggle | https://www.kaggle.com/c/rossmann-store-sales/data?select=train.csv |
+| 6 | test.csv | Kaggle | https://www.kaggle.com/c/rossmann-store-sales/data?select=test.csv |
+| 6 | test_with_customer | Author | https://github.com/alanmaehara/Sales-Prediction/blob/master/data/test_with_customers.csv |
 
 [back to top](#table-of-contents)
 
