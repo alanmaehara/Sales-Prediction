@@ -1,4 +1,4 @@
-# A Complete Guide for Sales Forecast Project Implementation Using Machine Learning: a Rossmann Case
+# Data Science in Prodution: A Sales Forecast Project Using Machine Learning for Rossmann
 
 <img src="https://insideretail.asia/wp-content/uploads/2020/09/Rossmann.jpg" alt="drawing" width="100%"/>
 
@@ -1193,7 +1193,7 @@ As with any power transformation, a log transformation is used to make highly sk
 ![](img/log.png)
 
 See how values far from each other (1, 10, 100) are gathered in a nicely, closer pattern (0, 1, 2)?  
-A graphical example is the brain weight of animals as a function of their body weight. The first graph is the original dataset plotted with body weight in the x-axis, and brain weight in the y-axis, and the second graph is the log transformed version:
+A graphical example is the brain weight of animals as a function of their body weight. The first graph is the original dataset plotted with body weight on the x-axis, and brain weight on the y-axis, and the second graph is the log transformed version:
 
 ![](img/log_1.jpg)
 
