@@ -2320,9 +2320,9 @@ Hope you have enjoyed the journey with me!
 | 4 | unemployment_germany.csv | OECD | https://stats.oecd.org/index.aspx?queryid=36324 |
 | 5 | CCI_germany.csv | OECD | https://data.oecd.org/leadind/consumer-confidence-index-cci.htm |
 | 6 | stores.csv | Kaggle | https://www.kaggle.com/c/rossmann-store-sales/data?select=store.csv |
-| 6 | train.csv | Kaggle | https://www.kaggle.com/c/rossmann-store-sales/data?select=train.csv |
-| 6 | test.csv | Kaggle | https://www.kaggle.com/c/rossmann-store-sales/data?select=test.csv |
-| 6 | test_with_customer | Author | https://github.com/alanmaehara/Sales-Prediction/blob/master/data/test_with_customers.csv |
+| 7 | train.csv | Kaggle | https://www.kaggle.com/c/rossmann-store-sales/data?select=train.csv |
+| 8 | test.csv | Kaggle | https://www.kaggle.com/c/rossmann-store-sales/data?select=test.csv |
+| 9 | test_with_customer | Author | https://github.com/alanmaehara/Sales-Prediction/blob/master/data/test_with_customers.csv |
 
 [back to top](#table-of-contents)
 
