@@ -2213,7 +2213,7 @@ In this task, we will set the Telegram Bot to connect with our cloud-based platf
 
   ![](img/endpoint.png)
   
-  - Note that we have included a line plot that shows the sales revenues prediction progress each week. We use the buffer module `BytesIO()` to save the plot as bytes, and use the `send_photo()` method from the `telegram` package to retrieve the plot and send it back to the Telegram user. Here we import the libraries as `from io import BytesIO` and `import telegram` at the beginning of the script;
+  - Note that we have included a line plot that shows the sales revenues prediction progress each week. We use the buffer module `BytesIO()` to save the plot as bytes, and use the `send_photo()` method from the `Bot` class to retrieve the plot and send it back to the Telegram user. Here we import the libraries as `from io import BytesIO` and `import python-telegram-api` at the beginning of the script;
 
   ![](img/lineplot.PNG)
 
