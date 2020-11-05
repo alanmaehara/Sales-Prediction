@@ -21,7 +21,7 @@ This project was born from [Meigarom Lopes](https://github.com/Meigarom)'s excel
 
 ### How to read this README.MD?
 
-This is a very extensive README since it carries the responsibility of showing the project outcomes and also to explain the intuition behind algorithms and statistical analyses. There is also a somewhat palatable length of explanations on the reasoning of each step in this project. Here is my suggestion for the readers:
+This is a very extensive README since it shows the project outcomes, and also explains the intuition behind algorithms and statistical analyses. There is also a somewhat palatable length of explanations on the reasoning of each step in this project. Here is my suggestion for the readers:
 
 1. If you wish to **check the codes for this project**, access the Jupyter notebook [here](https://github.com/alanmaehara/Sales-Prediction/blob/master/notebooks/cycle02_rossmann_sales_prediction.ipynb) and go back to the [table of contents](#table-of-contents) whenever some explanation is lacking there. 
 2. If you wish to **read the project's main findings instead of going through the entire project**, look no further and [get there.](#main-findings)
@@ -2166,7 +2166,7 @@ In this task, we will set the Telegram Bot to connect with our cloud-based platf
   <p align="center"><img width="40%" alt="drawing" src="img/bot1.jpg"></p>
   &nbsp; 
   
-  Observe that BotFather returns a confirmation message with the HTTP API: this is a token used to connect users with the telegram API. 
+  Observe that BotFather returns a confirmation message with the HTTP API: this is a token used to connect users with the telegram API (I hid the token for security reasons) 
 
   - Press on `t.me/rossmann_prediction_bot` link to find the bot we have just created and press start on the new screen:
 
@@ -2297,11 +2297,11 @@ Then, we connect Heroku and Telegram by substituting the end part of the URL by 
 
 In this project, all necessary steps to deploy a complete Data Science project to production were taken. Using two CRISP-DM project management methodology cycles, a satisfactory model performance was obtained by using the XGBoost algorithm to predict sales revenue for Rossmann stores, and useful business information was retrieved during the exploratory data analysis section. Other than that, the project met the criteria for arranging a suitable solution for the company's stakeholders to access sales predictions on a smartphone application.
 
-I took approximately two months to complete this project. From retrieving and cleaning the company's data, conducting descriptive statistics analysis, modeling the machine learning algorithms for regression, to grasp the main ideas behind deployment and production environment settings, this project was challenging in many ways. Among the challenges, the biggest one was documenting this project in a clean, neat way - I hope I had delivered it in the right tone. 
+I took approximately one and a half months to complete this project. From retrieving and cleaning the company's data, conducting descriptive statistics analysis, modeling the machine learning algorithms for regression, to grasp the main ideas behind deployment and production environment settings, this project was challenging in many ways. Among the challenges, one was documenting this project in a clean, neat way - I hope I had delivered it in the right tone. 
 
 Other challenges would include: (1) the need for further information on each Rossmann store designated in the dataset - mainly geolocation information; (2) the lack of publicly available data about Rossmann in English; (3) more precise definition in the variables' description from the Kaggle dataset - especially the variables `assortment` and `store_type`; (4) time management and computer processing limitations, since the entire project was done in my personal laptop - processing times were extremely long when training machine learning models and running feature selection algorithms. 
 
-However, it is important to note that solutions for the aforementioned challenges could be easily overcome if one has tackled this project from within the company. Therefore, this project is not targeted at achieving the best solution possible but to show how a Data Science project can be implemented in a structured, fast-paced way with the CRISP-DM methodology. 
+However, it is important to note that the aforementioned challenges could be addressed if one has tackled this project from within the company. Therefore, this project is not targeted at achieving the best solution possible but to show how a Data Science project can be implemented in a structured, fast-paced way with the CRISP-DM methodology. 
 
 Hope you have enjoyed the journey with me!
 
