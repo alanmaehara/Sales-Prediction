@@ -1,4 +1,4 @@
-# Data Science in Prodution: A Sales Forecast Project Using Machine Learning for Rossmann
+# Data Science in Production: A Sales Forecast Project Using Machine Learning for Rossmann
 
 <img src="https://insideretail.asia/wp-content/uploads/2020/09/Rossmann.jpg" alt="drawing" width="100%"/>
 
