@@ -17,7 +17,7 @@ In this project, we will use machine learning to predict sales. Therefore, we wi
 
 ### Special Mention
 
-This project was born from [Meigarom Lopes](https://github.com/Meigarom)'s excellent course _Data Science em Produção_. In this course, learners apply data science techniques to deploy a data science solution from scratch from a business perspective. The course is thorough: it goes through data collection and data cleaning, machine learning modeling, and project deployment. For more details, please check his course (in Portuguese) [here](https://sejaumdatascientist.com/como-ser-um-data-scientist/). 
+Many colleagues from the Data Science community have contributed ideas and shared knowledge for this guide to happen. In particular, a special thanks to [Meigarom Lopes](https://github.com/Meigarom), founder of the Brazilian Data Science community (Comunidade DS), who provided not only a rich and inspiring network of individuals, but also had a paramount influence in most topics presented in this guide.  
 
 ### How to read this README.MD?
 
